@@ -6,4 +6,4 @@
 .httr-oauth
 .DS_Store
 .quarto
-R/hello.R
+/*.R
