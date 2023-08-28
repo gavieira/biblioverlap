@@ -14,7 +14,11 @@
 #' @export
 #'
 #' @examples
-#' any_empty_dfs(scopus_df, wos_df)
+#' df1 <- data.frame(A = sample(1:10)) #non-empty dataframe
+#' df2 <- data.frame() #empty dataframe
+#' df3 <- data.frame(A = c('test1', 'test2')) #non-empty dataframe
+#' any_empty_dfs(df1, df2) #TRUE, as df2 is empty
+#' any_empty_dfs(df1, df3) #FALSE, as there are no empty dfs in the arguments
 
 any_empty_dfs <- function(df1, df2){
   empty_dfs <- sapply(list(df1, df2), function(db) nrow(db) == 0)
