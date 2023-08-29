@@ -11,9 +11,9 @@
 #' @param df2 - A second data.frame object
 #'
 #' @return a boolean value
-#' @export
+# @export
 #'
-#' @examples
+# @examples
 #' df1 <- data.frame(A = sample(1:10)) #non-empty dataframe
 #' df2 <- data.frame() #empty dataframe
 #' df3 <- data.frame(A = c('test1', 'test2')) #non-empty dataframe
