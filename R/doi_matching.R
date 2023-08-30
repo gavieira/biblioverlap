@@ -1,0 +1,51 @@
+#' Subsetting bibliographic database records to use in matching procedures
+#'
+#' @param db - dataframe containing all fields from the bibliographic database records
+#'
+#' @return a subset of the database containing only relevant fields for the doi matching procedure
+# @export
+#'
+# @examples
+subset_db_for_doi_match <- function(db) {
+  db %>%
+    dplyr::filter(!is.na(DI) & score < 1) %>%
+    dplyr::select(index,DI)
+}
+
+
+
+#' Document matching using DOI (Digital Object Identifier) data for two dataframes
+#'
+#' @param db1 - First bibliographic database in the comparison
+#' @param db2 - Second bibliographic database in the comparison
+#' @param n_threads - number of (logical) cores to be used in the matching
+#' @param doi_score - custom score value to help identify DOI matches in previous comparisons
+#'
+#' @return a list containing match data
+# @export
+#'
+# @examples
+#Function that receives two lists of DOIs and returns a list containing the DOI matches of list1 against list2
+#We'll also give the DOI matching a "fake score" that will be used to identify which rows have been matched in previous pairwise comparisons
+
+parallel_doi_match <- function(db1, db2, n_threads, doi_score = 2) {
+  subset_db1 <- subset_db_for_doi_match(db1) #Extracting DOI info from db1
+  subset_db2 <- subset_db_for_doi_match(db2) #Extracting DOI info from db2
+  if ( any_empty_dfs(subset_db1, subset_db2) ) {
+    print('There is a db with no DOI records')
+    return( list() )
+  }
+  cl <- parallel::makeCluster(n_threads) #Starts the cluster for parallel computing (by default, uses all cores in the system)
+  parallel::clusterExport(cl, varlist = c("subset_db1", "subset_db2", "doi_score"), envir = environment()) #Exporting the variables received by the function to the cluster
+  doi_matches <- parallel::parLapplyLB(cl,  1:nrow(subset_db1),  function(i) {
+
+    match <- match(subset_db1[i, 'DI'], subset_db2$DI, incomparables = c(NULL, NA, ''))
+    if (!is.na(match)) {
+      return( list('db1_id' = as.numeric(subset_db1[i, 'index']),
+                   'score' = doi_score,
+                   'db2_id' = as.numeric(subset_db2[match, 'index'])) ) }
+  }) #Calculating which elements in list2 correspond to the DOIs in list1
+  parallel::stopCluster(cl) #Stopping the cluster
+  doi_matches <- Filter(function(x) !is.null(x), doi_matches) #Removing any null elements from list
+  return(doi_matches) #Returning a list where the indices correspond to position in list1, and the values correspond to the rows with matching DOI in list2
+}

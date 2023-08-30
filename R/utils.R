@@ -12,3 +12,7 @@
 #' @param rhs A function call using the magrittr semantics.
 #' @return The result of calling `rhs(lhs)`.
 NULL
+
+
+#' Variables for unquoted use in dplyr
+utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI'))

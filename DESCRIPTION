@@ -15,6 +15,7 @@ Imports:
     dplyr,
     magrittr,
     Matrix,
+    methods,
     parallel,
     stringdist,
     stringr,
