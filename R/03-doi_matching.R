@@ -1,19 +1,3 @@
-#' Subsetting bibliographic database records to use in matching procedures
-#'
-#' @param db - dataframe containing all fields from the bibliographic database records
-#'
-#' @return a subset of the database containing only relevant fields for the doi matching procedure
-# @export
-#'
-# @examples
-subset_db_for_doi_match <- function(db) {
-  db %>%
-    dplyr::filter(!is.na(DI) & score < 1) %>%
-    dplyr::select(index,DI)
-}
-
-
-
 #' Document matching using DOI (Digital Object Identifier) data for two dataframes
 #'
 #' @param db1 - First bibliographic database in the comparison

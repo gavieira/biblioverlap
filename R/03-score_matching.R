@@ -1,35 +1,3 @@
-#' Subsetting bibliographic database records to use in matching procedures
-#'
-#' @param df - a dataframe from a bibliographic database
-#'
-#' @return a subset df with all needed data for the specified matching procedure
-# @export
-#'
-# @examples
-subset_db_for_score_match <- function(df) {
-  df %>%
-    dplyr::filter(is.na(DI) & score < 1) %>%
-    dplyr::select(index,TI,PY,J9,AU)
-}
-
-#' Converts a matrix to sparseMatrix format
-#'
-#' @param matrix - A matrix object
-#'
-#' @description
-#' This is a helper function to both calc_distance_score_matrix() and calc_exact_score_matrix()
-#'
-#'
-#' @return a matrix in sparseMatrix format, where negative values have been replaced by 0
-# @export
-#'
-# @examples
-convert_to_sparse_matrix <- function(matrix) {
-  matrix[is.na(matrix) | matrix < 0] <- 0 # Replacing NA and negative values with zeroes
-  return( methods::as(matrix, "sparseMatrix") ) #Returning sparse_matrix (way more memory efficient)
-}
-
-
 #' Calculates score matrix for a pair of databases based on edit (levenshtein) distance
 #'
 #' @param db1_col - Column from db1 with values to be compared

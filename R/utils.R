@@ -15,4 +15,5 @@ NULL
 
 
 #' Variables for unquoted use in dplyr
-utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI'))
+#' @name global variables
+utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI', 'SO'))

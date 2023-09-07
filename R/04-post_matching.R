@@ -20,10 +20,32 @@ update_db2_matches <- function(db1, db2, match_list) {
 }
 
 
+
+
+#' My Custom List Object
+#'
+#' This is an example list object containing sample data.
+#'
+#' @format A named list.
+#' @field doi Description of the field.
+#' @field title Description of the field.
+#' @field pubyear Description of the field.
+#' @field authors Description of the field.
+#' @field source Description of the field.
+#'
+#' @export
+matching_cols <- list(doi = 'DI',
+                      title = 'TI',
+                      pubyear = 'PY',
+                      authors = 'AU',
+                      source = 'SO')
+
+
 #' Obtains document overlap between databases from a named list
 #'
 #' @param db_list - list of dataframes containing the sets of bibliographic data
 #' @param db_order - order of the databases
+#' @param matching_fields - Column names used in the matching
 #' @param n_threads - number of (logical) cores used in the matching procedures
 #' @param ti_penalty - penalty applied for each increment in Title's levenshtein distance
 #' @param ti_max - max score value for Title
@@ -35,16 +57,16 @@ update_db2_matches <- function(db1, db2, match_list) {
 #' @param score_cutoff - minimum final score for a valid match between two documents
 #'
 #' @return a modified version of db_list where matching documents share the same UUID
-# @export
+#' @export
 #'
 # @examples
-db_analyses <- function(db_list, db_order = names(db_list), n_threads = parallel::detectCores(),
+db_analyses <- function(db_list, db_order = names(db_list), matching_fields = matching_fields, n_threads = parallel::detectCores(),
                         ti_penalty = 0.1, ti_max = 0.6,
                         j9_penalty = 0.1, j9_max = 0.3,
                         au_penalty = 0.1, au_max = 0.3,
                         py_max = 0.3, score_cutoff = 1) {
   #db_list <- lapply(db_list, function(db) db %>% rownames_to_column(var = 'index') ) #Creating column that will keep the index of the original db row even when splitting the data for doi and score matching
-  db_list <- data_preprocessing(db_list)
+  db_list <- data_preprocessing(db_list, matching_fields)
   combs <- utils::combn(db_order, 2) #Getting ordered db pairwise combinations
   matches <- list()
   score_matrices <- list()
