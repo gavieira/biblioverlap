@@ -6,6 +6,7 @@
 .httr-oauth
 .DS_Store
 .quarto
-data-raw/*/
-data-raw/*.csv
-data-raw/*
+#data-raw/*/
+#data-raw/*.csv
+data-raw
+data
