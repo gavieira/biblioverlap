@@ -12,7 +12,7 @@
 #Function that receives two lists of DOIs and returns a list containing the DOI matches of list1 against list2
 #We'll also give the DOI matching a "fake score" that will be used to identify which rows have been matched in previous pairwise comparisons
 
-parallel_doi_match <- function(db1, db2, n_threads, doi_score = 2) {
+doi_matching <- function(db1, db2, n_threads, doi_score = 2) {
   subset_db1 <- subset_db_for_doi_match(db1) #Extracting DOI info from db1
   subset_db2 <- subset_db_for_doi_match(db2) #Extracting DOI info from db2
   if ( any_empty_dfs(subset_db1, subset_db2) ) {

@@ -34,28 +34,27 @@ calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
 }
 
 
-
-
 #' Get the max score value for each row of the final score matrix
 #'
 #' @param final_score_matrix - matrix with final score values
+#' @param db1_index - db1 index column
+#' @param db2_index - db2 index column
 #'
 #' @return a list containing match data
 # @export
 #'
 # @examples
-get_max_score_matches <- function(final_score_matrix) {
-  db1_ids <- as.numeric(rownames(final_score_matrix))
-  max_scores <- apply(final_score_matrix, 1, max)
-  db2_pos <- apply(final_score_matrix, 1, which.max)
-  db2_names <- as.numeric(colnames(final_score_matrix))
-  db2_ids <- sapply(db2_pos, function(x) db2_names[x])
+extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
+  db1_ids <- db1_index # db1 index vector
+  max_scores <- apply(final_score_matrix, 1, max) # max score value for each row (i.e. for each db1_record)
+  db2_pos <- apply(final_score_matrix, 1, which.max) # column position of the max score (i.e. db2 match position)
+  db2_ids <- sapply(db2_pos, function(x) db2_index[x]) # db2 match index vector (extracted from db2_index using db2_pos)
   score_matches <- Map(function(vec1, vec2, vec3) { list('db1_id' = vec1,
                                                          'score' = vec2,
                                                          'db2_id' = vec3) },
-                       db1_ids, max_scores, db2_ids)
-  score_matches <- unname(score_matches)
-  score_matches <- Filter(function(x) x$score != 0, score_matches)
+                       db1_ids, max_scores, db2_ids) # generating match list
+  score_matches <- unname(score_matches) #removing names from list
+  score_matches <- Filter(function(x) x$score != 0, score_matches) # removing records where score == 0 (all scores below cutoff are converted to 0 by the get_score_matches() function)
   return( score_matches )
 }
 
@@ -85,7 +84,7 @@ get_max_score_matches <- function(final_score_matrix) {
 # @export
 #'
 # @examples
-get_score_matches <- function(db1, db2, n_threads,
+score_matching <- function(db1, db2, n_threads,
                               ti_penalty, ti_max,
                               so_penalty, so_max,
                               au_penalty, au_max,
@@ -101,8 +100,9 @@ get_score_matches <- function(db1, db2, n_threads,
   so_matrix <- calc_distance_score_matrix(db1$SO, db2$SO, max_score = so_max, penalty = so_penalty, n_threads = n_threads)
   py_matrix <- calc_exact_score_matrix(db1$PY, db2$PY, max_score = py_max)
   final_score_matrix <- ti_matrix + au_matrix + so_matrix + py_matrix
-  final_score_matrix[final_score_matrix < score_cutoff] <- 0 #Removing results below cutoff
-  dimnames(final_score_matrix) <- list(db1$index, db2$index) #Adding db indexes to each matrix dimension
-  score_matches <- get_max_score_matches(final_score_matrix)
+  final_score_matrix[final_score_matrix < score_cutoff] <- 0 #Results below cutoff are converted to 0
+  dimnames(final_score_matrix) <- list(paste0('db1_', db1$index),
+                                       paste0('db2_',db2$index)) #Adding db indexes to each matrix dimension
+  score_matches <- extract_score_matches(final_score_matrix, db1$index, db2$index)
   return(list(score_matches, final_score_matrix))
 }

@@ -49,8 +49,8 @@ matching_cols <- list(doi = 'DI',
 #' @param n_threads - number of (logical) cores used in the matching procedures
 #' @param ti_penalty - penalty applied for each increment in Title's levenshtein distance
 #' @param ti_max - max score value for Title
-#' @param j9_penalty - penalty applied for each increment in Source's levenshtein distance
-#' @param j9_max - max score value for Source
+#' @param so_penalty - penalty applied for each increment in Source's levenshtein distance
+#' @param so_max - max score value for Source
 #' @param au_penalty - penalty applied for each increment in Author's levenshtein distance
 #' @param au_max - max  score value for Author
 #' @param py_max - max score value for Publication Year
@@ -60,9 +60,9 @@ matching_cols <- list(doi = 'DI',
 #' @export
 #'
 # @examples
-db_analyses <- function(db_list, db_order = names(db_list), matching_fields = matching_fields, n_threads = parallel::detectCores(),
+biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = matching_fields, n_threads = parallel::detectCores(),
                         ti_penalty = 0.1, ti_max = 0.6,
-                        j9_penalty = 0.1, j9_max = 0.3,
+                        so_penalty = 0.1, so_max = 0.3,
                         au_penalty = 0.1, au_max = 0.3,
                         py_max = 0.3, score_cutoff = 1) {
   #db_list <- lapply(db_list, function(db) db %>% rownames_to_column(var = 'index') ) #Creating column that will keep the index of the original db row even when splitting the data for doi and score matching
@@ -77,11 +77,11 @@ db_analyses <- function(db_list, db_order = names(db_list), matching_fields = ma
     db1 <- db_list[[db1_name]] #Getting db1 by name from the db_list
     db2 <- db_list[[db2_name]] #Getting db2 by name from the db_list
     print(paste('Matching by DOI for pair', comb_name))
-    doi_matches <- parallel_doi_match(db1, db2, n_threads = n_threads) #Obtaining matches by DOI
+    doi_matches <- doi_matching(db1, db2, n_threads = n_threads) #Obtaining matches by DOI
     print(paste('Matching by SCORE for pair', comb_name))
-    score_matches <- get_score_matches(db1, db2, n_threads = n_threads,
+    score_matches <- score_matching(db1, db2, n_threads = n_threads,
                                        ti_penalty, ti_max,
-                                       j9_penalty, j9_max,
+                                       so_penalty, so_max,
                                        au_penalty, au_max,
                                        py_max, score_cutoff) #Obtaining matches by score
     final_score_matrix <- score_matches[[2]]

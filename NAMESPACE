@@ -2,7 +2,7 @@
 
 export("%>%")
 export(bibliometrix_parsing)
+export(biblioverlap)
 export(data_preprocessing)
-export(db_analyses)
 export(matching_cols)
 importFrom(magrittr,"%>%")
