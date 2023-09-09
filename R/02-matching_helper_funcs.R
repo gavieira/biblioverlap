@@ -67,14 +67,10 @@ subset_db_for_score_match <- function(df) {
 #'
 #'
 #' @return a matrix in sparseMatrix format, where negative values have been replaced by 0
-# @export
+#' @export
 #'
 # @examples
 convert_to_sparse_matrix <- function(matrix) {
   matrix[is.na(matrix) | matrix < 0] <- 0 # Replacing NA and negative values with zeroes
-  return( methods::as(matrix, "sparseMatrix") ) #Returning sparse_matrix (way more memory efficient)
+  return( Matrix::Matrix(matrix, sparse = TRUE) ) #Returning sparse_matrix (way more memory efficient)
 }
-
-
-
-

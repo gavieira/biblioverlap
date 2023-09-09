@@ -1,3 +1,6 @@
+
+
+
 #' Updating db2 matched records
 #'
 #' @param db1 - First bibliographic database in the comparison
@@ -22,6 +25,15 @@ update_db2_matches <- function(db1, db2, match_list) {
 
 
 
+inherit_uuid_col <- function(db_list, internal_db_list) {
+  for (name in names(db_list)) {
+    db_list[[name]]$UUID <- internal_db_list[[name]]$UUID
+  }
+  return(db_list)
+}
+
+
+
 #' My Custom List Object
 #'
 #' This is an example list object containing sample data.
@@ -34,11 +46,16 @@ update_db2_matches <- function(db1, db2, match_list) {
 #' @field source Description of the field.
 #'
 #' @export
-matching_cols <- list(doi = 'DI',
-                      title = 'TI',
-                      pubyear = 'PY',
-                      authors = 'AU',
-                      source = 'SO')
+matching_fields <- list(DI = 'DI',
+                      TI = 'TI',
+                      PY = 'PY',
+                      AU = 'AU',
+                      SO = 'SO')
+#matching_fields <- list(DI = 'Lens.ID',
+#                      TI = 'Title',
+#                      PY = 'Publication.Year',
+#                      AU = 'Author.s',
+#                      SO = 'Source.Title')
 
 
 #' Obtains document overlap between databases from a named list
@@ -66,7 +83,8 @@ biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = m
                         au_penalty = 0.1, au_max = 0.3,
                         py_max = 0.3, score_cutoff = 1) {
   #db_list <- lapply(db_list, function(db) db %>% rownames_to_column(var = 'index') ) #Creating column that will keep the index of the original db row even when splitting the data for doi and score matching
-  db_list <- data_preprocessing(db_list, matching_fields)
+  db_list <- removing_duplicates(db_list, matching_fields)
+  internal_db_list <- data_preprocessing(db_list, matching_fields)
   combs <- utils::combn(db_order, 2) #Getting ordered db pairwise combinations
   matches <- list()
   score_matrices <- list()
@@ -74,8 +92,8 @@ biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = m
     db1_name <- combs[1,i] #db1 name for current pairwise combination
     db2_name <- combs[2,i] #db2 name for current pairwise combination
     comb_name <- paste0(db1_name,'_',db2_name) #Name of combination (db1_db2) - Will be used to identify each list of matches
-    db1 <- db_list[[db1_name]] #Getting db1 by name from the db_list
-    db2 <- db_list[[db2_name]] #Getting db2 by name from the db_list
+    db1 <- internal_db_list[[db1_name]] #Getting db1 by name from the db_list
+    db2 <- internal_db_list[[db2_name]] #Getting db2 by name from the db_list
     print(paste('Matching by DOI for pair', comb_name))
     doi_matches <- doi_matching(db1, db2, n_threads = n_threads) #Obtaining matches by DOI
     print(paste('Matching by SCORE for pair', comb_name))
@@ -94,9 +112,11 @@ biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = m
       lst$db1 <- db1_name
       lst$db2 <- db2_name
       return(lst) } )
-    db_list[[db2_name]] <- update_db2_matches(db1, db2, matches[[comb_name]]) #Saving modified db2 to db_list
+    internal_db_list[[db2_name]] <- update_db2_matches(db1, db2, matches[[comb_name]]) #Saving modified db2 to db_list
   }
+  db_list <- inherit_uuid_col(db_list, internal_db_list)
   return (list(db_list = db_list,
+               internal_db_list = internal_db_list,
                matches = matches,
                score_matrices = score_matrices)) #Returning db_list and matches
 }

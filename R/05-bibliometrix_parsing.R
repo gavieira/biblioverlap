@@ -38,3 +38,11 @@ bibliometrix_parsing <- function(dataset_list, n_threads = parallel::detectCores
   db_list <- parallel::mclapply(dataset_list, function(db_data) convert2df_wrapper(db_data), mc.cores = n_threads )
   return(db_list)
 }
+
+
+
+
+
+merge_db_list <- function(db_list) {
+  return( dplyr::bind_rows(db_list, .id = 'SET_NAME') )
+}

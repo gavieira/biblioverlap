@@ -15,10 +15,8 @@ Imports:
     dplyr,
     magrittr,
     Matrix,
-    methods,
     parallel,
     stringdist,
-    tibble,
     uuid
 Suggests: 
     testthat
