@@ -40,6 +40,12 @@ calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
 #' @param db1_index - db1 index column
 #' @param db2_index - db2 index column
 #'
+#' @details
+#' This function uses the base 'apply()' to obtain max_value and max_col_index for each row in the 'final_score_matrix' object.
+#' Such approach coerces the 'final_score_matrix' from sparse (dgCMatrix) to a regular (dense) matrix. This can generate warnings regarding vector allocation when working with large datasets
+#' To avoid adding more dependencies to this package, we have chosen to keep this function working with the base 'apply()', since the increased RAM usage caused by this coercion is temporary and won't surpass total RAM usage in the score_matrix calculation
+#' Long story short, if the computer has enough RAM to calculate the score matrices, it will have enough RAM to run this function, so we chose to use only base functions in it.
+#'
 #' @return a list containing match data
 # @export
 #'
@@ -99,10 +105,11 @@ score_matching <- function(db1, db2, n_threads,
   au_matrix <- calc_distance_score_matrix(db1$AU, db2$AU, max_score = au_max, penalty = au_penalty, n_threads = n_threads)
   so_matrix <- calc_distance_score_matrix(db1$SO, db2$SO, max_score = so_max, penalty = so_penalty, n_threads = n_threads)
   py_matrix <- calc_exact_score_matrix(db1$PY, db2$PY, max_score = py_max)
+
   final_score_matrix <- ti_matrix + au_matrix + so_matrix + py_matrix
   final_score_matrix[final_score_matrix < score_cutoff] <- 0 #Results below cutoff are converted to 0
-  dimnames(final_score_matrix) <- list(paste0('db1_', db1$index),
-                                       paste0('db2_',db2$index)) #Adding db indexes to each matrix dimension
+  #dimnames(final_score_matrix) <- list(paste0('db1_', db1$index),
+  #                                     paste0('db2_',db2$index)) #Adding db indexes to each matrix dimension
   score_matches <- extract_score_matches(final_score_matrix, db1$index, db2$index)
   return(list(score_matches, final_score_matrix))
 }
