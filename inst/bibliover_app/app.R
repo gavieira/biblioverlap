@@ -45,60 +45,11 @@ ui <- fluidPage(
       br(),
       br(),
 
-      HTML('Set1:'),
-      tabsetPanel(
-        id = "set1",
-        tabPanel("Name",
-                 textInput("name1", "Dataset name:")
-                 ),
-        tabPanel("Files",
-                 fileInput("set1", "Upload files:", multiple = TRUE,
-                           accept = c("text/csv",
-                                      "text/comma-separated-values,text/plain",
-                                      ".csv") )
-                 ),
-        tabPanel("Sep",
-                 selectInput('sep1', 'Separator',
-                             choices = c(Comma = ",",
-                                        Semicolon = ";",
-                                        Tab = "\t"),
-                             selected = "," )
-                 ),
-        tabPanel("Quote",
-                 selectInput('sep1', 'Quote type',
-                             choices = c(None = "",
-                                         "Double Quote" = '"',
-                                         "Single Quote" = "'"),
-                             selected = "" )
-                 )
-        ),
-      HTML('Set2:'),
-      tabsetPanel(
-        id = "set2",
-        tabPanel("Name",
-                 textInput("name2", "Dataset name:")
-                 ),
-        tabPanel("Files",
-                 fileInput("set2", "Upload files:", multiple = TRUE,
-                           accept = c("text/csv",
-                                      "text/comma-separated-values,text/plain",
-                                      ".csv") )
-                 ),
-        tabPanel("Sep",
-                 selectInput('sep2', 'Separator',
-                             choices = c(Comma = ",",
-                                        Semicolon = ";",
-                                        Tab = "\t"),
-                             selected = "," )
-                 ),
-        tabPanel("Quote",
-                 selectInput('sep2', 'Quote type',
-                             choices = c(None = "",
-                                         "Double Quote" = '"',
-                                         "Single Quote" = "'"),
-                             selected = "" )
-                 )
-        ),
+      uiOutput("dynamicUI"),
+      actionButton("addButton", "+ Add set"),
+      actionButton("removeButton", "- Remove set"),
+
+
 
       actionButton('compute', "Compute", width = '100%', class = 'compute_button')
     ),
@@ -108,11 +59,76 @@ ui <- fluidPage(
 
 # Define server function that does nothing
 server <- function(input, output, session) {
-  observeEvent
+
+  # Initialize a counter for the number of added UI elements
+  counter <- reactiveVal(2)
+
+  # Define a function to generate the dynamic UI
+  generateUI <- function(id) {
+    tagList(
+      div(
+        id = paste0("uiElement", id),
+        # Add your UI elements here
+        HTML(paste0("Set", id, ':')),
+        tabsetPanel(
+          id = paste0("set", id),
+          tabPanel("Name",
+                   textInput("name1", "Dataset name:")
+          ),
+          tabPanel("Files",
+                   fileInput("set1", "Upload files:", multiple = TRUE,
+                             accept = c("text/csv",
+                                        "text/comma-separated-values,text/plain",
+                                        ".csv") )
+          ),
+          tabPanel("Sep",
+                   selectInput('sep1', 'Separator',
+                               choices = c(Comma = ",",
+                                           Semicolon = ";",
+                                           Tab = "\t"),
+                               selected = "," )
+          ),
+          tabPanel("Quote",
+                   selectInput('sep1', 'Quote type',
+                               choices = c(None = "",
+                                           "Double Quote" = '"',
+                                           "Single Quote" = "'"),
+                               selected = "" )
+          )
+        )
+
+      )
+    )
+  }
+
+  # Render the dynamic UI
+  output$dynamicUI <- renderUI({
+    uiList <- lapply(1:2, function(i) {
+      generateUI(i)
+    })
+    tagList(uiList)
+  })
 
 
+  # Add UI element when the "+" button is clicked
+  observeEvent(input$addButton, {
+    if (counter() < 7) {
+    counter(counter() + 1)
+    insertUI(
+      selector = "#dynamicUI",
+      ui = generateUI(counter())
+    )}
+  })
 
-
+  # Remove UI element when the "-" button is clicked
+  observeEvent(input$removeButton, {
+    if (counter() > 2) {
+      counter(counter() - 1)
+      removeUI(
+        selector = paste0("#uiElement", counter() + 1)
+      )
+    }
+  })
 
 }
 
