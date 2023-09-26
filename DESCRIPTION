@@ -16,6 +16,7 @@ Imports:
     magrittr,
     Matrix,
     parallel,
+    shiny,
     stringdist,
     uuid
 Suggests: 

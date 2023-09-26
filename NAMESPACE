@@ -3,6 +3,7 @@
 export("%>%")
 export(bibliometrix_parsing)
 export(biblioverlap)
+export(convert_to_sparse_matrix)
 export(data_preprocessing)
 export(generating_db_col)
 export(matching_fields)
