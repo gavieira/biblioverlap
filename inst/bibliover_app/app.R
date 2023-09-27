@@ -7,7 +7,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
 
-      HTML('Adding column names:'),
+      tags$b('Column names'),
 
       tabsetPanel(
         id = "colnames",
@@ -32,7 +32,7 @@ ui <- fluidPage(
 
       tags$hr(),
 
-      numericInput('n_threads', 'Number of Threads',
+      numericInput('n_threads', 'Number of threads',
                    min = 1,
                    max = parallel::detectCores(),
                    value = 1
@@ -41,15 +41,10 @@ ui <- fluidPage(
 
       tags$hr(),
 
-      HTML('Adding bibliographical datasets:'),
-      br(),
-      br(),
-
+      numericInput('n_sets', "Number of bibliographical datasets",
+                   min = 2, max = 7,
+                   value = 2),
       uiOutput("dynamicUI"),
-      actionButton("addButton", "+ Add set"),
-      actionButton("removeButton", "- Remove set"),
-
-
 
       actionButton('compute', "Compute", width = '100%', class = 'compute_button')
     ),
@@ -60,12 +55,74 @@ ui <- fluidPage(
 # Define server function that does nothing
 server <- function(input, output, session) {
 
-  # Initialize a counter for the number of added UI elements
-  counter <- reactiveVal(2)
+  # Get list of
+  column_list <- function() {
 
-  # Define a function to generate the dynamic UI
-  generateUI <- function(id) {
-    tagList(
+  }
+
+  read_input_file <- function(input_file, sep, quote) {
+    df <- read.csv(input_file,
+                   sep = sep,
+                   quote = quote,
+                   strip.white = TRUE)
+
+    return( df )
+  }
+
+
+  # Function to retrieve information from all sets
+  retrieveInfoFromSets <- function() {
+    all_sets <- list()
+    for (i in 1:input$n_sets) {
+      set_name <- input[[paste0("name", i)]]
+      filepath <- input[[paste0("files", i)]]$datapath
+      sep <- input[[paste0("sep", i)]]
+      quote <- input[[paste0("quote", i)]]
+
+      # Read the CSV file and store it in a data frame
+      df <- read_input_file(filepath, sep, quote)
+
+      # Assign the data frame to the named list
+      all_sets[[set_name]] <- df
+      }
+    return(all_sets)
+  }
+
+  observeEvent(input$compute, {
+    # Retrieve information from all sets
+    sets_info <- retrieveInfoFromSets()
+    View(sets_info)
+    View(sets_info[[1]])
+    View(sets_info[[2]])
+    # Do something with sets_info, e.g., print it
+    #View(input$set1)
+    #View(input$set2)
+    #View(input$name1)
+    #View(input$name2)
+    #View(input$sep1)
+    #View(input$sep2)
+    #View(input$quote1)
+    #View(input$quote2)
+  })
+
+
+  colnames <- reactiveValues(
+    DI = NULL,
+    TI = NULL,
+    SO = NULL,
+    AU = NULL,
+    PY = NULL
+  )
+
+ n_threads <- reactiveVal(NULL)
+ n_sets <- reactiveVal(NULL)
+
+
+
+
+
+ generateUI <- function(id) {
+   tagList(
       div(
         id = paste0("uiElement", id),
         # Add your UI elements here
@@ -73,23 +130,23 @@ server <- function(input, output, session) {
         tabsetPanel(
           id = paste0("set", id),
           tabPanel("Name",
-                   textInput("name1", "Dataset name:")
+                   textInput(paste0("name", id), "Dataset name:")
           ),
           tabPanel("Files",
-                   fileInput("set1", "Upload files:", multiple = TRUE,
+                   fileInput(paste0("files", id), "Upload files:", multiple = TRUE,
                              accept = c("text/csv",
                                         "text/comma-separated-values,text/plain",
                                         ".csv") )
           ),
           tabPanel("Sep",
-                   selectInput('sep1', 'Separator',
+                   selectInput(paste0('sep', id), 'Separator',
                                choices = c(Comma = ",",
                                            Semicolon = ";",
                                            Tab = "\t"),
                                selected = "," )
           ),
           tabPanel("Quote",
-                   selectInput('sep1', 'Quote type',
+                   selectInput(paste0('quote', id), 'Quote type',
                                choices = c(None = "",
                                            "Double Quote" = '"',
                                            "Single Quote" = "'"),
@@ -103,32 +160,26 @@ server <- function(input, output, session) {
 
   # Render the dynamic UI
   output$dynamicUI <- renderUI({
-    uiList <- lapply(1:2, function(i) {
+    uiList <- lapply(1:input$n_sets, function(i) {
       generateUI(i)
     })
     tagList(uiList)
   })
 
+  eventReactive(input$compute, {
+    matching_fields <- list(
+      DI = input$di,
+      TI = input$TI,
+      AU = input$AU,
+      SO = input$SO)
+    sets = list()
 
-  # Add UI element when the "+" button is clicked
-  observeEvent(input$addButton, {
-    if (counter() < 7) {
-    counter(counter() + 1)
-    insertUI(
-      selector = "#dynamicUI",
-      ui = generateUI(counter())
-    )}
+
   })
 
-  # Remove UI element when the "-" button is clicked
-  observeEvent(input$removeButton, {
-    if (counter() > 2) {
-      counter(counter() - 1)
-      removeUI(
-        selector = paste0("#uiElement", counter() + 1)
-      )
-    }
-  })
+
+
+
 
 }
 

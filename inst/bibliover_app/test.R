@@ -1,51 +1,25 @@
-library(shiny)
+# UI code
+ui <- fileInput("file_upload", "Upload a file")
 
-ui <- fluidPage(
-  actionButton("addButton", "+ Add UI"),
-  actionButton("removeButton", "- Remove UI"),
-  uiOutput("dynamicUI")
-)
-
+# Server code
 server <- function(input, output, session) {
-  # Initialize a counter for the number of added UI elements, starting at 1
-  counter <- reactiveVal(1)
+  observeEvent(input$file_upload, {
+    # Access the uploaded file information
+    View(input$file_upload)
+    uploaded_file <- input$file_upload
 
-  # Define a function to generate the dynamic UI
-  generateUI <- function(id) {
-    tagList(
-      div(
-        id = paste0("uiElement", id),
-        h4(paste("Dynamic UI Element", id)),
-        # Add your UI elements here
-        textInput(inputId = paste0("text", id), label = "Text Input")
-      )
-    )
-  }
+    # Check if a file was uploaded
+    if (!is.null(uploaded_file)) {
+      # Extract the file path
+      file_path <- uploaded_file$datapath
 
-  # Render the dynamic UI
-  output$dynamicUI <- renderUI({
-    uiList <- lapply(1:counter(), function(i) {
-      generateUI(i)
-    })
-    tagList(uiList)
-  })
+      # You can now use file_path as the path to the uploaded file
+      # For example, you can read the file using read.csv()
+      data <- read.csv(file_path)
 
-  # Add UI element when the "+" button is clicked
-  observeEvent(input$addButton, {
-    counter(counter() + 1)
-    insertUI(
-      selector = "#dynamicUI",
-      ui = generateUI(counter())
-    )
-  })
-
-  # Remove UI element when the "-" button is clicked
-  observeEvent(input$removeButton, {
-    if (counter() > 0) {
-      counter(counter() - 1)
-      removeUI(
-        selector = paste0("#uiElement", counter() + 1)
-      )
+      # Do something with the data
+      # For demonstration purposes, we are just printing the data
+      print(data)
     }
   })
 }
