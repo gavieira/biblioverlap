@@ -13,7 +13,7 @@ ui <- fluidPage(
       tabsetPanel(
         id = "colnames",
         tabPanel("DI",
-                 textInput("di", "DOI", value = 'DOI')
+                 textInput("di", "DOI / unique identifier", value = 'DOI')
         ),
         tabPanel("TI",
                  textInput('ti', 'Document title', value = 'Title')
@@ -50,10 +50,30 @@ ui <- fluidPage(
       actionButton('compute', "Compute", width = '100%', class = 'compute_button')
     ),
     mainPanel(
+      tabsetPanel(
+        id = "results",
+        tabPanel("all_data",
+                 tags$br(),
+                 #downloadButton("download_data", "Download Data"),
+                 uiOutput('download_button'),
+                 tags$br(),
+                 DT::dataTableOutput('full_table')
+        ),
+        tabPanel("internal_data",
+                 DT::dataTableOutput('internal_table'),
+        ),
+        tabPanel("Venn Diagram",
+        ),
+        tabPanel("UpSet plot",
+        )
+
+        )
+
+
       #tableOutput('full_table'),
       #tableOutput('internal_table'),
-      DT::dataTableOutput('internal_table'),
-      DT::dataTableOutput('full_table')
+      #DT::dataTableOutput('internal_table'),
+      #DT::dataTableOutput('full_table')
 
     )
   )
@@ -95,12 +115,12 @@ server <- function(input, output, session) {
     all_sets <- list()
     for (i in 1:input$n_sets) {
       set_name <- input[[paste0("name", i)]]
-      filepath <- input[[paste0("files", i)]]$datapath
+      filepaths <- input[[paste0("files", i)]]$datapath
       sep <- input[[paste0("sep", i)]]
       quote <- input[[paste0("quote", i)]]
 
       # Read the CSV file and store it in a data frame
-      df <- read_input_file(filepath, sep, quote)
+      df <- read_input_files(filepaths, sep, quote)
 
       # Assign the data frame to the named list
       all_sets[[set_name]] <- df
@@ -118,23 +138,12 @@ server <- function(input, output, session) {
   }
 
 
-  #observeEvent(input$compute, {
+  observeEvent(input$compute, {
   #  # Retrieve information from all sets
-  #  sets_info <- get_sets_list()
-  #  View(sets_info)
-  #  View(sets_info[[1]])
-  #  View(sets_info[[2]])
-  #  # Do something with sets_info, e.g., print it
-  #  #View(input$set1)
-  #  #View(input$set2)
-  #  #View(input$name1)
-  #  #View(input$name2)
-  #  #View(input$sep1)
-  #  #View(input$sep2)
-  #  #View(input$quote1)
-  #  #View(input$quote2)
-  #})
-
+  output$download_button <- renderUI({
+    downloadButton("download_data", "Download Data") })
+  View(input$files)
+  })
 
  generateUI <- function(id) {
    tagList(
@@ -224,6 +233,14 @@ server <- function(input, output, session) {
   }
 
 
+  output$download_data <- downloadHandler(
+    filename = function() {
+      'result_data.csv'
+    },
+    content = function(file) {
+      write.csv(get_merged_db_list(calculate_results()$db_list), file, row.names = FALSE)
+    }
+  )
 
   output$full_table <- DT::renderDataTable({
     table_list <- calculate_results()$db_list
