@@ -114,7 +114,9 @@ biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = m
       return(lst) } )
     internal_db_list[[db2_name]] <- update_db2_matches(db1, db2, matches[[comb_name]]) #Saving modified db2 to db_list
   }
+  print('Updating matched documents original db2')
   db_list <- inherit_uuid_col(db_list, internal_db_list)
+  print('is there a problem in the return?')
   return (list(db_list = db_list,
                internal_db_list = internal_db_list,
                matches = matches,
