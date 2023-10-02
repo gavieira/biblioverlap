@@ -1,4 +1,5 @@
 library(shiny)
+library(biblioverlap)
 options(shiny.maxRequestSize = 100 * 1024^2)
 
 # Define UI with fluid rows and columns
@@ -54,13 +55,12 @@ ui <- fluidPage(
         id = "results",
         tabPanel("all_data",
                  tags$br(),
-                 #downloadButton("download_data", "Download Data"),
                  uiOutput('download_button'),
                  tags$br(),
                  DT::dataTableOutput('full_table')
         ),
-        tabPanel("internal_data",
-                 DT::dataTableOutput('internal_table'),
+        tabPanel("Summary",
+                 #Could have both a table and a plot, and donwload boxes for both of them.
         ),
         tabPanel("Venn Diagram",
         ),
@@ -93,18 +93,18 @@ server <- function(input, output, session) {
     )
   }
 
-  read_input_file <- function(input_file, sep, quote) {
-    if (quote == "") {
-      df <- read.csv(input_file,
-                    sep = sep,
-                    strip.white = TRUE,
-                    check.names = FALSE) }
-    else {
-      df <- read.csv(input_file,
-                    sep = sep,
-                    quote = quote,
-                    strip.white = TRUE,
-                    check.names = FALSE) }
+  read_input_files <- function(input_files, sep, quote) {
+
+    df_list <- lapply(input_files, function(input_file) {
+      read.csv(input_file,
+               sep = sep,
+               strip.white = TRUE,
+               check.names = FALSE) })
+    df <- do.call(rbind, df_list)
+
+    # There's no need to remove duplicate rows here, as biblioverlap already does that in the removing_duplicates() function
+    #df <- df[!duplicated(df), ]
+
 
     return( df )
   }
@@ -130,19 +130,27 @@ server <- function(input, output, session) {
 
 
 
-
-
   get_merged_db_list <- function(db_list) {
-    db_list <- lapply(db_list, function(df) as.data.frame(lapply(df, as.character))) #Converting all field types to character to avoid problems when merging the dataframes
-    return( dplyr::bind_rows(db_list, .id = 'SET_NAME') )
+    df <- do.call(rbind, Map(cbind, db_list, SET_NAME = names(db_list))) #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
+    columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
+    df <- df[c(columns_to_front, setdiff(names(df), columns_to_front))] # Rearrange columns
+
+    return( df )
   }
 
 
+  #get_merged_db_list <- function(db_list) {
+  #  db_list <- lapply(db_list, function(df) as.data.frame(lapply(df, as.character))) #Converting all field types to character to avoid problems when merging the dataframes
+  #  return( dplyr::bind_rows(db_list, .id = 'SET_NAME') )
+  #}
+
+
   observeEvent(input$compute, {
-  #  # Retrieve information from all sets
   output$download_button <- renderUI({
     downloadButton("download_data", "Download Data") })
-  View(input$files)
+  # Retrieve information from all sets
+  View(input$files1)
+  View(input$files2)
   })
 
  generateUI <- function(id) {
@@ -212,7 +220,7 @@ server <- function(input, output, session) {
       filter = 'top',
       selection = 'none',
       options = list(
-        dom = "Blrptip",
+        dom = "Blrtip",
         buttons = c("colvis"),
         colReorder = TRUE,
         columnDefs = list(

@@ -29,8 +29,9 @@ removing_duplicates <- function(db_list, matching_fields) {
   doi_col <- dplyr::sym(matching_fields$DI)
   no_dups <- lapply(db_list, function(db) {
     #db <- as.data.frame(db)
+    db <- db[!duplicated(db), ] # Identify and remove duplicate rows
     db %>%
-      dplyr::distinct() %>% #Removing all rows that are completely identical in the same database
+      #dplyr::distinct() %>% #Removing all rows that are completely identical in the same database
       dplyr::mutate(dplyr::across(!!doi_col, trimws)) %>% #Removing whitespace from doi column
       dplyr::mutate(dplyr::across(!!doi_col, ~ ifelse(. == "" | is.null(.), NA, .) ) ) %>% #Converting empty/null values to NA from doi column
       dplyr::filter(!duplicated(!!doi_col, incomparables = NA)) #Keeping only unique DOIs (duplicated DOIs are not uncommon)
