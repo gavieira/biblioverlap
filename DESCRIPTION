@@ -13,11 +13,15 @@ RoxygenNote: 7.2.3
 Imports: 
     bibliometrix,
     dplyr,
+    ggplot2,
+    ggVennDiagram,
     magrittr,
     Matrix,
     parallel,
+    rlang,
     shiny,
     stringdist,
+    UpSetR,
     uuid
 Suggests: 
     testthat
