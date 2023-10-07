@@ -2,12 +2,14 @@ library(shiny)
 library(biblioverlap)
 options(shiny.maxRequestSize = 100 * 1024^2)
 
-# Define UI with fluid rows and columns
 ui <- fluidPage(
   titlePanel('Biblioverlap'),
   tags$style(HTML(".custom_button { background-color: green; color: white; }")),
   sidebarLayout(
     sidebarPanel( width = 3,
+      tabsetPanel(id = 'sidebars',
+                  tabPanel('Biblioverlap',
+                           tags$br(),
 
       tags$b('Column names'),
 
@@ -93,6 +95,28 @@ ui <- fluidPage(
 
       actionButton('compute', "Compute", width = '100%', class = 'custom_button')
     ),
+    tabPanel('Merge Files',
+             HTML('<br>Biblioverlap accepts a single csv file for each dataset. However, there are cases when a query has to be split between multiple files. <br> <br>
+                  In this page, the user can upload multiple csv files (from the same bibliographical database) and download all records merged into a single file. <br> <br>'),
+             tabsetPanel(id = 'merging_user_input',
+                         tabPanel('Files',
+             fileInput('unmerged_files',  'Upload files', multiple = TRUE,
+                       accept = c("text/csv",
+                                  "text/comma-separated-values,text/plain",
+                                  ".csv") ) ),
+             tabPanel('Sep',
+             selectInput('unmerged_sep', 'Separator',
+                                   choices = c(Comma = ",",
+                                               Semicolon = ";",
+                                               Tab = "\t"),
+                                   selectize = FALSE,
+                                   selected = "," ) ),
+             ),
+             actionButton('merge_button', "Merge Files", width = '100%', class = 'custom_button')
+
+    )
+  )
+    ),
     mainPanel( width = 9,
       conditionalPanel(
         condition = "output.calculation_done",
@@ -153,16 +177,13 @@ ui <- fluidPage(
                  )
         )
 
-
-      #tableOutput('full_table'),
-      #tableOutput('internal_table'),
-      #DT::dataTableOutput('internal_table'),
-      #DT::dataTableOutput('full_table')
-
     )
   )
   )
 )
+
+
+
 
 # Define server function that does nothing
 server <- function(input, output, session) {
@@ -178,6 +199,7 @@ server <- function(input, output, session) {
     )
   }
 
+  # Function to read multiple input_files per dataset
   read_input_files <- function(input_files, sep, quote) {
 
     df_list <- lapply(input_files, function(input_file) {
@@ -186,10 +208,7 @@ server <- function(input, output, session) {
                strip.white = TRUE,
                check.names = FALSE) })
     df <- do.call(rbind, df_list)
-
-    # There's no need to remove duplicate rows here, as biblioverlap already does that in the removing_duplicates() function
-    #df <- df[!duplicated(df), ]
-
+    #df <- df[!duplicated(df), ]   # There's no need to remove duplicate rows here, as biblioverlap already does that in the removing_duplicates() function
 
     return( df )
   }
@@ -224,45 +243,17 @@ server <- function(input, output, session) {
   }
 
 
-  #get_merged_db_list <- function(db_list) {
-  #  db_list <- lapply(db_list, function(df) as.data.frame(lapply(df, as.character))) #Converting all field types to character to avoid problems when merging the dataframes
-  #  return( dplyr::bind_rows(db_list, .id = 'SET_NAME') )
-  #}
-
-
-#  observeEvent(input$compute, {
+#  count_modify_upset <- reactiveVal(0)
 #
-#  output$download_data_button <- renderUI({
-#    downloadButton("download_data", "Download Data") })
-#
-#  output$download_summary_table_button <- renderUI({
-#    downloadButton("download_summary_table", "Download summary table") })
-#
-#  output$download_summary_plot_button <- renderUI({
-#    downloadButton("download_summary_plot", "Download summary plot") })
-#  # Retrieve information from all sets
-#  #View(input$files1)
-#  #View(input$files2)
+#  observeEvent(input$modify_upset, {
+#    count_modify_upset(count_modify_upset() + 1)
 #  })
-
-  count_compute <- reactiveVal(0)
-
-  #observeEvent(input$compute, {
-  #  count_compute(count_compute() + 1)
-  #})
-
-
-  count_modify_upset <- reactiveVal(0)
-
-  observeEvent(input$modify_upset, {
-    count_modify_upset(count_modify_upset() + 1)
-  })
-
-  count_change_score_params <- reactiveVal(0)
-
-  observeEvent(input$change_score_params, {
-    count_change_score_params(count_change_score_params() + 1)
-  })
+#
+#  count_change_score_params <- reactiveVal(0)
+#
+#  observeEvent(input$change_score_params, {
+#    count_change_score_params(count_change_score_params() + 1)
+#  })
 
  generateUI <- function(id) {
    tagList(
