@@ -7,7 +7,7 @@ ui <- fluidPage(
   titlePanel('Biblioverlap'),
   tags$style(HTML(".custom_button { background-color: green; color: white; }")),
   sidebarLayout(
-    sidebarPanel(
+    sidebarPanel( width = 3,
 
       tags$b('Column names'),
 
@@ -93,21 +93,21 @@ ui <- fluidPage(
 
       actionButton('compute', "Compute", width = '100%', class = 'custom_button')
     ),
-    mainPanel(
+    mainPanel( width = 9,
       conditionalPanel(
-        condition = "input.compute >= 1",
+        condition = "output.calculation_done",
       tabsetPanel(
         id = "results",
         tabPanel("Data",
                  tags$br(),
-                 uiOutput('download_data_button'),
+                 downloadButton("download_data", "Download Data", class = 'custom_button'),
                  tags$br(),
                  DT::dataTableOutput('full_table')
         ),
         tabPanel("Summary",
                  #Could have both a table and a plot, and donwload boxes for both of them.
-                 uiOutput('donwload_summary_table_button'),
-                 uiOutput('donwload_summary_plot_button'),
+                 downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
+                 downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
                  tableOutput('summary_table'),
                  plotOutput('summary_plot', width = '100%')
                  #plotOutput('summary_plot', width = "1920px", height = "1080px")
@@ -230,26 +230,26 @@ server <- function(input, output, session) {
   #}
 
 
-  observeEvent(input$compute, {
-
-  output$download_data_button <- renderUI({
-    downloadButton("download_data", "Download Data") })
-
-  output$download_summary_table_button <- renderUI({
-    downloadButton("download_summary_table", "Download summary table") })
-
-  output$download_summary_plot_button <- renderUI({
-    downloadButton("download_summary_plot", "Download summary plot") })
-  # Retrieve information from all sets
-  #View(input$files1)
-  #View(input$files2)
-  })
+#  observeEvent(input$compute, {
+#
+#  output$download_data_button <- renderUI({
+#    downloadButton("download_data", "Download Data") })
+#
+#  output$download_summary_table_button <- renderUI({
+#    downloadButton("download_summary_table", "Download summary table") })
+#
+#  output$download_summary_plot_button <- renderUI({
+#    downloadButton("download_summary_plot", "Download summary plot") })
+#  # Retrieve information from all sets
+#  #View(input$files1)
+#  #View(input$files2)
+#  })
 
   count_compute <- reactiveVal(0)
 
-  observeEvent(input$compute, {
-    count_compute(count_compute() + 1)
-  })
+  #observeEvent(input$compute, {
+  #  count_compute(count_compute() + 1)
+  #})
 
 
   count_modify_upset <- reactiveVal(0)
@@ -301,7 +301,9 @@ server <- function(input, output, session) {
 
       )
     )
-  }
+ }
+
+ observe(calculate_results())
 
   # Render the dynamic UI
   output$dynamicUI <- renderUI({
@@ -310,6 +312,9 @@ server <- function(input, output, session) {
     })
     tagList(uiList)
   })
+
+
+  calculation_done <- reactiveVal(FALSE) #Creating a new reactiveVal to hide the results panel until submitting data for analysis
 
   calculate_results <- eventReactive(input$compute, {
     withProgress(message = 'Analyzing data...', {
@@ -325,9 +330,14 @@ server <- function(input, output, session) {
     }, error = function(e)
       message(e)
       )
+    calculation_done(TRUE) #Setting this to TRUE here shows the result panel only when the calculation has been finished
     return( results )
     })
   })
+
+  output$calculation_done <- reactive({ calculation_done() } ) #conditionalPanel does not accept reactiveVals, so we need to create a new output value
+  outputOptions(output, "calculation_done", suspendWhenHidden = FALSE) #Needed to use output value in conditionalPanel (https://github.com/rstudio/shiny/issues/1318)
+
 
 
   read_datatable <- function(df) {
@@ -338,6 +348,7 @@ server <- function(input, output, session) {
       selection = 'none',
       options = list(
         dom = "Blrtip",
+        scrollX = TRUE,
         buttons = c("colvis"),
         colReorder = TRUE,
         columnDefs = list(
@@ -375,6 +386,7 @@ server <- function(input, output, session) {
       write.csv(calculate_results()$summary$df, file, row.names = FALSE)
     }
   )
+
 
   output$download_summary_plot <- downloadHandler(
     filename = function() {
