@@ -5,7 +5,7 @@ options(shiny.maxRequestSize = 100 * 1024^2)
 # Define UI with fluid rows and columns
 ui <- fluidPage(
   titlePanel('Biblioverlap'),
-  tags$style(HTML(".compute_button { background-color: green; color: white; }")),
+  tags$style(HTML(".custom_button { background-color: green; color: white; }")),
   sidebarLayout(
     sidebarPanel(
 
@@ -33,6 +33,49 @@ ui <- fluidPage(
       ),
 
       tags$hr(),
+      tags$strong('Score matching'),
+      tags$br(),
+
+      actionButton("change_score_params", "Change parameters", class = 'custom_button'),
+      tags$br(),
+      conditionalPanel(
+        condition = "input.change_score_params % 2 == 1",
+        tags$br(),
+        fluidRow(
+          column(6, numericInput('ti_penalty', 'ti_penalty',
+                                 min = 0, step = 0.1,
+                                 value = 0.1)),
+          column(6, numericInput('ti_max', 'ti_max',
+                                 min = 0, step = 0.1,
+                                 value = 0.6))
+          ),
+        fluidRow(
+          column(6, numericInput('so_penalty', 'so_penalty',
+                                 min = 0, step = 0.1,
+                                 value = 0.1)),
+          column(6, numericInput('so_max', 'so_max',
+                                 min = 0, step = 0.1,
+                                 value = 0.3))
+          ),
+        fluidRow(
+          column(6, numericInput('au_penalty', 'au_penalty',
+                                 min = 0, step = 0.1,
+                                 value = 0.1)),
+          column(6, numericInput('au_max', 'au_max',
+                                 min = 0, step = 0.1,
+                                 value = 0.3))
+          ),
+        fluidRow(
+          column(6, numericInput('py_max', 'py_max',
+                                 min = 0, step = 0.1,
+                                 value = 0.3)),
+          column(6, numericInput('score_cutoff', 'score_cutoff',
+                                 min = 0, step = 0.1,
+                                 value = 1))
+        )
+      ),
+
+      tags$hr(),
 
       numericInput('n_threads', 'Number of threads',
                    min = 1,
@@ -48,25 +91,66 @@ ui <- fluidPage(
                    value = 2),
       uiOutput("dynamicUI"),
 
-      actionButton('compute', "Compute", width = '100%', class = 'compute_button')
+      actionButton('compute', "Compute", width = '100%', class = 'custom_button')
     ),
     mainPanel(
+      conditionalPanel(
+        condition = "input.compute >= 1",
       tabsetPanel(
         id = "results",
-        tabPanel("all_data",
+        tabPanel("Data",
                  tags$br(),
-                 uiOutput('download_button'),
+                 uiOutput('download_data_button'),
                  tags$br(),
                  DT::dataTableOutput('full_table')
         ),
         tabPanel("Summary",
                  #Could have both a table and a plot, and donwload boxes for both of them.
+                 uiOutput('donwload_summary_table_button'),
+                 uiOutput('donwload_summary_plot_button'),
+                 tableOutput('summary_table'),
+                 plotOutput('summary_plot', width = '100%')
+                 #plotOutput('summary_plot', width = "1920px", height = "1080px")
         ),
         tabPanel("Venn Diagram",
+                 plotOutput('venn', width = '100%')
         ),
-        tabPanel("UpSet plot",
-        )
-
+        tabPanel("UpSet Plot",
+                 tags$br(),
+                 actionButton("modify_upset", "Modify plot", class = 'custom_button'),
+                 conditionalPanel(
+                   condition = "input.modify_upset % 2 == 1",
+                   fluidRow(
+                   column(2, numericInput('nintersects', 'Intersects',
+                                min = 3, max = 150,
+                                value = 30)
+                          ),
+                   column(2, selectInput('scale', 'Scale',
+                               choices = c(Identity = "identity",
+                                           log10 = "log10",
+                                           log2 = "log2"),
+                               selectize = FALSE,
+                               selected = "identity" )
+                          ),
+                   column(2, numericInput('text_size', 'Text size',
+                                min = 1, max = 3, step = 0.1,
+                                value = 1.5)
+                          ),
+                   column(2, numericInput('mb.ratio', 'Barplot size',
+                                min = 0.1 , max = 0.9, step = 0.05,
+                                value = 0.7)
+                          ),
+                   column(2, selectInput('show.numbers', 'Barplot numbers',
+                               choices = c(Show = "yes",
+                                           Hide = "no"),
+                               selectize = FALSE,
+                               selected = "yes" )
+                          )
+                   )
+                   ),
+                 tags$br(),
+                 plotOutput('upset', width = '100%')
+                 )
         )
 
 
@@ -76,6 +160,7 @@ ui <- fluidPage(
       #DT::dataTableOutput('full_table')
 
     )
+  )
   )
 )
 
@@ -146,11 +231,37 @@ server <- function(input, output, session) {
 
 
   observeEvent(input$compute, {
-  output$download_button <- renderUI({
+
+  output$download_data_button <- renderUI({
     downloadButton("download_data", "Download Data") })
+
+  output$download_summary_table_button <- renderUI({
+    downloadButton("download_summary_table", "Download summary table") })
+
+  output$download_summary_plot_button <- renderUI({
+    downloadButton("download_summary_plot", "Download summary plot") })
   # Retrieve information from all sets
-  View(input$files1)
-  View(input$files2)
+  #View(input$files1)
+  #View(input$files2)
+  })
+
+  count_compute <- reactiveVal(0)
+
+  observeEvent(input$compute, {
+    count_compute(count_compute() + 1)
+  })
+
+
+  count_modify_upset <- reactiveVal(0)
+
+  observeEvent(input$modify_upset, {
+    count_modify_upset(count_modify_upset() + 1)
+  })
+
+  count_change_score_params <- reactiveVal(0)
+
+  observeEvent(input$change_score_params, {
+    count_change_score_params(count_change_score_params() + 1)
   })
 
  generateUI <- function(id) {
@@ -205,13 +316,19 @@ server <- function(input, output, session) {
     columns <- get_columns_list()
     db_list <- get_sets_list()
     tryCatch({
-      results <-  biblioverlap::biblioverlap(db_list, matching_fields = columns)
+      results <-  biblioverlap::biblioverlap(db_list,
+                                             matching_fields = columns,
+                                             ti_penalty = input$ti_penalty, ti_max = input$ti_max,
+                                             so_penalty = input$so_penalty, so_max = input$so_max,
+                                             au_penalty = input$au_penalty, au_max = input$au_max,
+                                             py_max = input$py_max, score_cutoff = input$score_cutoff)
     }, error = function(e)
       message(e)
       )
     return( results )
     })
   })
+
 
   read_datatable <- function(df) {
     return(DT::datatable(
@@ -250,21 +367,64 @@ server <- function(input, output, session) {
     }
   )
 
+  output$download_summary_table <- downloadHandler(
+    filename = function() {
+      'summary.csv'
+    },
+    content = function(file) {
+      write.csv(calculate_results()$summary$df, file, row.names = FALSE)
+    }
+  )
+
+  output$download_summary_plot <- downloadHandler(
+    filename = function() {
+      'summary.csv'
+    },
+    content = function(file) {
+      write.csv(calculate_results()$summary$df, file, row.names = FALSE)
+    }
+  )
+
   output$full_table <- DT::renderDataTable({
     table_list <- calculate_results()$db_list
     table <- get_merged_db_list(table_list)
 
     return( read_datatable(table) )
-  }, server = TRUE)
+  }, server = TRUE) ##Server is necessary because the db_list can be huge
 
-  output$internal_table <- DT::renderDataTable({
-    table_list <- calculate_results()$internal_db_list
-    table <- get_merged_db_list(table_list)
+  output$summary_table <- renderTable({
+    summary_table <- calculate_results()$summary$df
     #DT::datatable(table)
-    return( read_datatable(table) )
-  }, server = TRUE)
+    return( summary_table )
+  }, width = '100%', striped = TRUE, bordered = TRUE, align = 'l')
+
+  output$summary_plot <- renderPlot({
+    summary_plot <- calculate_results()$summary$plot
+    summary_plot <- summary_plot + ggplot2::update_geom_defaults("text", list(size = 5)) + ggplot2::theme(text=ggplot2::element_text(size=15))
+    return( summary_plot )
+  })
+
+  output$venn <- renderPlot({
+    venn <- biblioverlap::plot_venn(calculate_results()$db_list)
+    return( venn )
+  })
+
+  output$upset <- renderPlot({
+    db_list <- calculate_results()$db_list
+    upset <- biblioverlap::plot_upset(db_list,
+                                      nsets = length(db_list),
+                                      nintersects = input$nintersects,
+                                      scale.intersections	= input$scale,
+                                      scale.sets = input$scale,
+                                      text.scale = input$text_size,
+                                      show.numbers = input$show.numbers,
+                                      mb.ratio = c(input$mb.ratio, 1 - input$mb.ratio)
+    )
+    return( upset )
+  })
 
 }
+
 
 # Create the app object
 shinyApp(ui = ui, server = server)

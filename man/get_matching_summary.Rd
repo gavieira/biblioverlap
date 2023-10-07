@@ -4,10 +4,10 @@
 \alias{get_matching_summary}
 \title{Getting a matching summary (plot and dataframe) of biblioverlap matching results}
 \usage{
-get_matching_summary(matched_db_list)
+get_matching_summary(internal_db_list)
 }
 \arguments{
-\item{matched_db_list}{- list of matched dataframes (with UUID column added by biblioverlap)}
+\item{internal_db_list}{- list of matched dataframes used internally by biblioverlap}
 }
 \value{
 a list containing a summary (df and plot) of the matching results

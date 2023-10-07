@@ -102,7 +102,7 @@ matching_summary_plot <- function(matching_summary_df) {
   plot <- matching_summary_df %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$category, y = .data$n_docs, fill = .data$doc_subset)) +
     ggplot2::geom_bar(stat = 'identity', position = 'stack') +
-    ggplot2::geom_text(ggplot2::aes(label = paste0(.data$n_docs," (",.data$perc_inside_category,"%)" ) ), position = ggplot2::position_stack(vjust = 0.5))
+    ggplot2::geom_text(ggplot2::aes(label = paste0(.data$n_docs," (",.data$perc_inside_category,"%),", size = 15 ) ), position = ggplot2::position_stack(vjust = 0.5))
 
   return(plot)
 }
@@ -125,33 +125,38 @@ get_matching_summary <- function(internal_db_list) {
 }
 
 
+get_uuid_list <- function(db_list) {
+  return( lapply(db_list, function(db) db$UUID) )
+}
 
 
-#' Plotting Venn Diagram based on biblioverlap results
+#' Plotting Venn Diagram from biblioverlap results
 #'
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
 #'
-#' @return a ggVennDiagram plot
+#' @return a Venn Diagram
 #' @export
 #'
 # @examples
-get_venn_diagram <- function(db_list) {
-  uuid <- lapply(db_list, function(db) db$UUID)
-  return( ggVennDiagram::ggVennDiagram(uuid) )
+plot_venn <- function(db_list) {
+  uuid <- get_uuid_list(db_list)
+  venn <- ggVennDiagram::ggVennDiagram(uuid) +
+    ggplot2::scale_fill_gradient(low = "#A7C7E7", high = "#08306B") +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = .2))
+  return ( venn )
 }
 
-
-#' Plotting UpSet plot
+#' Plotting UpSet plot from biblioverlap results
 #'
-#' @param db_list  - list of matched dataframes (with UUID column added by biblioverlap)
+#' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
+#' @param ... - arguments to be passed down to UpsetR::upset()
 #'
-#' @return - an UpSet plot
+#' @return a UpSet plot
 #' @export
 #'
 # @examples
-get_upset_plot <- function(db_list) {
-  uuid <- lapply(db_list, function(db) db$UUID)
-  upset <- UpSetR::upset(UpSetR::fromList(uuid))
-  return( upset )
+plot_upset <- function(db_list, ...) {
+  uuid <- get_uuid_list(db_list)
+  upset <- UpSetR::upset(UpSetR::fromList(uuid), ...)
+  return ( upset )
 }
-
