@@ -102,7 +102,7 @@ matching_summary_plot <- function(matching_summary_df) {
   plot <- matching_summary_df %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$category, y = .data$n_docs, fill = .data$doc_subset)) +
     ggplot2::geom_bar(stat = 'identity', position = 'stack') +
-    ggplot2::geom_text(ggplot2::aes(label = paste0(.data$n_docs," (",.data$perc_inside_category,"%),", size = 15 ) ), position = ggplot2::position_stack(vjust = 0.5))
+    ggplot2::geom_text(ggplot2::aes(label = paste0(.data$n_docs," (",.data$perc_inside_category,"%)")), position = ggplot2::position_stack(vjust = 0.5) )
 
   return(plot)
 }

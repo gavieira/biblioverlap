@@ -2,6 +2,7 @@
 
 export("%>%")
 export(bibliometrix_parsing)
+export(biblioverApp)
 export(biblioverlap)
 export(convert_to_sparse_matrix)
 export(data_preprocessing)

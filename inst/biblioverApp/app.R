@@ -1,6 +1,6 @@
 library(shiny)
 library(biblioverlap)
-options(shiny.maxRequestSize = 100 * 1024^2)
+#options(shiny.maxRequestSize = 100 * 1024^2)
 
 ui <- fluidPage(
   titlePanel('Biblioverlap'),
@@ -97,7 +97,7 @@ ui <- fluidPage(
     ),
     tabPanel('Merge Files',
              HTML('<br>Biblioverlap accepts a single csv file for each dataset. However, there are cases when a query has to be split between multiple files. <br> <br>
-                  In this page, the user can upload multiple csv files (from the same bibliographical database) and download all records merged into a single file. <br> <br>'),
+                  In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records into a single file. <br> <br>'),
              tabsetPanel(id = 'merging_user_input',
                          tabPanel('Files',
              fileInput('unmerged_files',  'Upload files', multiple = TRUE,
@@ -112,7 +112,7 @@ ui <- fluidPage(
                                    selectize = FALSE,
                                    selected = "," ) ),
              ),
-             actionButton('merge_button', "Merge Files", width = '100%', class = 'custom_button')
+             downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
 
     )
   )
@@ -130,8 +130,9 @@ ui <- fluidPage(
         ),
         tabPanel("Summary",
                  #Could have both a table and a plot, and donwload boxes for both of them.
+                 tags$br(),
                  downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
-                 downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
+                 #downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
                  tableOutput('summary_table'),
                  plotOutput('summary_plot', width = '100%')
                  #plotOutput('summary_plot', width = "1920px", height = "1080px")
@@ -199,17 +200,12 @@ server <- function(input, output, session) {
     )
   }
 
-  # Function to read multiple input_files per dataset
-  read_input_files <- function(input_files, sep, quote) {
 
-    df_list <- lapply(input_files, function(input_file) {
-      read.csv(input_file,
-               sep = sep,
-               strip.white = TRUE,
-               check.names = FALSE) })
-    df <- do.call(rbind, df_list)
-    #df <- df[!duplicated(df), ]   # There's no need to remove duplicate rows here, as biblioverlap already does that in the removing_duplicates() function
-
+  read_input_file <- function(input_file, sep) {
+      df <- read.csv(input_file,
+                     sep = sep,
+                     strip.white = TRUE,
+                     check.names = FALSE)
     return( df )
   }
 
@@ -219,19 +215,17 @@ server <- function(input, output, session) {
     all_sets <- list()
     for (i in 1:input$n_sets) {
       set_name <- input[[paste0("name", i)]]
-      filepaths <- input[[paste0("files", i)]]$datapath
+      filepath <- input[[paste0("file", i)]]$datapath
       sep <- input[[paste0("sep", i)]]
-      quote <- input[[paste0("quote", i)]]
 
       # Read the CSV file and store it in a data frame
-      df <- read_input_files(filepaths, sep, quote)
+      df <- read_input_file(filepath, sep)
 
       # Assign the data frame to the named list
       all_sets[[set_name]] <- df
-      }
+    }
     return(all_sets)
   }
-
 
 
   get_merged_db_list <- function(db_list) {
@@ -266,8 +260,8 @@ server <- function(input, output, session) {
           tabPanel("Name",
                    textInput(paste0("name", id), "Dataset name:", value = id)
           ),
-          tabPanel("Files",
-                   fileInput(paste0("files", id), "Upload files:", multiple = TRUE,
+          tabPanel("File",
+                   fileInput(paste0("file", id), "Upload file:",
                              accept = c("text/csv",
                                         "text/comma-separated-values,text/plain",
                                         ".csv") )
@@ -381,12 +375,18 @@ server <- function(input, output, session) {
 
   output$download_summary_plot <- downloadHandler(
     filename = function() {
-      'summary.csv'
+      'summary.jpg'
     },
     content = function(file) {
-      write.csv(calculate_results()$summary$df, file, row.names = FALSE)
+      #ggplot2::ggsave(file, plot = calculate_results()$summary$plot, device = "png")
+      ggplot2::ggsave(file, plot = update_summary_plot(), device = "png")
+      #png(file)
+      #print(calculate_results()$summary$plot)
+      #dev.off()
     }
   )
+
+
 
   output$full_table <- DT::renderDataTable({
     table_list <- calculate_results()$db_list
@@ -401,11 +401,24 @@ server <- function(input, output, session) {
     return( summary_table )
   }, width = '100%', striped = TRUE, bordered = TRUE, align = 'l')
 
-  output$summary_plot <- renderPlot({
+
+  update_summary_plot <- reactive({
     summary_plot <- calculate_results()$summary$plot
     summary_plot <- summary_plot + ggplot2::update_geom_defaults("text", list(size = 5)) + ggplot2::theme(text=ggplot2::element_text(size=15))
     return( summary_plot )
   })
+
+
+  output$summary_plot <- renderPlot({
+    update_summary_plot()
+  })
+
+
+  #output$summary_plot <- renderPlot({
+  #  summary_plot <- calculate_results()$summary$plot
+  #  summary_plot <- summary_plot + ggplot2::update_geom_defaults("text", list(size = 5)) + ggplot2::theme(text=ggplot2::element_text(size=15))
+  #  return( summary_plot )
+  #})
 
   output$venn <- renderPlot({
     venn <- biblioverlap::plot_venn(calculate_results()$db_list)
@@ -425,6 +438,42 @@ server <- function(input, output, session) {
     )
     return( upset )
   })
+
+
+  #observeEvent(input$merge_button)
+  observe({
+    View(input$unmerged_files)
+    print(input$unmerged_files$datapath)
+    print(typeof(input$unmerged_files$datapath))
+    })
+
+  # Function to merge multiple input_files
+  merge_input_files <- reactive({
+    input_files <- input$unmerged_files$datapath
+    sep <- input$unmerged_sep
+
+    df_list <- lapply(input_files, function(input_file) {
+      read.csv(input_file,
+               sep = sep,
+               strip.white = TRUE,
+               check.names = FALSE) })
+    df <- do.call(rbind, df_list)
+    df <- df[!duplicated(df), ]   # Removing duplicate records
+
+    return( df )
+  })
+
+  output$download_merged_file <- downloadHandler(
+    filename = function() {
+      'merged_data.csv'
+    },
+    content = function(file) {
+      write.csv(merge_input_files(), file, row.names = FALSE)
+    }
+  )
+
+
+
 
 }
 
