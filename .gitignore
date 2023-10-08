@@ -8,6 +8,6 @@
 .quarto
 #data-raw/*/
 #data-raw/*.csv
-data-raw
-data
+#data-raw
+#data
 R/sysdata.rda
