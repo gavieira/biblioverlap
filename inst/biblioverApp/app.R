@@ -469,11 +469,11 @@ server <- function(input, output, session) {
 
 
   #observeEvent(input$merge_button)
-  observe({
-    View(input$unmerged_files)
-    print(input$unmerged_files$datapath)
-    print(typeof(input$unmerged_files$datapath))
-    })
+  #observe({
+  #  View(input$unmerged_files)
+  #  print(input$unmerged_files$datapath)
+  #  print(typeof(input$unmerged_files$datapath))
+  #  })
 
   # Function to merge multiple input_files
   merge_input_files <- reactive({
