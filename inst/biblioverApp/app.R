@@ -3,13 +3,16 @@ library(biblioverlap)
 #options(shiny.maxRequestSize = 100 * 1024^2)
 
 ui <- fluidPage(
-  titlePanel('Biblioverlap'),
   tags$style(HTML(".custom_button { background-color: green; color: white; }")),
+  navbarPage('BiblioverApp',
+            id = 'tabs',
+  tabPanel('Biblioverlap', value = 1),
+  tabPanel('Merge Files', value = 2),
+  conditionalPanel(
+    condition = 'input.tabs == 1',
   sidebarLayout(
     sidebarPanel( width = 3,
-      tabsetPanel(id = 'sidebars',
-                  tabPanel('Biblioverlap',
-                           tags$br(),
+      tags$br(),
 
       tags$b('Column names'),
 
@@ -95,28 +98,6 @@ ui <- fluidPage(
 
       actionButton('compute', "Compute", width = '100%', class = 'custom_button')
     ),
-    tabPanel('Merge Files',
-             HTML('<br>Biblioverlap accepts a single csv file for each dataset. However, there are cases when a query has to be split between multiple files. <br> <br>
-                  In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records into a single file. <br> <br>'),
-             tabsetPanel(id = 'merging_user_input',
-                         tabPanel('Files',
-             fileInput('unmerged_files',  'Upload files', multiple = TRUE,
-                       accept = c("text/csv",
-                                  "text/comma-separated-values,text/plain",
-                                  ".csv") ) ),
-             tabPanel('Sep',
-             selectInput('unmerged_sep', 'Separator',
-                                   choices = c(Comma = ",",
-                                               Semicolon = ";",
-                                               Tab = "\t"),
-                                   selectize = FALSE,
-                                   selected = "," ) ),
-             ),
-             downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
-
-    )
-  )
-    ),
     mainPanel( width = 9,
       conditionalPanel(
         condition = "output.calculation_done",
@@ -176,15 +157,62 @@ ui <- fluidPage(
                  tags$br(),
                  plotOutput('upset', width = '100%')
                  )
+      )
         )
 
     )
   )
-  )
+  ),
+  conditionalPanel(
+    condition = "input.tabs == 2",
+                 HTML('<br>Biblioverlap accepts a single csv file for each dataset. However, there are cases when a query has to be split between multiple files. <br> <br>
+                      In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records into a single file. <br> <br>'),
+                 tabsetPanel(id = 'merging_user_input',
+                             tabPanel('Files',
+                 fileInput('unmerged_files',  'Upload files', multiple = TRUE,
+                           accept = c("text/csv",
+                                      "text/comma-separated-values,text/plain",
+                                      ".csv") ) ),
+                 tabPanel('Sep',
+                 selectInput('unmerged_sep', 'Separator',
+                                       choices = c(Comma = ",",
+                                                   Semicolon = ";",
+                                                   Tab = "\t"),
+                                       selectize = FALSE,
+                                       selected = "," ) ),
+                 ),
+                 downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
+
+        )
+   )
 )
 
 
 
+
+
+#    tabPanel('Merge Files',
+#             HTML('<br>Biblioverlap accepts a single csv file for each dataset. However, there are cases when a query has to be split between multiple files. <br> <br>
+#                  In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records into a single file. <br> <br>'),
+#             tabsetPanel(id = 'merging_user_input',
+#                         tabPanel('Files',
+#             fileInput('unmerged_files',  'Upload files', multiple = TRUE,
+#                       accept = c("text/csv",
+#                                  "text/comma-separated-values,text/plain",
+#                                  ".csv") ) ),
+#             tabPanel('Sep',
+#             selectInput('unmerged_sep', 'Separator',
+#                                   choices = c(Comma = ",",
+#                                               Semicolon = ";",
+#                                               Tab = "\t"),
+#                                   selectize = FALSE,
+#                                   selected = "," ) ),
+#             ),
+#             downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
+#
+#    )
+#  )
+#    ),
 
 # Define server function that does nothing
 server <- function(input, output, session) {
