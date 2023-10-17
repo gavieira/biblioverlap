@@ -104,7 +104,7 @@ server <- function(input, output, session) {
 
   calculation_done <- reactiveVal(FALSE) #Creating a new reactiveVal to hide the results panel until submitting data for analysis
 
-  calculate_results <- eventReactive(input$compute, {
+  calculate_results <- eventReactive(input$submit, {
     withProgress(message = 'Analyzing data...', {
     columns <- get_columns_list()
     db_list <- get_sets_list()

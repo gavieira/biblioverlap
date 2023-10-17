@@ -1,27 +1,30 @@
 column_names_ui <-
+  tagList(
+  tags$b('Column names'),
   tabsetPanel(
     id = "colnames",
     tabPanel("DI",
              textInput("di", "DOI / unique identifier", value = 'DOI')
-    ),
+             ),
     tabPanel("TI",
              textInput('ti', 'Document title', value = 'Title')
-    ),
+             ),
     tabPanel("SO",
              textInput('so', 'Document Source', value = 'Source Title')
-    ),
+             ),
 
     tabPanel("AU",
              textInput('au', 'Author(s)', value = 'Author/s')
-    ),
+             ),
 
     tabPanel("PY",
              textInput('py', 'Publication Year', 'Publication Year')
+             )
     )
   )
 
 
-score_matching_options_ui <-
+score_matching_params_ui <-
   tagList(
     fluidRow(
       column(6, numericInput('ti_penalty', 'ti_penalty',
@@ -57,15 +60,34 @@ score_matching_options_ui <-
     )
   )
 
-n_threads_ui <- numericInput('n_threads', 'number of threads',
+score_matching_options_ui <-
+  tagList(
+    tags$strong('Score matching'),
+    tags$br(),
+    actionButton("change_score_params", "Change parameters", class = 'custom_button'),
+    tags$br(),
+    conditionalPanel(
+      condition = "input.change_score_params % 2 == 1",
+      tags$br(),
+      score_matching_params_ui
+      )
+    )
+
+
+
+n_threads_ui <- numericInput('n_threads', 'Number of threads',
                              min = 1,
                              max = parallel::detectCores(),
                              value = 1
 )
 
-n_sets_ui <- numericInput('n_sets', "Number of bibliographical datasets",
+n_sets_ui <-
+  tagList(
+    numericInput('n_sets', "Number of bibliographical datasets",
                           min = 2, max = 7,
-                          value = 2)
+                          value = 2),
+    uiOutput("dynamicUI")
+    )
 
 
 results_data <-  tabPanel("Data",
@@ -76,15 +98,38 @@ results_data <-  tabPanel("Data",
                           )
 
 
-results_summary <- tabPanel("Summary",
-                      #Could have both a table and a plot, and donwload boxes for both of them.
-                      tags$br(),
-                      downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
-                      #downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
-                      tableOutput('summary_table'),
-                      plotOutput('summary_plot', width = '100%')
-                      #plotOutput('summary_plot', width = "1920px", height = "1080px")
-                      )
+results_summary_table <- tabPanel("Summary",
+                            tags$br(),
+                            downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
+                            tableOutput('summary_table')
+                            )
+
+
+results_summary_plot <- tabPanel("Summary",
+                            tags$br(),
+                            plotOutput('summary_plot', width = '100%')
+                            )
+
+#results_summary <- tabPanel("Summary",
+#                      #Could have both a table and a plot, and donwload boxes for both of them.
+#                      tags$br(),
+#                      downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
+#                      #downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
+#                      tableOutput('summary_table'),
+#                      plotOutput('summary_plot', width = '100%')
+#                      #plotOutput('summary_plot', width = "1920px", height = "1080px")
+#                      )
+
+
+#results_summary <- tabPanel("Summary",
+#                      #Could have both a table and a plot, and donwload boxes for both of them.
+#                      tags$br(),
+#                      downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
+#                      #downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
+#                      tableOutput('summary_table'),
+#                      plotOutput('summary_plot', width = '100%')
+#                      #plotOutput('summary_plot', width = "1920px", height = "1080px")
+#                      )
 
 
 results_venn <- tabPanel("Venn Diagram",
@@ -129,3 +174,31 @@ results_upset <-  tabPanel("UpSet Plot",
                            tags$br(),
                            plotOutput('upset', width = '100%')
                            )
+
+
+merge_files_ui <- sidebarLayout(
+                    sidebarPanel( width = 3,
+                                  HTML('<br>Biblioverlap accepts a single csv file for each dataset.
+                                  However, there are cases when a query has to be split between multiple files. <br> <br>
+                                  In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records
+                                  into a single file. <br> <br>'),
+                                  tabsetPanel(id = 'merging_user_input',
+                                              tabPanel('Files',
+                                                       fileInput('unmerged_files',  'Upload files', multiple = TRUE,
+                                                                 accept = c("text/csv",
+                                                                            "text/comma-separated-values,text/plain",
+                                                                            ".csv") ) ),
+                                              tabPanel('Sep',
+                                                       selectInput('unmerged_sep', 'Separator',
+                                                                   choices = c(Comma = ",",
+                                                                               Semicolon = ";",
+                                                                               Tab = "\t"),
+                                                                   selectize = FALSE,
+                                                                   selected = "," ) ),
+                                  ),
+                                  tags$br(),
+                                  downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
+                    ),
+                    mainPanel( width = 9,
+                               DT::dataTableOutput('merged_files_table') )
+                  )
