@@ -107,32 +107,58 @@ results_summary_table <- tabPanel("Summary",
 
 results_summary_plot <- tabPanel("Summary",
                             tags$br(),
+                            actionButton("modify_summary", "Modify plot", class = 'custom_button'),
+                            conditionalPanel(
+                              condition = "input.modify_summary % 2 == 1",
+                              fluidRow(
+                                column(2, numericInput('summary_value_size', 'Value size',
+                                                       min = 0, max = 50,
+                                                       value = 4.5, step = 0.5)
+                                ),
+                                column(2, numericInput('summary_text_size', 'text_size',
+                                                       min = 0, max = 50,
+                                                       value = 4.5, step = 0.05)
+                                )
+                              )
+                            ),
                             plotOutput('summary_plot', width = '100%')
                             )
 
-#results_summary <- tabPanel("Summary",
-#                      #Could have both a table and a plot, and donwload boxes for both of them.
-#                      tags$br(),
-#                      downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
-#                      #downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
-#                      tableOutput('summary_table'),
-#                      plotOutput('summary_plot', width = '100%')
-#                      #plotOutput('summary_plot', width = "1920px", height = "1080px")
-#                      )
-
-
-#results_summary <- tabPanel("Summary",
-#                      #Could have both a table and a plot, and donwload boxes for both of them.
-#                      tags$br(),
-#                      downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
-#                      #downloadButton("download_summary_plot", "Download Summary Plot", class = 'custom_button'),
-#                      tableOutput('summary_table'),
-#                      plotOutput('summary_plot', width = '100%')
-#                      #plotOutput('summary_plot', width = "1920px", height = "1080px")
-#                      )
-
 
 results_venn <- tabPanel("Venn Diagram",
+                         tags$br(),
+                         actionButton("modify_venn", "Modify plot", class = 'custom_button'),
+                         conditionalPanel(
+                           condition = "input.modify_venn % 2 == 1",
+                           fluidRow(
+                             column(2, selectInput('venn_label', 'Label type',
+                                                   choices = c(Count = "count",
+                                                               Percent = "percent",
+                                                               Both = "both",
+                                                               None = "none"),
+                                                   selectize = FALSE,
+                                                   selected = "both" )
+                             ),
+                             column(2, selectInput('venn_label_color', 'Label color',
+                                                   choices = c(Black = "black",
+                                                               White = "white"),
+                                                   selectize = FALSE,
+                                                   selected = "black" )
+                             ),
+                               column(2, numericInput('venn_label_size', 'Label size',
+                                                    min = 1, max = 10,
+                                                    value = 4.5, step = 0.5)
+                             ),
+                               column(2, numericInput('venn_label_alpha', 'Label alpha',
+                                                    min = 0, max = 1,
+                                                    value = 0.5, step = 0.05)
+                             ),
+                               column(2, numericInput('venn_set_size', 'Set size',
+                                                    min = 1, max = 10,
+                                                    value = 4.5, step = 0.5)
+                             )
+                           )
+                         ),
                          plotOutput('venn', width = '100%')
                          )
 

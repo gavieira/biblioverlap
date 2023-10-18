@@ -1,6 +1,6 @@
 server <- function(input, output, session) {
 
-  # Get list of columns
+  # Get list of columns from UI
   get_columns_list <- function() {
     col_list <- list(
       DI = input$di,
@@ -12,6 +12,7 @@ server <- function(input, output, session) {
   }
 
 
+  #Read individual input files for bibliographical overlap
   read_input_file <- function(input_file, sep) {
       df <- read.csv(input_file,
                      sep = sep,
@@ -39,6 +40,7 @@ server <- function(input, output, session) {
   }
 
 
+  # Merge files
   get_merged_db_list <- function(db_list) {
     df <- do.call(rbind, Map(cbind, db_list, SET_NAME = names(db_list))) #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
     columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
@@ -91,7 +93,7 @@ server <- function(input, output, session) {
     )
  }
 
- observe(calculate_results())
+ observe(calculate_results()) #Needed to 'hide' MainPanel from
 
   # Render the dynamic UI
   output$dynamicUI <- renderUI({
@@ -137,6 +139,7 @@ server <- function(input, output, session) {
       options = list(
         dom = "Blrtip",
         scrollX = TRUE,
+        lengthMenu = c(2, 10, 50, 100),
         buttons = c("colvis"),
         colReorder = TRUE,
         columnDefs = list(
@@ -199,15 +202,16 @@ server <- function(input, output, session) {
   }, server = TRUE) ##Server is necessary because the db_list can be huge
 
   output$summary_table <- renderTable({
-    summary_table <- calculate_results()$summary$df
-    #DT::datatable(table)
+    summary_table <- calculate_results()$summary
     return( summary_table )
   }, width = '100%', striped = TRUE, bordered = TRUE, align = 'l')
 
 
   update_summary_plot <- reactive({
-    summary_plot <- calculate_results()$summary$plot
-    summary_plot <- summary_plot + ggplot2::update_geom_defaults("text", list(size = 5)) + ggplot2::theme(text=ggplot2::element_text(size=15))
+    summary_df <- calculate_results()$summary
+    summary_plot <- biblioverlap::plot_matching_summary(summary_df,
+                                                        size = input$summary_value_size) +
+      ggplot2::theme(text=ggplot2::element_text(size= input$summary_text_size))
     return( summary_plot )
   })
 
@@ -224,7 +228,12 @@ server <- function(input, output, session) {
   #})
 
   output$venn <- renderPlot({
-    venn <- biblioverlap::plot_venn(calculate_results()$db_list)
+    venn <- biblioverlap::plot_venn(calculate_results()$db_list,
+                                    label = input$venn_label,
+                                    label_color = input$venn_label_color,
+                                    label_size = input$venn_label_size,
+                                    label_alpha = input$venn_label_alpha,
+                                    set_size = input$venn_set_size )
     return( venn )
   })
 
@@ -279,8 +288,6 @@ server <- function(input, output, session) {
       table <- merge_input_files()
       return( read_datatable(table) )
     }, server = TRUE) ##Server is necessary because the db_list can be huge
-
-
 
 
 }

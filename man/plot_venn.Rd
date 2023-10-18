@@ -4,10 +4,12 @@
 \alias{plot_venn}
 \title{Plotting Venn Diagram from biblioverlap results}
 \usage{
-plot_venn(db_list)
+plot_venn(db_list, ...)
 }
 \arguments{
 \item{db_list}{- list of matched dataframes (with UUID column added by biblioverlap)}
+
+\item{...}{- Additional arguments that can be passed down to `ggVennDiagram:ggVennDiagram`}
 }
 \value{
 a Venn Diagram
