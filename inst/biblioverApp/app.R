@@ -1,6 +1,6 @@
 library(shiny)
 library(biblioverlap)
-options(shiny.maxRequestSize = 100 * 1024^2)
+#options(shiny.maxRequestSize = 100 * 1024^2)
 
 # Load the UI and server components
 source('ui.R')

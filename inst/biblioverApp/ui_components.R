@@ -75,17 +75,17 @@ score_matching_options_ui <-
 
 
 
-n_threads_ui <- numericInput('n_threads', 'Number of threads',
+n_threads_ui <- sliderInput('n_threads', 'Number of threads',
                              min = 1,
                              max = parallel::detectCores(),
-                             value = 1
+                             value = 1, step = 1
 )
 
 n_sets_ui <-
   tagList(
-    numericInput('n_sets', "Number of bibliographical datasets",
+    sliderInput('n_sets', "Number of bibliographical datasets",
                           min = 2, max = 7,
-                          value = 2),
+                          value = 2, step = 1),
     uiOutput("dynamicUI")
     )
 
@@ -113,11 +113,11 @@ results_summary_plot <- tabPanel("Summary",
                               fluidRow(
                                 column(2, numericInput('summary_value_size', 'Value size',
                                                        min = 0, max = 50,
-                                                       value = 4.5, step = 0.5)
+                                                       value = 5, step = 0.25)
                                 ),
                                 column(2, numericInput('summary_text_size', 'text_size',
                                                        min = 0, max = 50,
-                                                       value = 4.5, step = 0.05)
+                                                       value = 15, step = 0.25)
                                 )
                               )
                             ),
@@ -174,31 +174,44 @@ results_upset <-  tabPanel("UpSet Plot",
                                                       min = 3, max = 150,
                                                       value = 30)
                                ),
-                               column(2, selectInput('scale', 'Scale',
+                               column(2, selectInput('order.by', 'Order by',
+                                                     choices = c(Frequency = "freq",
+                                                                 Degree = "degree"
+                                                                 ),
+                                                     multiple = TRUE,
+                                                     selected = "freq" )
+                               ),
+                               column(1, selectInput('scale', 'Scale',
                                                      choices = c(Identity = "identity",
                                                                  log10 = "log10",
                                                                  log2 = "log2"),
                                                      selectize = FALSE,
                                                      selected = "identity" )
                                ),
-                               column(2, numericInput('text_size', 'Text size',
+                               column(1, numericInput('text_size', 'Text size',
                                                       min = 1, max = 3, step = 0.1,
                                                       value = 1.5)
                                ),
-                               column(2, numericInput('mb.ratio', 'Barplot size',
+                               column(2, numericInput('mb.ratio', 'Intersects barplot size',
                                                       min = 0.1 , max = 0.9, step = 0.05,
                                                       value = 0.7)
                                ),
-                               column(2, selectInput('show.numbers', 'Barplot numbers',
+                               column(2, selectInput('show.numbers', 'Nº docs per intersect',
                                                      choices = c(Show = "yes",
                                                                  Hide = "no"),
                                                      selectize = FALSE,
                                                      selected = "yes" )
+                               ),
+                               column(2, selectInput('empty.intersections', 'Empty intersections',
+                                                     choices = c(Show = TRUE,
+                                                                 Hide = FALSE),
+                                                     selectize = FALSE,
+                                                     selected = TRUE)
                                )
                              )
                            ),
                            tags$br(),
-                           plotOutput('upset', width = '100%')
+                           plotOutput('upset')
                            )
 
 

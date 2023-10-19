@@ -237,12 +237,22 @@ server <- function(input, output, session) {
     return( venn )
   })
 
+  # Upset plots from UpSetR can hide its empty intersections if a NULL value is passed to its `empty.intersections` parameter
+  # However, the NULL value can not be passed directly to the `selectInput()` shiny function
+  # So, the `selectInput` accepts an input from user and, if FALSE, will convert it to NULL in this `eventReactive()` expression
+  upset_empty_intersections <- eventReactive(input$empty.intersections, {
+    if (input$empty.intersections) { return(TRUE) }
+    else {return(NULL)}
+  })
+
   output$upset <- renderPlot({
     db_list <- calculate_results()$db_list
     upset <- biblioverlap::plot_upset(db_list,
                                       nsets = length(db_list),
                                       nintersects = input$nintersects,
+                                      order.by = input$order.by,
                                       scale.intersections	= input$scale,
+                                      empty.intersections = upset_empty_intersections(),
                                       scale.sets = input$scale,
                                       text.scale = input$text_size,
                                       show.numbers = input$show.numbers,
