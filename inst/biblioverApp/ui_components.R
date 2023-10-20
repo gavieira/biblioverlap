@@ -1,3 +1,15 @@
+custom_styles <-
+  tags$style(
+    HTML(".custom_title { color: darkcyan; font-family: Arial, sans-serif; text-align: center; font-size: 18px; font-weight: bold; }"),
+    HTML(".custom_button { background-color: green; color: white; }"),
+    )
+
+input_data_panel_title <-
+  tagList(
+    tags$div("Input data config", class = "custom_title"),
+    tags$hr()
+  )
+
 column_names_ui <-
   tagList(
   tags$b('Column names'),
@@ -104,6 +116,24 @@ results_summary_table <- tabPanel("Summary",
                             tableOutput('summary_table')
                             )
 
+plot_panel_title <-
+  tagList(
+    tags$div("General plot options", class = "custom_title"),
+    tags$hr()
+  )
+
+
+plot_settings <- tagList(
+  sliderInput('plot_height', 'Plot Height',
+              min = 200, max = 1400,
+              value = 400, step = 50
+              ),
+  tags$br(),
+  sliderInput('plot_width', 'Plot Width',
+              min = 200, max = 2200,
+              value = 1000, step = 50
+              )
+  )
 
 results_summary_plot <- tabPanel("Summary",
                             tags$br(),
@@ -121,7 +151,7 @@ results_summary_plot <- tabPanel("Summary",
                                 )
                               )
                             ),
-                            plotOutput('summary_plot', width = '100%')
+                            plotOutput('summary_plot')
                             )
 
 
@@ -159,7 +189,7 @@ results_venn <- tabPanel("Venn Diagram",
                              )
                            )
                          ),
-                         plotOutput('venn', width = '100%')
+                         plotOutput('venn')
                          )
 
 
@@ -181,28 +211,30 @@ results_upset <-  tabPanel("UpSet Plot",
                                                      multiple = TRUE,
                                                      selected = "freq" )
                                ),
-                               column(1, selectInput('scale', 'Scale',
+                               column(2, selectInput('scale', 'Scale',
                                                      choices = c(Identity = "identity",
                                                                  log10 = "log10",
                                                                  log2 = "log2"),
                                                      selectize = FALSE,
                                                      selected = "identity" )
                                ),
-                               column(1, numericInput('text_size', 'Text size',
+                               column(2, numericInput('text_size', 'Text size',
                                                       min = 1, max = 3, step = 0.1,
                                                       value = 1.5)
                                ),
-                               column(2, numericInput('mb.ratio', 'Intersects barplot size',
+                               column(2, numericInput('mb.ratio', 'Barplot size',
                                                       min = 0.1 , max = 0.9, step = 0.05,
                                                       value = 0.7)
-                               ),
-                               column(2, selectInput('show.numbers', 'Nº docs per intersect',
+                               )
+                             ),
+                             fluidRow(
+                               column(2, selectInput('show.numbers', 'Intersect totals',
                                                      choices = c(Show = "yes",
                                                                  Hide = "no"),
                                                      selectize = FALSE,
                                                      selected = "yes" )
                                ),
-                               column(2, selectInput('empty.intersections', 'Empty intersections',
+                               column(2, selectInput('empty.intersections', 'Empty intersects',
                                                      choices = c(Show = TRUE,
                                                                  Hide = FALSE),
                                                      selectize = FALSE,
@@ -214,10 +246,16 @@ results_upset <-  tabPanel("UpSet Plot",
                            plotOutput('upset')
                            )
 
+merge_files_panel_title <-
+  tagList(
+    tags$div("Merging files for analysis", class = "custom_title"),
+    tags$hr()
+  )
 
 merge_files_ui <- sidebarLayout(
                     sidebarPanel( width = 3,
-                                  HTML('<br>Biblioverlap accepts a single csv file for each dataset.
+                                  merge_files_panel_title,
+                                  HTML('Biblioverlap accepts a single csv file for each dataset.
                                   However, there are cases when a query has to be split between multiple files. <br> <br>
                                   In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records
                                   into a single file. <br> <br>'),

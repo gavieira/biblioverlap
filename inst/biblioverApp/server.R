@@ -1,5 +1,6 @@
 server <- function(input, output, session) {
 
+
   # Get list of columns from UI
   get_columns_list <- function() {
     col_list <- list(
@@ -207,25 +208,16 @@ server <- function(input, output, session) {
   }, width = '100%', striped = TRUE, bordered = TRUE, align = 'l')
 
 
-  update_summary_plot <- reactive({
+
+  output$summary_plot <- renderPlot({
     summary_df <- calculate_results()$summary
     summary_plot <- biblioverlap::plot_matching_summary(summary_df,
                                                         size = input$summary_value_size) +
       ggplot2::theme(text=ggplot2::element_text(size= input$summary_text_size))
     return( summary_plot )
-  })
-
-
-  output$summary_plot <- renderPlot({
-    update_summary_plot()
-  })
-
-
-  #output$summary_plot <- renderPlot({
-  #  summary_plot <- calculate_results()$summary$plot
-  #  summary_plot <- summary_plot + ggplot2::update_geom_defaults("text", list(size = 5)) + ggplot2::theme(text=ggplot2::element_text(size=15))
-  #  return( summary_plot )
-  #})
+  }, height = reactive( { input$plot_height } ),
+  width = reactive( { input$plot_width } )
+  )
 
   output$venn <- renderPlot({
     venn <- biblioverlap::plot_venn(calculate_results()$db_list,
@@ -235,17 +227,28 @@ server <- function(input, output, session) {
                                     label_alpha = input$venn_label_alpha,
                                     set_size = input$venn_set_size )
     return( venn )
-  })
+  }, height = reactive( { input$plot_height } ),
+  width = reactive( { input$plot_width } )
+  )
+
 
   # Upset plots from UpSetR can hide its empty intersections if a NULL value is passed to its `empty.intersections` parameter
   # However, the NULL value can not be passed directly to the `selectInput()` shiny function
-  # So, the `selectInput` accepts an input from user and, if FALSE, will convert it to NULL in this `eventReactive()` expression
-  upset_empty_intersections <- eventReactive(input$empty.intersections, {
+  # So, the `selectInput` accepts an input from user and, if FALSE, will convert it to NULL in this reactive expression
+  upset_empty_intersections <- reactive({
     if (input$empty.intersections) { return(TRUE) }
     else {return(NULL)}
   })
 
-  output$upset <- renderPlot({
+
+  #plot_height <- reactive({input$plot_height})
+  #plot_width <- reactive({input$plot_width})
+  #plot_dpi <- reactive({input$plot_dpi})
+
+  output$upset <- renderPlot(#height = reactive(input$height),
+                             #width = reactive(input$width),
+                             #res = reactive(input$dpi),
+                               {
     db_list <- calculate_results()$db_list
     upset <- biblioverlap::plot_upset(db_list,
                                       nsets = length(db_list),
@@ -259,7 +262,9 @@ server <- function(input, output, session) {
                                       mb.ratio = c(input$mb.ratio, 1 - input$mb.ratio)
     )
     return( upset )
-  })
+  }, height = reactive( { input$plot_height } ),
+  width = reactive( { input$plot_width } )
+  )
 
 
   #observeEvent(input$merge_button)

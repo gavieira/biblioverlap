@@ -2,12 +2,13 @@ source('ui_components.R')
 
 
 ui <- fluidPage(
-  tags$style(HTML(".custom_button { background-color: green; color: white; }")),
+  custom_styles,
   navbarPage('Biblioverlap',
             id = 'tabs',
     tabPanel('Input Data',
       sidebarLayout(
         sidebarPanel( width = 3,
+          input_data_panel_title,
           column_names_ui,
           tags$hr(),
           score_matching_options_ui,
@@ -29,14 +30,25 @@ ui <- fluidPage(
         )
       ),
     tabPanel('Plots',
-             tabsetPanel(
-               id = 'plots',
-               results_summary_plot,
-               results_venn,
-               results_upset )
+             sidebarLayout(
+               sidebarPanel( width = 3,
+                             plot_panel_title,
+                             plot_settings
+                             ),
+               mainPanel( width = 9,
+                          conditionalPanel(
+                            condition = "output.calculation_done",
+                            tabsetPanel(
+                              id = 'plots',
+                              results_summary_plot,
+                              results_venn,
+                              results_upset )
+                            )
+                          )
+               )
              ),
 
     tabPanel('Merge Files',
-      merge_files_ui )
-     )
+             merge_files_ui )
+    )
 )

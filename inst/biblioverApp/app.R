@@ -1,6 +1,13 @@
 library(shiny)
 library(biblioverlap)
-#options(shiny.maxRequestSize = 100 * 1024^2)
+
+options(
+  shiny.reactlog = TRUE,  # Enable or disable the Reactlog (optional)
+  shiny.width = reactive(input$width),     # Set the default width for renderPlot
+  shiny.height = reactive(input$height),    # Set the default height for renderPlot
+  shiny.res = 100        # Set the default resolution (dpi) for renderPlot
+)
+
 
 # Load the UI and server components
 source('ui.R')
