@@ -1,4 +1,5 @@
 library(shiny)
+library(DT)
 library(biblioverlap)
 
 # Load the UI and server components

@@ -1,9 +1,13 @@
 Package: biblioverlap
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Gabriel Alves Vieira
-Maintainer: The package maintainer <yourself@somewhere.net>
+Title: Document-Level Matching Between Bibliographic Datasets
+Version: 1.0.0
+Authors@R: c(
+    person("Gabriel", "Vieira", , "gabriel.vieira@bioqmed.ufrj.br", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5529-7628")),
+    person("Jacqueline", "Leta", , "jleta@bioqmed.ufrj.br", role = "ctb",
+           comment = c(ORCID = "0000-0002-3271-7749"))
+  )
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL (>= 3)
@@ -13,6 +17,7 @@ RoxygenNote: 7.2.3
 Imports: 
     bibliometrix,
     dplyr,
+    DT,
     ggplot2,
     ggVennDiagram,
     magrittr,
