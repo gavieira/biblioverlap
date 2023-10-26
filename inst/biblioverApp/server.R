@@ -18,7 +18,7 @@ server <- function(input, output, session) {
       df <- read.csv(input_file,
                      sep = sep,
                      strip.white = TRUE,
-                     check.names = FALSE)
+                     check.names = FALSE) #Keep names exactly as they are in the original files
     return( df )
   }
 
@@ -27,21 +27,19 @@ server <- function(input, output, session) {
   get_sets_list <- function() {
     all_sets <- list()
     for (i in 1:input$n_sets) {
+      #Reading info from input
       set_name <- input[[paste0("name", i)]]
       filepath <- input[[paste0("file", i)]]$datapath
       sep <- input[[paste0("sep", i)]]
 
-      # Read the CSV file and store it in a data frame
-      df <- read_input_file(filepath, sep)
-
-      # Assign the data frame to the named list
-      all_sets[[set_name]] <- df
+      df <- read_input_file(filepath, sep) # Read the CSV file and store it in a data frame
+      all_sets[[set_name]] <- df # Assign the data frame to the named list
     }
     return(all_sets)
   }
 
 
-  # Merge files
+  # Merge files into a named list of dataframes
   get_merged_db_list <- function(db_list) {
     df <- do.call(rbind, Map(cbind, db_list, SET_NAME = names(db_list))) #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
     columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
@@ -50,20 +48,7 @@ server <- function(input, output, session) {
     return( df )
   }
 
-
-#  count_modify_upset <- reactiveVal(0)
-#
-#  observeEvent(input$modify_upset, {
-#    count_modify_upset(count_modify_upset() + 1)
-#  })
-#
-#  count_change_score_params <- reactiveVal(0)
-#
-#  observeEvent(input$change_score_params, {
-#    count_change_score_params(count_change_score_params() + 1)
-#  })
-
- generateUI <- function(id) {
+ generate_dataset_input_fields <- function(id) {
    tagList(
       div(
         id = paste0("uiElement", id),
@@ -94,19 +79,17 @@ server <- function(input, output, session) {
     )
  }
 
- observe(calculate_results()) #Needed to 'hide' MainPanel from
 
   # Render the dynamic UI
-  output$dynamicUI <- renderUI({
+  output$dataset_input_fields <- renderUI({
     uiList <- lapply(1:input$n_sets, function(i) {
-      generateUI(i)
+      generate_dataset_input_fields(i)
     })
     tagList(uiList)
   })
 
 
-  calculation_done <- reactiveVal(FALSE) #Creating a new reactiveVal to hide the results panel until submitting data for analysis
-
+  #Calculating results using the biblioverlap package when the 'submit' button is clicked
   calculate_results <- eventReactive(input$submit, {
     withProgress(message = 'Analyzing data...', {
     columns <- get_columns_list()
@@ -126,9 +109,14 @@ server <- function(input, output, session) {
     })
   })
 
-  output$calculation_done <- reactive({ calculation_done() } ) #conditionalPanel does not accept reactiveVals, so we need to create a new output value
-  outputOptions(output, "calculation_done", suspendWhenHidden = FALSE) #Needed to use output value in conditionalPanel (https://github.com/rstudio/shiny/issues/1318)
 
+  observe(calculate_results()) #Needed to 'hide' MainPanel before calculating the results
+
+  calculation_done <- reactiveVal(FALSE) #Creating a new reactiveVal to hide the results panel until submitting data for analysis
+
+  output$calculation_done <- reactive({ calculation_done() } ) #conditionalPanel does not accept reactiveVals directly, so we need to create a new output value from the reactive value
+
+  outputOptions(output, "calculation_done", suspendWhenHidden = FALSE) #Needed to use output value in conditionalPanel (https://github.com/rstudio/shiny/issues/1318)
 
 
   read_datatable <- function(df) {
@@ -144,12 +132,12 @@ server <- function(input, output, session) {
         buttons = c("colvis"),
         colReorder = TRUE,
         columnDefs = list(
-          list(targets = "_all", render = htmlwidgets::JS(
+          list(targets = "_all", render = htmlwidgets::JS( #The following JS code shows only the first characters of each cell, replacing the rest with '...'
             "function(data, type, row, meta) {",
             "if (data === null || data === undefined) {",
             "return '';",
             "} else if (type === 'display' && data.length > 30) {",
-            "return data.substr(0, 30) + '...';",  # Adjust the length as needed
+            "return data.substr(0, 30) + '...';",  # Adjust the length of the substring to be displayed
             "} else {",
             "return data;",
             "} }" )
@@ -170,6 +158,7 @@ server <- function(input, output, session) {
     }
   )
 
+
   output$download_summary_table <- downloadHandler(
     filename = function() {
       'summary.csv'
@@ -180,27 +169,13 @@ server <- function(input, output, session) {
   )
 
 
-  output$download_summary_plot <- downloadHandler(
-    filename = function() {
-      'summary.jpg'
-    },
-    content = function(file) {
-      #ggplot2::ggsave(file, plot = calculate_results()$summary$plot, device = "png")
-      ggplot2::ggsave(file, plot = update_summary_plot(), device = "png")
-      #png(file)
-      #print(calculate_results()$summary$plot)
-      #dev.off()
-    }
-  )
-
-
-
   output$full_table <- DT::renderDataTable({
     table_list <- calculate_results()$db_list
     table <- get_merged_db_list(table_list)
 
     return( read_datatable(table) )
   }, server = TRUE) ##Server is necessary because the db_list can be huge
+
 
   output$summary_table <- renderTable({
     summary_table <- calculate_results()$summary
@@ -241,14 +216,8 @@ server <- function(input, output, session) {
   })
 
 
-  #plot_height <- reactive({input$plot_height})
-  #plot_width <- reactive({input$plot_width})
-  #plot_dpi <- reactive({input$plot_dpi})
 
-  output$upset <- renderPlot(#height = reactive(input$height),
-                             #width = reactive(input$width),
-                             #res = reactive(input$dpi),
-                               {
+  output$upset <- renderPlot(   {
     db_list <- calculate_results()$db_list
     upset <- biblioverlap::plot_upset(db_list,
                                       nsets = length(db_list),
@@ -265,14 +234,6 @@ server <- function(input, output, session) {
   }, height = reactive( { input$plot_height } ),
   width = reactive( { input$plot_width } )
   )
-
-
-  #observeEvent(input$merge_button)
-  #observe({
-  #  View(input$unmerged_files)
-  #  print(input$unmerged_files$datapath)
-  #  print(typeof(input$unmerged_files$datapath))
-  #  })
 
   # Function to merge multiple input_files
   merge_input_files <- reactive({
@@ -303,6 +264,5 @@ server <- function(input, output, session) {
       table <- merge_input_files()
       return( read_datatable(table) )
     }, server = TRUE) ##Server is necessary because the db_list can be huge
-
 
 }

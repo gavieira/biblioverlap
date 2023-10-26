@@ -1,12 +1,17 @@
 custom_styles <-
   tags$style(
     HTML(".custom_title { color: darkcyan; font-family: Arial, sans-serif; text-align: center; font-size: 18px; font-weight: bold; }"),
-    HTML(".custom_button { background-color: green; color: white; }"),
+    HTML(".custom_button { background-color: green; color: white; margin-top: 10px; margin-bottom: 10px }"),
+    HTML(".plot-container {
+      width: 100%; /* Set the width of the div as needed */
+      overflow-x: auto; /* Add a vertical scrollbar if content overflows horizontally */
+      border: 2px solid rgba(0, 0, 0, 0.3); border-radius: 2px;
+    }")
     )
 
 input_data_panel_title <-
   tagList(
-    tags$div("Input data config", class = "custom_title"),
+    tags$div("Input data options", class = "custom_title"),
     tags$hr()
   )
 
@@ -77,10 +82,8 @@ score_matching_options_ui <-
     tags$strong('Score matching'),
     tags$br(),
     actionButton("change_score_params", "Change parameters", class = 'custom_button'),
-    tags$br(),
     conditionalPanel(
       condition = "input.change_score_params % 2 == 1",
-      tags$br(),
       score_matching_params_ui
       )
     )
@@ -98,20 +101,17 @@ n_sets_ui <-
     sliderInput('n_sets', "Number of bibliographical datasets",
                           min = 2, max = 7,
                           value = 2, step = 1),
-    uiOutput("dynamicUI")
+    uiOutput("dataset_input_fields")
     )
 
 
 results_data <-  tabPanel("Data",
-                          tags$br(),
                           downloadButton("download_data", "Download Data", class = 'custom_button'),
-                          tags$br(),
                           DT::dataTableOutput('full_table')
                           )
 
 
 results_summary_table <- tabPanel("Summary",
-                            tags$br(),
                             downloadButton("download_summary_table", "Download Summary Table", class = 'custom_button'),
                             tableOutput('summary_table')
                             )
@@ -124,19 +124,18 @@ plot_panel_title <-
 
 
 plot_settings <- tagList(
-  sliderInput('plot_height', 'Plot Height',
-              min = 200, max = 1400,
-              value = 400, step = 50
+  sliderInput('plot_width', 'Plot Width',
+              min = 200, max = 2560,
+              value = 640, step = 10
               ),
   tags$br(),
-  sliderInput('plot_width', 'Plot Width',
-              min = 200, max = 2200,
-              value = 1000, step = 50
+  sliderInput('plot_height', 'Plot Height',
+              min = 200, max = 1440,
+              value = 480, step = 10
               )
   )
 
 results_summary_plot <- tabPanel("Summary",
-                            tags$br(),
                             actionButton("modify_summary", "Modify plot", class = 'custom_button'),
                             conditionalPanel(
                               condition = "input.modify_summary % 2 == 1",
@@ -145,18 +144,20 @@ results_summary_plot <- tabPanel("Summary",
                                                        min = 0, max = 50,
                                                        value = 5, step = 0.25)
                                 ),
-                                column(2, numericInput('summary_text_size', 'text_size',
+                                column(2, numericInput('summary_text_size', 'Text size',
                                                        min = 0, max = 50,
                                                        value = 15, step = 0.25)
                                 )
                               )
                             ),
-                            plotOutput('summary_plot')
+                            tags$div(
+                               plotOutput('summary_plot', height = '100%'), #height parameter in all plotOutput() function calls were necessary to make div vertically 'infinite'
+                               class = "plot-container"
+                               )
                             )
 
 
 results_venn <- tabPanel("Venn Diagram",
-                         tags$br(),
                          actionButton("modify_venn", "Modify plot", class = 'custom_button'),
                          conditionalPanel(
                            condition = "input.modify_venn % 2 == 1",
@@ -189,13 +190,16 @@ results_venn <- tabPanel("Venn Diagram",
                              )
                            )
                          ),
-                         plotOutput('venn')
+                         tags$div(
+                            plotOutput('venn', height = '100%'),
+                            class = "plot-container"
+                            )
                          )
 
 
 #Matybe split the results_upset into a part that contains the modify options and one for the plot itself
 results_upset <-  tabPanel("UpSet Plot",
-                           tags$br(),
+                           #tags$br(),
                            actionButton("modify_upset", "Modify plot", class = 'custom_button'),
                            conditionalPanel(
                              condition = "input.modify_upset % 2 == 1",
@@ -243,22 +247,26 @@ results_upset <-  tabPanel("UpSet Plot",
                              )
                            ),
                            tags$br(),
-                           plotOutput('upset')
+                           tags$div(
+                              plotOutput('upset', height = '100%'),
+                              class = "plot-container"
+                              )
                            )
 
 merge_files_panel_title <-
   tagList(
-    tags$div("Merging files for analysis", class = "custom_title"),
+    tags$div("Merging files", class = "custom_title"),
     tags$hr()
   )
 
 merge_files_ui <- sidebarLayout(
                     sidebarPanel( width = 3,
                                   merge_files_panel_title,
-                                  HTML('Biblioverlap accepts a single csv file for each dataset.
+                                  HTML('<div style="text-align: justify;">
+                                  Biblioverlap accepts a single csv file for each dataset.
                                   However, there are cases when a query has to be split between multiple files. <br> <br>
                                   In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records
-                                  into a single file. <br> <br>'),
+                                  into a single file. Duplicates are automatically removed. <br> <br>'),
                                   tabsetPanel(id = 'merging_user_input',
                                               tabPanel('Files',
                                                        fileInput('unmerged_files',  'Upload files', multiple = TRUE,
@@ -273,7 +281,6 @@ merge_files_ui <- sidebarLayout(
                                                                    selectize = FALSE,
                                                                    selected = "," ) ),
                                   ),
-                                  tags$br(),
                                   downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
                     ),
                     mainPanel( width = 9,
