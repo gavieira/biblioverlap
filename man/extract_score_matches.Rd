@@ -27,7 +27,10 @@ Get the max score value for each row of the final score matrix
 }
 \details{
 This function uses the base 'apply()' to obtain max_value and max_col_index for each row in the 'final_score_matrix' object.
-Such approach coerces the 'final_score_matrix' from sparse (dgCMatrix) to a regular (dense) matrix. This can generate warnings regarding vector allocation when working with large datasets
-To avoid adding more dependencies to this package, we have chosen to keep this function working with the base 'apply()', since the increased RAM usage caused by this coercion is temporary and won't surpass total RAM usage in the score_matrix calculation
+
+Such approach coerces the 'final_score_matrix' from sparse (dgCMatrix) to a regular (dense) matrix. This can generate warnings regarding vector allocation when working with large datasets.
+
+To avoid adding more dependencies to this package, we have chosen to keep this function working with the base 'apply()', since the increased RAM usage caused by this coercion is temporary and won't surpass total RAM usage in the score_matrix calculation.
+
 Long story short, if the computer has enough RAM to calculate the score matrices, it will have enough RAM to run this function, so we chose to use only base functions in it.
 }

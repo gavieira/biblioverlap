@@ -20,7 +20,7 @@ doi_matching(db1, db2, n_threads, doi_score = 2)
 }}
 
 \item{doi_score}{\itemize{
-\item custom score value to help identify DOI matches in previous comparisons
+\item custom score value to help identify DOI matches in subsequent comparisons
 }}
 }
 \value{

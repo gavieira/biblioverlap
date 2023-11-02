@@ -1,4 +1,4 @@
-#' Calculates score matrix for a pair of databases based on edit (levenshtein) distance
+#' Calculates score matrix for a pair of databases based on edit (Levenshtein) distance
 #'
 #' @param db1_col - Column from db1 with values to be compared
 #' @param db2_col - Column from db2 with values to be compared
@@ -7,9 +7,7 @@
 #' @param n_threads - Number of threads used for matrix calculation
 #'
 #' @return a sparseMatrix object containing score values
-# @export
 #'
-# @examples
 calc_distance_score_matrix <- function(db1_col, db2_col, max_score, penalty, n_threads) {
   stringdist_matrix <- stringdist::stringdistmatrix(db1_col, db2_col, method = "lv", nthread = n_threads)
   stringdist_matrix <- max_score - stringdist_matrix * penalty
@@ -24,9 +22,7 @@ calc_distance_score_matrix <- function(db1_col, db2_col, max_score, penalty, n_t
 #' @param max_score - Max score value
 #'
 #' @return a sparseMatrix object containing score values
-# @export
 #'
-# @examples
 calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
   exact_matrix <- outer(db1_col, db2_col, FUN = "==") + 0
   exact_matrix <- max_score * exact_matrix
@@ -42,14 +38,15 @@ calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
 #'
 #' @details
 #' This function uses the base 'apply()' to obtain max_value and max_col_index for each row in the 'final_score_matrix' object.
-#' Such approach coerces the 'final_score_matrix' from sparse (dgCMatrix) to a regular (dense) matrix. This can generate warnings regarding vector allocation when working with large datasets
-#' To avoid adding more dependencies to this package, we have chosen to keep this function working with the base 'apply()', since the increased RAM usage caused by this coercion is temporary and won't surpass total RAM usage in the score_matrix calculation
+#'
+#' Such approach coerces the 'final_score_matrix' from sparse (dgCMatrix) to a regular (dense) matrix. This can generate warnings regarding vector allocation when working with large datasets.
+#'
+#' To avoid adding more dependencies to this package, we have chosen to keep this function working with the base 'apply()', since the increased RAM usage caused by this coercion is temporary and won't surpass total RAM usage in the score_matrix calculation.
+#'
 #' Long story short, if the computer has enough RAM to calculate the score matrices, it will have enough RAM to run this function, so we chose to use only base functions in it.
 #'
 #' @return a list containing match data
-# @export
 #'
-# @examples
 extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
   db1_ids <- db1_index # db1 index vector
   max_scores <- apply(final_score_matrix, 1, max) # max score value for each row (i.e. for each db1_record)
@@ -87,9 +84,7 @@ extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
 #' @param score_cutoff - minimum final score for a valid match between two documents
 #'
 #' @return a list containing match data
-# @export
 #'
-# @examples
 score_matching <- function(db1, db2, n_threads,
                               ti_penalty, ti_max,
                               so_penalty, so_max,

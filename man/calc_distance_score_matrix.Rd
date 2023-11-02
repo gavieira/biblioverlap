@@ -2,7 +2,7 @@
 % Please edit documentation in R/04-score_matching.R
 \name{calc_distance_score_matrix}
 \alias{calc_distance_score_matrix}
-\title{Calculates score matrix for a pair of databases based on edit (levenshtein) distance}
+\title{Calculates score matrix for a pair of databases based on edit (Levenshtein) distance}
 \usage{
 calc_distance_score_matrix(db1_col, db2_col, max_score, penalty, n_threads)
 }
@@ -31,5 +31,5 @@ calc_distance_score_matrix(db1_col, db2_col, max_score, penalty, n_threads)
 a sparseMatrix object containing score values
 }
 \description{
-Calculates score matrix for a pair of databases based on edit (levenshtein) distance
+Calculates score matrix for a pair of databases based on edit (Levenshtein) distance
 }
