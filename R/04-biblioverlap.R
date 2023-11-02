@@ -31,6 +31,47 @@ inherit_uuid_col <- function(db_list, internal_db_list) {
 }
 
 
+#' Obtaining a table summary of biblioverlap's matching
+#'
+#' @param matched_db_list - list of matched dataframes (with UUID column added by biblioverlap)
+#'
+#' @return a table summary the matching results
+#' @importFrom rlang .data
+# @export
+#'
+# @examples
+get_matching_summary_df <- function(matched_db_list) {
+  #Getting dataframes
+  all_data <- do.call(rbind, matched_db_list) #Saving all data into a single df
+  matched_data <-  all_data %>%
+    dplyr::filter(duplicated(.data$UUID)) %>% #Filtering only rows with duplicated UUID (docs with match)
+    dplyr::distinct(.data$UUID, .keep_all = TRUE) #And then obtaining only one (the first) occurrence of each matched document
+  #Getting values
+  summary <- list()
+  summary$total <- nrow(all_data)
+  summary$unique <- nrow(all_data %>% dplyr::distinct(.data$UUID, .keep_all = TRUE))
+  summary$duplicates <- summary$total - summary$unique
+  summary$matched <- nrow(matched_data)
+  summary$unmatched <- summary$unique - summary$matched
+  summary$matched_id <- nrow(matched_data %>% dplyr::filter(!is.na(DI)))
+  summary$matched_score <- nrow(matched_data %>% dplyr::filter(is.na(DI))) #USES DI column
+  summary_df <- data.frame(doc_subset = names(summary), n_docs = unlist(summary), row.names = NULL)
+  #return(summary)
+  #return(df)
+  #Getting dataframe
+  categories <- c('total', 'unique/duplicates', 'unique/duplicates', 'unique', 'unique', 'matched', 'matched')
+  doc_subset_levels <- c('total',  'duplicates', 'unique', 'unmatched', 'matched',  'matched_id', 'matched_score' )
+  final_summary_df <- summary_df %>%
+    #tidyr::pivot_longer(cols = dplyr::everything(), names_to = "doc_subset", values_to = "n_docs" ) %>%
+    dplyr::mutate("doc_subset" = factor(.data$doc_subset, levels = doc_subset_levels)) %>%
+    dplyr::mutate("category" = factor(categories, levels = unique(categories)), .after = .data$doc_subset) %>%
+    dplyr::group_by(.data$category) %>%
+    dplyr::mutate("perc_inside_category" = round(.data$n_docs / sum(.data$n_docs) * 100, 1))
+  return(final_summary_df)
+}
+
+
+
 #' Obtains document overlap between databases from a named list
 #'
 #' @param db_list - list of dataframes containing the sets of bibliographic data
