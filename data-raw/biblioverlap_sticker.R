@@ -1,10 +1,9 @@
-
 # loading the necessary packages
 library(hexSticker) # hexSticker generator
 library(ggplot2)
 library(biblioverlap)
 
-#Script to create a hexsticker to the 'biblioverlap' package
+#####Script to create a hexsticker for the 'biblioverlap' package
 
 
 ###Generating plot to be featured in sticker

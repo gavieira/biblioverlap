@@ -3,7 +3,7 @@
 ##' @param db_data - list containing 3 elements: file (either a single file or vector with multiple files containing bibliographic records), dbsource (bibliographic source), and format (file format)
 ##'
 ##' @return a database featuring all records from the files specified, formatted according to bibliometrix fields
-##' @seealso [bibliometrix::convert2df()]
+##' @seealso bibliometrix::convert2df()
 ##'
 ## @export
 ##'
@@ -30,14 +30,14 @@
 #' @export
 #'
 # @examples
-bibliometrix_parsing <- function(dataset_list, n_threads = parallel::detectCores() ) {
-  n_sets <- length(dataset_list)
-  if (n_threads > n_sets) {
-    n_threads <- n_sets
-  }
-  db_list <- parallel::mclapply(dataset_list, function(db_data) convert2df_wrapper(db_data), mc.cores = n_threads )
-  return(db_list)
-}
+#bibliometrix_parsing <- function(dataset_list, n_threads = parallel::detectCores() ) {
+#  n_sets <- length(dataset_list)
+#  if (n_threads > n_sets) {
+#    n_threads <- n_sets
+#  }
+#  db_list <- parallel::mclapply(dataset_list, function(db_data) convert2df_wrapper(db_data), mc.cores = n_threads )
+#  return(db_list)
+#}
 
 
 

@@ -1,7 +1,6 @@
 ##### Reading raw lens data
 ##Data was downloaded from
 
-
 # Specifying path (inside project root)
 path <- 'data-raw'
 
@@ -18,7 +17,7 @@ csv_names <- sapply(csv_files, function(file) {
 
 
 # Creating a list of dataframes by reading each file with read.csv()
-df_list <- lapply(csv_files, read.csv)
+df_list <- lapply(csv_files, read.csv, strip.white = TRUE, check.names = FALSE)
 
 # Using csv filenames as element names in the dataframe list
 names(df_list) <- csv_names
@@ -35,43 +34,18 @@ remove_excess_authors <- function(df, au_col, sep = ';', max_au = 3) {
 }
 
 # Selecting columns to clean and reduce size of package data
-test_data <- lapply(df_list, function(df) {
+ufrj_bio_0122 <- lapply(df_list, function(df) {
   `%>%` <- magrittr::`%>%` #Defining the pipe operator for this specific function to avoid loading the entire 'magrittr' library
   df %>%
-    dplyr::mutate(Date.Published = as.Date(Date.Published)) %>% #Converting 'Date.Published' into 'Date' type
-    dplyr::filter(Date.Published >= '2022-01-01', Date.Published <= '2022-01-31')  %>% #Selecting only january records
-    dplyr::select(Lens.ID, DOI, Title, Publication.Year, Source.Title, Author.s, Publication.Type, Citing.Works.Count, Open.Access.Colour) %>% #Selecting relevant columns
-    remove_excess_authors(au_col = 'Author.s') %>% #Keeps only the three first authors
+    dplyr::mutate(`Date Published` = as.Date(`Date Published`)) %>% #Converting 'Date.Published' into 'Date' type
+    dplyr::filter(`Date Published` >= '2022-01-01', `Date Published` <= '2022-01-31')  %>% #Selecting only january records
+    dplyr::select(`Lens ID`, DOI, Title, `Publication Year`, `Source Title`, `Author/s`, `Publication Type`, `Citing Works Count`, `Open Access Colour`) %>% #Selecting relevant columns
+    remove_excess_authors(au_col = 'Author/s') %>% #Keeps only the three first authors
     dplyr::mutate(Title = gsub("<.*?>", "", Title)) %>% #Removes html tags, common in the Title field
-    dplyr::mutate(dplyr::across(dplyr::where(is.character), ~ iconv(., to = "UTF-8"))) %>% #Making sure that all character fields are UTF-8 encoded
-    dplyr::rename( DI = DOI, TI = Title, PY = Publication.Year, SO = Source.Title, AU = Author.s )
+    dplyr::mutate(dplyr::across(dplyr::where(is.character), ~ iconv(., to = "UTF-8"))) #Making sure that all character fields are UTF-8 encoded
 })
 
 
-## code to prepare `data_prep` dataset goes here
-
-usethis::use_data(test_data, overwrite = TRUE, compress = 'xz')
-
-
-
-##Generating duplicated dataset for internal testing
-
-dups <- lapply(test_data, function(df) rbind(df,df))
-
-all_dups <- lapply(dups, function(db) {
-  db %>%
-  dplyr::filter(DI != '') %>%
-  dplyr::filter(duplicated(DI) | duplicated(DI, fromLast = TRUE)) %>%
-  dplyr::arrange(DI)
-  })
-
-View(all_dups$Biochemistry)
-
-View(lapply(test_data, function(db) {
-  db %>%
-    dplyr::distinct()
-}
-  ))
-
-usethis::use_data(c(test_data, internal = TRUE, overwrite = TRUE, compress = 'xz')
+#Saving as compressed package dataset
+usethis::use_data(ufrj_bio_0122, overwrite = TRUE, compress = 'xz')
 

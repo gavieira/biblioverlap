@@ -15,6 +15,9 @@ NULL
 
 
 #' Variables for unquoted use in dplyr
+#' @description
+#' Internally, biblioverlap uses specific field names to refer to the data it processes. They are added here for unquoted use in dplyr.
+#'
 #' @name global variables
 utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI', 'SO', '.', 'UUID'))
 
@@ -30,10 +33,28 @@ utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI', 'SO', '.
 #' @field source Publication source
 #'
 #' @export
-default_matching_fields <- list(DI = 'DI',
-                                TI = 'TI',
-                                PY = 'PY',
-                                AU = 'AU',
-                                SO = 'SO')
+default_matching_fields <- list(DI = 'DOI',
+                                TI = 'Title',
+                                PY = 'Publication Year',
+                                AU = 'Author/s',
+                                SO = 'Source Title')
 
+#' ufrj_bio_0122
+#'
+#' Data obtained from [The Lens Scholarly Search](https://www.lens.org)
+#' Report ...
+#' @name ufrj_bio_0122
+#' @encoding UTF-8
+#'
+#' @format ## `ufrj_bio_0122`
+#' A data frame with 7,240 rows and 60 columns:
+#' \describe{
+#'   \item{country}{Country name}
+#'   \item{iso2, iso3}{2 & 3 letter ISO country codes}
+#'   \item{year}{Year}
+#'   ...
+#' }
+#'
+#' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
+"ufrj_bio_0122"
 
