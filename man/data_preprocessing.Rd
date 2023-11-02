@@ -12,11 +12,11 @@ data_preprocessing(db_list, matching_fields)
 }}
 
 \item{matching_fields}{\itemize{
-\item list containing the names of the columns used in the matching procedure
+\item list containing the names of the columns to be used in the matching procedure
 }}
 }
 \value{
-a list containing a (modified) dataframe for each set
+a list containing a (pre-processed) dataframe for each set
 }
 \description{
 Processes bibliographic data for the downstream matching procedure

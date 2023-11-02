@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-matching_helper_funcs.R
 \name{subset_db_for_doi_match}
 \alias{subset_db_for_doi_match}
-\title{Subsetting bibliographic database records to use in matching procedures}
+\title{Subsetting bibliographic database records to use in the unique identifier matching procedure}
 \usage{
 subset_db_for_doi_match(db)
 }
@@ -12,8 +12,8 @@ subset_db_for_doi_match(db)
 }}
 }
 \value{
-a subset of the database containing only relevant fields for the doi matching procedure
+a subset of the database containing only relevant fields for the unique id matching procedure
 }
 \description{
-Subsetting bibliographic database records to use in matching procedures
+Subsetting bibliographic database records to use in the unique identifier matching procedure
 }

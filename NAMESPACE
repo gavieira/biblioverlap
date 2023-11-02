@@ -3,7 +3,6 @@
 export("%>%")
 export(biblioverApp)
 export(biblioverlap)
-export(convert_to_sparse_matrix)
 export(default_matching_fields)
 export(plot_matching_summary)
 export(plot_upset)

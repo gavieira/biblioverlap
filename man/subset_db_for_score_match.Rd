@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-matching_helper_funcs.R
 \name{subset_db_for_score_match}
 \alias{subset_db_for_score_match}
-\title{Subsetting bibliographic database records to use in matching procedures}
+\title{Subsetting bibliographic database records to use in the score matching procedure}
 \usage{
 subset_db_for_score_match(df)
 }
@@ -12,8 +12,8 @@ subset_db_for_score_match(df)
 }}
 }
 \value{
-a subset df with all needed data for the specified matching procedure
+a subset df with all needed data for the score matching procedure
 }
 \description{
-Subsetting bibliographic database records to use in matching procedures
+Subsetting bibliographic database records to use in the score matching procedure
 }

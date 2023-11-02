@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-matching_helper_funcs.R
 \name{convert_to_sparse_matrix}
 \alias{convert_to_sparse_matrix}
-\title{Converts a matrix to sparseMatrix format - used in score matching procedure}
+\title{Converts a regular matrix to sparseMatrix}
 \usage{
 convert_to_sparse_matrix(matrix)
 }
@@ -15,5 +15,17 @@ convert_to_sparse_matrix(matrix)
 a matrix in sparseMatrix format, where negative values have been replaced by 0
 }
 \description{
-This is a helper function to both calc_distance_score_matrix() and calc_exact_score_matrix()
+This function converts regular (dense) matrices to sparse, which decreases overall RAM allocation.
+
+It acts as a helper function to both \code{\link[=calc_distance_score_matrix]{calc_distance_score_matrix()}} and \code{\link[=calc_exact_score_matrix]{calc_exact_score_matrix()}}.
+
+Since it is used in the score matching procedure, negative values are replaced by 0 to further reduce RAM usage.
+}
+\examples{
+# Creating a sample matrix
+sample_matrix <- matrix(c(1, -2, NA, 4, 5, 0), nrow = 2, ncol = 3)
+
+# Converting sample matrix to sparseMatrix format
+convert_to_sparse_matrix(sample_matrix)
+
 }
