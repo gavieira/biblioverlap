@@ -7,7 +7,9 @@
 subset_db_for_score_match(df)
 }
 \arguments{
-\item{df}{- a dataframe from a bibliographic database}
+\item{df}{\itemize{
+\item a dataframe from a bibliographic database
+}}
 }
 \value{
 a subset df with all needed data for the specified matching procedure

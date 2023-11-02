@@ -7,11 +7,17 @@
 biblioverApp(port = NULL, max_upload_size = 1000, launch.browser = TRUE)
 }
 \arguments{
-\item{port}{- port of the application}
+\item{port}{\itemize{
+\item port of the application
+}}
 
-\item{max_upload_size}{- max upload size of documents (in MB) - Default 100}
+\item{max_upload_size}{\itemize{
+\item max upload size of documents (in MB) - Default 100
+}}
 
-\item{launch.browser}{- launch on browser - Default = TRUE}
+\item{launch.browser}{\itemize{
+\item launch on browser - Default = TRUE
+}}
 }
 \value{
 opens a instance of the biblioverlap UI

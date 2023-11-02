@@ -23,39 +23,12 @@ update_db2_matches <- function(db1, db2, match_list) {
 }
 
 
-
-
 inherit_uuid_col <- function(db_list, internal_db_list) {
   for (name in names(db_list)) {
     db_list[[name]]$UUID <- internal_db_list[[name]]$UUID
   }
   return(db_list)
 }
-
-
-
-#' My Custom List Object
-#'
-#' This is an example list object containing sample data.
-#'
-#' @format A named list.
-#' @field doi Description of the field.
-#' @field title Description of the field.
-#' @field pubyear Description of the field.
-#' @field authors Description of the field.
-#' @field source Description of the field.
-#'
-#' @export
-matching_fields <- list(DI = 'DI',
-                      TI = 'TI',
-                      PY = 'PY',
-                      AU = 'AU',
-                      SO = 'SO')
-#matching_fields <- list(DI = 'Lens.ID',
-#                      TI = 'Title',
-#                      PY = 'Publication.Year',
-#                      AU = 'Author.s',
-#                      SO = 'Source.Title')
 
 
 #' Obtains document overlap between databases from a named list
@@ -77,7 +50,7 @@ matching_fields <- list(DI = 'DI',
 #' @export
 #'
 # @examples
-biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = matching_fields, n_threads = parallel::detectCores(),
+biblioverlap <- function(db_list, db_order = names(db_list), matching_fields = default_matching_fields, n_threads = parallel::detectCores(),
                         ti_penalty = 0.1, ti_max = 0.6,
                         so_penalty = 0.1, so_max = 0.3,
                         au_penalty = 0.1, au_max = 0.3,

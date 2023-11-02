@@ -7,7 +7,9 @@
 get_matching_summary_df(matched_db_list)
 }
 \arguments{
-\item{matched_db_list}{- list of matched dataframes (with UUID column added by biblioverlap)}
+\item{matched_db_list}{\itemize{
+\item list of matched dataframes (with UUID column added by biblioverlap)
+}}
 }
 \value{
 a table summary the matching results

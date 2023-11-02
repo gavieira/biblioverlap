@@ -7,11 +7,17 @@
 update_db2_matches(db1, db2, match_list)
 }
 \arguments{
-\item{db1}{- First bibliographic database in the comparison}
+\item{db1}{\itemize{
+\item First bibliographic database in the comparison
+}}
 
-\item{db2}{- Second bibliographic database in the comparison}
+\item{db2}{\itemize{
+\item Second bibliographic database in the comparison
+}}
 
-\item{match_list}{- List containing all matching documents between db1 and db2}
+\item{match_list}{\itemize{
+\item List containing all matching documents between db1 and db2
+}}
 }
 \value{
 db2 with updated uuid and score values

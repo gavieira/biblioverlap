@@ -1,19 +1,19 @@
-#' Wrapper function to call bibliometrix's convert2df() for a given set of records
-#'
-#' @param db_data - list containing 3 elements: file (either a single file or vector with multiple files containing bibliographic records), dbsource (bibliographic source), and format (file format)
-#'
-#' @return a database featuring all records from the files specified, formatted according to bibliometrix fields
-#' @seealso [bibliometrix::convert2df()]
-#'
-# @export
-#'
-# @examples
-convert2df_wrapper <- function(db_data) {
-  bibliometrix_df <- bibliometrix::convert2df(db_data$file,
-                                dbsource = db_data$dbsource,
-                                format = db_data$format )
-  return(bibliometrix_df)
-}
+##' Wrapper function to call bibliometrix's convert2df() for a given set of records
+##'
+##' @param db_data - list containing 3 elements: file (either a single file or vector with multiple files containing bibliographic records), dbsource (bibliographic source), and format (file format)
+##'
+##' @return a database featuring all records from the files specified, formatted according to bibliometrix fields
+##' @seealso [bibliometrix::convert2df()]
+##'
+## @export
+##'
+## @examples
+#convert2df_wrapper <- function(db_data) {
+#  bibliometrix_df <- bibliometrix::convert2df(db_data$file,
+#                                dbsource = db_data$dbsource,
+#                                format = db_data$format )
+#  return(bibliometrix_df)
+#}
 
 
 
@@ -134,7 +134,7 @@ get_uuid_list <- function(db_list) {
 #' Plotting Venn Diagram from biblioverlap results
 #'
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
-#' @param ... - Additional arguments that can be passed down to `ggVennDiagram:ggVennDiagram`
+#' @param ... - Additional arguments that can be passed down to [ggVennDiagram::ggVennDiagram()]
 #'
 #' @return a Venn Diagram
 #' @export
@@ -161,7 +161,7 @@ plot_venn <- function(db_list, ...) {
 #' Plotting UpSet plot from biblioverlap results
 #'
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
-#' @param ... - arguments to be passed down to UpsetR::upset()
+#' @param ... - arguments to be passed down to [UpSetR::upset()]
 #'
 #' @return a UpSet plot
 #' @export

@@ -2,12 +2,18 @@ custom_styles <-
   tags$style(
     HTML(".custom_title { color: darkcyan; font-family: Arial, sans-serif; text-align: center; font-size: 18px; font-weight: bold; }"),
     HTML(".custom_button { background-color: green; color: white; margin-top: 10px; margin-bottom: 10px }"),
-    HTML(".plot-container {
+    HTML(".plot_container {
       width: 100%; /* Set the width of the div as needed */
       overflow-x: auto; /* Add a vertical scrollbar if content overflows horizontally */
       border: 2px solid rgba(0, 0, 0, 0.3); border-radius: 2px;
-    }")
+    }"),
+    HTML(".justified_text { text-align: justify; }")
     )
+
+favicon <- tags$head(
+  tags$link(rel = "icon", href = "biblioverlap_sticker.png") #Setting tab favicon
+  )
+
 
 input_data_panel_title <-
   tagList(
@@ -152,7 +158,7 @@ results_summary_plot <- tabPanel("Summary",
                             ),
                             tags$div(
                                plotOutput('summary_plot', height = '100%'), #height parameter in all plotOutput() function calls were necessary to make div vertically 'infinite'
-                               class = "plot-container"
+                               class = "plot_container"
                                )
                             )
 
@@ -192,7 +198,7 @@ results_venn <- tabPanel("Venn Diagram",
                          ),
                          tags$div(
                             plotOutput('venn', height = '100%'),
-                            class = "plot-container"
+                            class = "plot_container"
                             )
                          )
 
@@ -249,7 +255,7 @@ results_upset <-  tabPanel("UpSet Plot",
                            tags$br(),
                            tags$div(
                               plotOutput('upset', height = '100%'),
-                              class = "plot-container"
+                              class = "plot_container"
                               )
                            )
 
@@ -262,11 +268,12 @@ merge_files_panel_title <-
 merge_files_ui <- sidebarLayout(
                     sidebarPanel( width = 3,
                                   merge_files_panel_title,
-                                  HTML('<div style="text-align: justify;">
-                                  Biblioverlap accepts a single csv file for each dataset.
+                                  div(class = "justified_text",
+                                  HTML('Biblioverlap accepts a single csv file for each dataset.
                                   However, there are cases when a query has to be split between multiple files. <br> <br>
                                   In this page, the user can upload multiple csv files (from the same bibliographical database) and merge all records
-                                  into a single file. Duplicates are automatically removed. <br> <br>'),
+                                  into a single file. Duplicates are automatically removed. <br> <br>')
+                                  ),
                                   tabsetPanel(id = 'merging_user_input',
                                               tabPanel('Files',
                                                        fileInput('unmerged_files',  'Upload files', multiple = TRUE,
@@ -279,7 +286,7 @@ merge_files_ui <- sidebarLayout(
                                                                                Semicolon = ";",
                                                                                Tab = "\t"),
                                                                    selectize = FALSE,
-                                                                   selected = "," ) ),
+                                                                   selected = "," ) )
                                   ),
                                   downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
                     ),

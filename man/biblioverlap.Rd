@@ -7,7 +7,7 @@
 biblioverlap(
   db_list,
   db_order = names(db_list),
-  matching_fields = matching_fields,
+  matching_fields = default_matching_fields,
   n_threads = parallel::detectCores(),
   ti_penalty = 0.1,
   ti_max = 0.6,
@@ -20,29 +20,53 @@ biblioverlap(
 )
 }
 \arguments{
-\item{db_list}{- list of dataframes containing the sets of bibliographic data}
+\item{db_list}{\itemize{
+\item list of dataframes containing the sets of bibliographic data
+}}
 
-\item{db_order}{- order of the databases}
+\item{db_order}{\itemize{
+\item order of the databases
+}}
 
-\item{matching_fields}{- Column names used in the matching}
+\item{matching_fields}{\itemize{
+\item Column names used in the matching
+}}
 
-\item{n_threads}{- number of (logical) cores used in the matching procedures}
+\item{n_threads}{\itemize{
+\item number of (logical) cores used in the matching procedures
+}}
 
-\item{ti_penalty}{- penalty applied for each increment in Title's levenshtein distance}
+\item{ti_penalty}{\itemize{
+\item penalty applied for each increment in Title's levenshtein distance
+}}
 
-\item{ti_max}{- max score value for Title}
+\item{ti_max}{\itemize{
+\item max score value for Title
+}}
 
-\item{so_penalty}{- penalty applied for each increment in Source's levenshtein distance}
+\item{so_penalty}{\itemize{
+\item penalty applied for each increment in Source's levenshtein distance
+}}
 
-\item{so_max}{- max score value for Source}
+\item{so_max}{\itemize{
+\item max score value for Source
+}}
 
-\item{au_penalty}{- penalty applied for each increment in Author's levenshtein distance}
+\item{au_penalty}{\itemize{
+\item penalty applied for each increment in Author's levenshtein distance
+}}
 
-\item{au_max}{- max  score value for Author}
+\item{au_max}{\itemize{
+\item max  score value for Author
+}}
 
-\item{py_max}{- max score value for Publication Year}
+\item{py_max}{\itemize{
+\item max score value for Publication Year
+}}
 
-\item{score_cutoff}{- minimum final score for a valid match between two documents}
+\item{score_cutoff}{\itemize{
+\item minimum final score for a valid match between two documents
+}}
 }
 \value{
 a modified version of db_list where matching documents share the same UUID

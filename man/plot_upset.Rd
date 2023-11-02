@@ -7,9 +7,13 @@
 plot_upset(db_list, ...)
 }
 \arguments{
-\item{db_list}{- list of matched dataframes (with UUID column added by biblioverlap)}
+\item{db_list}{\itemize{
+\item list of matched dataframes (with UUID column added by biblioverlap)
+}}
 
-\item{...}{- arguments to be passed down to UpsetR::upset()}
+\item{...}{\itemize{
+\item arguments to be passed down to \code{\link[UpSetR:upset]{UpSetR::upset()}}
+}}
 }
 \value{
 a UpSet plot

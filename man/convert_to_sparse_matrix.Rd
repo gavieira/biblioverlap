@@ -7,7 +7,9 @@
 convert_to_sparse_matrix(matrix)
 }
 \arguments{
-\item{matrix}{- A matrix object}
+\item{matrix}{\itemize{
+\item A matrix object
+}}
 }
 \value{
 a matrix in sparseMatrix format, where negative values have been replaced by 0

@@ -7,9 +7,13 @@
 any_empty_dfs(df1, df2)
 }
 \arguments{
-\item{df1}{- A data.frame object}
+\item{df1}{\itemize{
+\item A data.frame object
+}}
 
-\item{df2}{- A second data.frame object}
+\item{df2}{\itemize{
+\item A second data.frame object
+}}
 }
 \value{
 a boolean value

@@ -7,7 +7,9 @@
 generating_db_col(db_list, matching_fields)
 }
 \arguments{
-\item{db_list}{- blabla}
+\item{db_list}{\itemize{
+\item blabla
+}}
 
 \item{matching_fields}{-blabla}
 }

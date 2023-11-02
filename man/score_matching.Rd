@@ -19,27 +19,49 @@ score_matching(
 )
 }
 \arguments{
-\item{db1}{- First bibliographic database in the comparison}
+\item{db1}{\itemize{
+\item First bibliographic database in the comparison
+}}
 
-\item{db2}{- Second bibliographic database in the comparison}
+\item{db2}{\itemize{
+\item Second bibliographic database in the comparison
+}}
 
-\item{n_threads}{- number of (logical) cores to be used in the matching}
+\item{n_threads}{\itemize{
+\item number of (logical) cores to be used in the matching
+}}
 
-\item{ti_penalty}{- penalty applied for each increment in Title's levenshtein distance}
+\item{ti_penalty}{\itemize{
+\item penalty applied for each increment in Title's levenshtein distance
+}}
 
-\item{ti_max}{- max score value for Title}
+\item{ti_max}{\itemize{
+\item max score value for Title
+}}
 
-\item{so_penalty}{- penalty applied for each increment in Source's levenshtein distance}
+\item{so_penalty}{\itemize{
+\item penalty applied for each increment in Source's levenshtein distance
+}}
 
-\item{so_max}{- max score value for Source}
+\item{so_max}{\itemize{
+\item max score value for Source
+}}
 
-\item{au_penalty}{- penalty applied for each increment in Author's levenshtein distance}
+\item{au_penalty}{\itemize{
+\item penalty applied for each increment in Author's levenshtein distance
+}}
 
-\item{au_max}{- max score value for Author}
+\item{au_max}{\itemize{
+\item max score value for Author
+}}
 
-\item{py_max}{- max score value for Publication Year}
+\item{py_max}{\itemize{
+\item max score value for Publication Year
+}}
 
-\item{score_cutoff}{- minimum final score for a valid match between two documents}
+\item{score_cutoff}{\itemize{
+\item minimum final score for a valid match between two documents
+}}
 }
 \value{
 a list containing match data

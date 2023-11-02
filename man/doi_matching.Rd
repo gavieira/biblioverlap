@@ -7,13 +7,21 @@
 doi_matching(db1, db2, n_threads, doi_score = 2)
 }
 \arguments{
-\item{db1}{- First bibliographic database in the comparison}
+\item{db1}{\itemize{
+\item First bibliographic database in the comparison
+}}
 
-\item{db2}{- Second bibliographic database in the comparison}
+\item{db2}{\itemize{
+\item Second bibliographic database in the comparison
+}}
 
-\item{n_threads}{- number of (logical) cores to be used in the matching}
+\item{n_threads}{\itemize{
+\item number of (logical) cores to be used in the matching
+}}
 
-\item{doi_score}{- custom score value to help identify DOI matches in previous comparisons}
+\item{doi_score}{\itemize{
+\item custom score value to help identify DOI matches in previous comparisons
+}}
 }
 \value{
 a list containing match data

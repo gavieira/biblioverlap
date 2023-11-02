@@ -7,9 +7,13 @@
 data_preprocessing(db_list, matching_fields)
 }
 \arguments{
-\item{db_list}{- list containing a dataframe for each set}
+\item{db_list}{\itemize{
+\item list containing a dataframe for each set
+}}
 
-\item{matching_fields}{- list containing the names of the columns used in the matching procedure}
+\item{matching_fields}{\itemize{
+\item list containing the names of the columns used in the matching procedure
+}}
 }
 \value{
 a list containing a (modified) dataframe for each set

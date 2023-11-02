@@ -7,7 +7,9 @@
 subset_db_for_doi_match(db)
 }
 \arguments{
-\item{db}{- dataframe containing all fields from the bibliographic database records}
+\item{db}{\itemize{
+\item dataframe containing all fields from the bibliographic database records
+}}
 }
 \value{
 a subset of the database containing only relevant fields for the doi matching procedure

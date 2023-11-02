@@ -37,3 +37,4 @@ Depends:
     R (>= 4.1.2)
 URL: https://github.com/gavieira/biblioverlap
 BugReports: https://github.com/gavieira/biblioverlap/issues
+Roxygen: list(markdown = TRUE)

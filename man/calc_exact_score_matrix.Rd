@@ -7,11 +7,17 @@
 calc_exact_score_matrix(db1_col, db2_col, max_score)
 }
 \arguments{
-\item{db1_col}{- Column from db1 with values to be compared}
+\item{db1_col}{\itemize{
+\item Column from db1 with values to be compared
+}}
 
-\item{db2_col}{- Column from db2 with values to be compared}
+\item{db2_col}{\itemize{
+\item Column from db2 with values to be compared
+}}
 
-\item{max_score}{- Max score value}
+\item{max_score}{\itemize{
+\item Max score value
+}}
 }
 \value{
 a sparseMatrix object containing score values

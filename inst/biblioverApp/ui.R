@@ -3,6 +3,8 @@ source('ui_components.R')
 
 ui <- fluidPage(
   custom_styles,
+  favicon,
+  title = 'Biblioverlap',
   navbarPage('Biblioverlap',
             id = 'tabs',
     tabPanel('Input Data',
@@ -49,6 +51,7 @@ ui <- fluidPage(
              ),
 
     tabPanel('Merge Files',
-             merge_files_ui )
+             merge_files_ui
+             )
     )
 )

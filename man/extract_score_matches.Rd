@@ -7,11 +7,17 @@
 extract_score_matches(final_score_matrix, db1_index, db2_index)
 }
 \arguments{
-\item{final_score_matrix}{- matrix with final score values}
+\item{final_score_matrix}{\itemize{
+\item matrix with final score values
+}}
 
-\item{db1_index}{- db1 index column}
+\item{db1_index}{\itemize{
+\item db1 index column
+}}
 
-\item{db2_index}{- db2 index column}
+\item{db2_index}{\itemize{
+\item db2 index column
+}}
 }
 \value{
 a list containing match data

@@ -7,9 +7,13 @@
 plot_venn(db_list, ...)
 }
 \arguments{
-\item{db_list}{- list of matched dataframes (with UUID column added by biblioverlap)}
+\item{db_list}{\itemize{
+\item list of matched dataframes (with UUID column added by biblioverlap)
+}}
 
-\item{...}{- Additional arguments that can be passed down to `ggVennDiagram:ggVennDiagram`}
+\item{...}{\itemize{
+\item Additional arguments that can be passed down to \code{\link[ggVennDiagram:ggVennDiagram]{ggVennDiagram::ggVennDiagram()}}
+}}
 }
 \value{
 a Venn Diagram
