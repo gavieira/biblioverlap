@@ -3,7 +3,7 @@
 #' @param db_list - input list containing a dataframe for each set
 #' @param matching_fields - list containing the names of the columns to be used in the matching procedure
 #'
-#' @return  a list containing a duplicate-free dataframe for each set of bibliographic data
+#' @return  a list containing a (duplicate-free) dataframe for each set
 #'
 removing_duplicates <- function(db_list, matching_fields) {
   doi_col <- dplyr::sym(matching_fields$DI)
@@ -24,7 +24,7 @@ removing_duplicates <- function(db_list, matching_fields) {
 #' @param db_list - list containing a dataframe for each set
 #' @param matching_fields - list containing the names of the columns to be used in the matching procedure
 #'
-#' @return  a list containing a (modified) dataframe for each set
+#' @return  a list containing a (pre-processed) dataframe for each set
 #'
 data_preprocessing <- function(db_list, matching_fields) {
   preprocessed_data <- lapply(db_list, function(db) {
@@ -36,7 +36,6 @@ data_preprocessing <- function(db_list, matching_fields) {
       dplyr::mutate_all(trimws) %>% #Removing whitespace from all values
       dplyr::mutate_all(~ifelse(. == "" | is.null(.), NA, .) ) %>% #Converting empty/null values to NA
       dplyr::mutate(score = 0) %>% #This column will be used to exclude documents that have already been matched to another database from subsequent comparisons, reducing execution time
-      #tibble::rownames_to_column(var = 'index') %>% #Adding a column with the index of row
       dplyr::mutate(index = 1:nrow(.)) %>%
       dplyr::mutate(UUID = sapply(1:dplyr::n(), uuid::UUIDgenerate)) %>% #Generating UUIDs for each row
       dplyr::relocate(index, UUID, DI, TI, PY, AU, SO, score)
