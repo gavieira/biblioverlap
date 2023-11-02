@@ -2,7 +2,7 @@
 % Please edit documentation in R/03-doi_matching.R
 \name{doi_matching}
 \alias{doi_matching}
-\title{Document matching using DOI (Digital Object Identifier) data for two dataframes}
+\title{Document matching using unique identifiers for two bibliographic datasets}
 \usage{
 doi_matching(db1, db2, n_threads, doi_score = 2)
 }
@@ -27,5 +27,6 @@ doi_matching(db1, db2, n_threads, doi_score = 2)
 a list containing match data
 }
 \description{
-Document matching using DOI (Digital Object Identifier) data for two dataframes
+This function receives two lists of unique identifiers (e.g. DOI - Digital Object Identifier) and returns a list containing the matches of list1 against list2
+This step of the matching is also given a "fake score" that will be used as a tag to identify and exclude matched documents from subsequent doi matching steps, increasing overall efficiency of the whole process
 }
