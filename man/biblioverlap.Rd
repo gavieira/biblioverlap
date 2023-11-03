@@ -2,13 +2,12 @@
 % Please edit documentation in R/05-biblioverlap.R
 \name{biblioverlap}
 \alias{biblioverlap}
-\title{Obtains document overlap between databases from a named list}
+\title{Document-level matching of bibliographic datasets}
 \usage{
 biblioverlap(
   db_list,
-  db_order = names(db_list),
   matching_fields = default_matching_fields,
-  n_threads = parallel::detectCores(),
+  n_threads = 1,
   ti_penalty = 0.1,
   ti_max = 0.6,
   so_penalty = 0.1,
@@ -24,53 +23,86 @@ biblioverlap(
 \item list of dataframes containing the sets of bibliographic data
 }}
 
-\item{db_order}{\itemize{
-\item order of the databases
-}}
-
 \item{matching_fields}{\itemize{
-\item Column names used in the matching
+\item Column names used in the matching. Default: \link{default_matching_fields}
 }}
 
 \item{n_threads}{\itemize{
-\item number of (logical) cores used in the matching procedures
+\item number of (logical) cores used in the matching procedures. Default: 1
 }}
 
 \item{ti_penalty}{\itemize{
-\item penalty applied for each increment in Title's levenshtein distance
+\item penalty applied for each increment in Title's Levenshtein distance. Default: 0.1
 }}
 
 \item{ti_max}{\itemize{
-\item max score value for Title
+\item max score value for Title. Default: 0.6
 }}
 
 \item{so_penalty}{\itemize{
-\item penalty applied for each increment in Source's levenshtein distance
+\item penalty applied for each increment in Source's Levenshtein distance. Default: 0.1
 }}
 
 \item{so_max}{\itemize{
-\item max score value for Source
+\item max score value for Source. Default: 0.3
 }}
 
 \item{au_penalty}{\itemize{
-\item penalty applied for each increment in Author's levenshtein distance
+\item penalty applied for each increment in Author's Levenshtein distance. Default: 0.1
 }}
 
 \item{au_max}{\itemize{
-\item max  score value for Author
+\item max  score value for Author. Default: 0.3
 }}
 
 \item{py_max}{\itemize{
-\item max score value for Publication Year
+\item max score value for Publication Year. Default: 0.3
 }}
 
 \item{score_cutoff}{\itemize{
-\item minimum final score for a valid match between two documents
+\item minimum final score for a valid match between two documents. Default: 1
 }}
 }
 \value{
-a modified version of db_list where matching documents share the same UUID
+a list object containing:
+
+(i) \code{db_list}: a modified version of db_list where matching documents share the same UUID
+
+(ii) \code{summary}: a summary of the results of the matching procedure
 }
 \description{
-Obtains document overlap between databases from a named list
+This function identifies document overlap between bibliographic datasets and records it through the use of Universally Unique Identifiers (UUID).
+}
+\details{
+In this procedure, any duplicates in the same dataset are removed. Then, Universally Unique Identifiers (UUID) are attributed to each record. If a match is found between two documents in a pairwise comparison, the UUID of the record from the first dataset is copied to the record on the second.
+
+All preprocessing and modifications to the dataset are performed in a copy of the original data, which is used internally by the program. After all pairwise comparisons are completed, the UUID data is added as a new column in the original data.
+
+Thus, the \code{db_list} returned by this function contains the same fields provided by the user plus the UUID column with the overlap information. This allows for further analysis using other fields (e.g. 'number of citations' or 'document type').
+}
+\note{
+In its internal data, the program will attempt to split the AU (Author) field to extract only the first author, for which it will calculate the Levenshtein distance.
+
+It assumes that the AU field is ";" (semicolon) separated. Thus, in order to correctly perform the matching procedure to when another separator is being applied to this field, the user can either: (i) change the separator to semicolon; or (ii) create a new column containing only the first author.
+}
+\examples{
+#Example list of input dataframes
+lapply(ufrj_bio_0122, head, n=1)
+
+#List of columns for matching
+matching_cols <- list(DI = 'DOI',
+                      TI = 'Title',
+                      PY = 'Publication Year',
+                      AU = 'Author/s',
+                      SO = 'Source Title')
+
+#Running document-level matching procedure
+matched_data <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
+
+#Taking a look at the matched db_list
+lapply(matched_data$db_list, head, n=1)
+
+#Taking a look at the matching results summary
+matched_data$summary
+
 }

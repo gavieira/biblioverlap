@@ -21,3 +21,4 @@ a list containing a (pre-processed) dataframe for each set
 \description{
 Processes bibliographic data for the downstream matching procedure
 }
+\keyword{internal}

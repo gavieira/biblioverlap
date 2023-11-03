@@ -5,13 +5,16 @@
 \alias{default_matching_fields}
 \title{Default matching fields for \code{\link[=biblioverlap]{biblioverlap()}}}
 \format{
-A named list
+An object of class \code{list} of length 5.
 }
 \usage{
 default_matching_fields
 }
 \description{
-Each element in the list corresponds to a column that will be used to match documents between bibliographic datasets
+Each element in the named list corresponds to a column that will be used to match documents between bibliographic datasets.
+}
+\details{
+In total: there are five columns that need to be specified:
 }
 \section{Fields}{
 

@@ -23,9 +23,10 @@ utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI', 'SO', '.
 
 #' Default matching fields for [biblioverlap::biblioverlap()]
 #'
-#' Each element in the list corresponds to a column that will be used to match documents between bibliographic datasets
+#' Each element in the named list corresponds to a column that will be used to match documents between bibliographic datasets.
 #'
-#' @format A named list
+#' In total: there are five columns that need to be specified:
+#'
 #' @field doi Unique identifier (e.g. DOI)
 #' @field title Document title
 #' @field pubyear Publication year

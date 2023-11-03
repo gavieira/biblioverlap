@@ -21,3 +21,4 @@ a list containing a (duplicate-free) dataframe for each set
 \description{
 Removes duplicates from each bibliographic dataset
 }
+\keyword{internal}

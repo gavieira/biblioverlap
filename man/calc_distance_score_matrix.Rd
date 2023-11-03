@@ -33,3 +33,4 @@ a sparseMatrix object containing score values
 \description{
 Calculates score matrix for a pair of databases based on edit (Levenshtein) distance
 }
+\keyword{internal}

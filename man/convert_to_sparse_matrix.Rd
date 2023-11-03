@@ -21,11 +21,4 @@ It acts as a helper function to both \code{\link[=calc_distance_score_matrix]{ca
 
 Since it is used in the score matching procedure, negative values are replaced by 0 to further reduce RAM usage.
 }
-\examples{
-# Creating a sample matrix
-sample_matrix <- matrix(c(1, -2, NA, 4, 5, 0), nrow = 2, ncol = 3)
-
-# Converting sample matrix to sparseMatrix format
-convert_to_sparse_matrix(sample_matrix)
-
-}
+\keyword{internal}

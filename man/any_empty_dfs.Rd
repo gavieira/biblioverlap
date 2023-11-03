@@ -25,10 +25,4 @@ If at least one of the dataframes are empty, returns TRUE. Else, returns FALSE.
 
 It is intended to help the document matching functions deal with datasets that have only DOI (or DOIless) records.
 }
-\examples{
-df1 <- data.frame(A = sample(1:10)) #non-empty dataframe
-df2 <- data.frame() #empty dataframe
-df3 <- data.frame(A = c('test1', 'test2')) #non-empty dataframe
-any_empty_dfs(df1, df2) #TRUE, as df2 is empty
-any_empty_dfs(df1, df3) #FALSE, as there are no empty dfs in the arguments
-}
+\keyword{internal}

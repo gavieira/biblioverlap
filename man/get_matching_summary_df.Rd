@@ -2,18 +2,19 @@
 % Please edit documentation in R/05-biblioverlap.R
 \name{get_matching_summary_df}
 \alias{get_matching_summary_df}
-\title{Obtaining a table summary of biblioverlap's matching}
+\title{Obtaining a table summary of biblioverlap's matching results}
 \usage{
-get_matching_summary_df(matched_db_list)
+get_matching_summary_df(internal_db_list)
 }
 \arguments{
-\item{matched_db_list}{\itemize{
-\item list of matched dataframes (with UUID column added by biblioverlap)
+\item{internal_db_list}{\itemize{
+\item internal_db_list used by \code{\link[=biblioverlap]{biblioverlap()}} for document matching
 }}
 }
 \value{
-a table summary the matching results
+a table summary  of the matching procedure results
 }
 \description{
-Obtaining a table summary of biblioverlap's matching
+Obtaining a table summary of biblioverlap's matching results
 }
+\keyword{internal}

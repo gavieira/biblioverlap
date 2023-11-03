@@ -8,6 +8,7 @@
 #'
 #' @return a sparseMatrix object containing score values
 #'
+#' @keywords internal
 calc_distance_score_matrix <- function(db1_col, db2_col, max_score, penalty, n_threads) {
   stringdist_matrix <- stringdist::stringdistmatrix(db1_col, db2_col, method = "lv", nthread = n_threads)
   stringdist_matrix <- max_score - stringdist_matrix * penalty
@@ -23,6 +24,7 @@ calc_distance_score_matrix <- function(db1_col, db2_col, max_score, penalty, n_t
 #'
 #' @return a sparseMatrix object containing score values
 #'
+#' @keywords internal
 calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
   exact_matrix <- outer(db1_col, db2_col, FUN = "==") + 0
   exact_matrix <- max_score * exact_matrix
@@ -47,6 +49,7 @@ calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
 #'
 #' @return a list containing match data
 #'
+#' @keywords internal
 extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
   db1_ids <- db1_index # db1 index vector
   max_scores <- apply(final_score_matrix, 1, max) # max score value for each row (i.e. for each db1_record)
@@ -74,17 +77,18 @@ extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
 #' @param db1 - First bibliographic database in the comparison
 #' @param db2 - Second bibliographic database in the comparison
 #' @param n_threads - number of (logical) cores to be used in the matching
-#' @param ti_penalty - penalty applied for each increment in Title's levenshtein distance
+#' @param ti_penalty - penalty applied for each increment in Title's Levenshtein distance
 #' @param ti_max - max score value for Title
-#' @param so_penalty - penalty applied for each increment in Source's levenshtein distance
+#' @param so_penalty - penalty applied for each increment in Source's Levenshtein distance
 #' @param so_max - max score value for Source
-#' @param au_penalty - penalty applied for each increment in Author's levenshtein distance
+#' @param au_penalty - penalty applied for each increment in Author's Levenshtein distance
 #' @param au_max - max score value for Author
 #' @param py_max - max score value for Publication Year
 #' @param score_cutoff - minimum final score for a valid match between two documents
 #'
 #' @return a list containing match data
 #'
+#' @keywords internal
 score_matching <- function(db1, db2, n_threads,
                               ti_penalty, ti_max,
                               so_penalty, so_max,

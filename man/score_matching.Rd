@@ -32,7 +32,7 @@ score_matching(
 }}
 
 \item{ti_penalty}{\itemize{
-\item penalty applied for each increment in Title's levenshtein distance
+\item penalty applied for each increment in Title's Levenshtein distance
 }}
 
 \item{ti_max}{\itemize{
@@ -40,7 +40,7 @@ score_matching(
 }}
 
 \item{so_penalty}{\itemize{
-\item penalty applied for each increment in Source's levenshtein distance
+\item penalty applied for each increment in Source's Levenshtein distance
 }}
 
 \item{so_max}{\itemize{
@@ -48,7 +48,7 @@ score_matching(
 }}
 
 \item{au_penalty}{\itemize{
-\item penalty applied for each increment in Author's levenshtein distance
+\item penalty applied for each increment in Author's Levenshtein distance
 }}
 
 \item{au_max}{\itemize{
@@ -70,3 +70,4 @@ a list containing match data
 This function calculates each component of the score in a different score matrix, then sums those in order to obtain the final score.
 Finally, it extracts the highest score match for each row of the final score matrix.
 }
+\keyword{internal}

@@ -17,3 +17,4 @@ a subset df with all needed data for the score matching procedure
 \description{
 Subsetting bibliographic database records to use in the score matching procedure
 }
+\keyword{internal}

@@ -13,11 +13,12 @@
 #' @return a boolean value
 #'
 #' @examples
-#' df1 <- data.frame(A = sample(1:10)) #non-empty dataframe
-#' df2 <- data.frame() #empty dataframe
-#' df3 <- data.frame(A = c('test1', 'test2')) #non-empty dataframe
-#' any_empty_dfs(df1, df2) #TRUE, as df2 is empty
-#' any_empty_dfs(df1, df3) #FALSE, as there are no empty dfs in the arguments
+#' #df1 <- data.frame(A = sample(1:10)) #non-empty dataframe
+#' #df2 <- data.frame() #empty dataframe
+#' #df3 <- data.frame(A = c('test1', 'test2')) #non-empty dataframe
+#' #any_empty_dfs(df1, df2) #TRUE, as df2 is empty
+#' #any_empty_dfs(df1, df3) #FALSE, as there are no empty dfs in the arguments
+#' @keywords internal
 any_empty_dfs <- function(df1, df2){
   empty_dfs <- sapply(list(df1, df2), function(db) nrow(db) == 0)
   return( any(empty_dfs) )
@@ -30,6 +31,7 @@ any_empty_dfs <- function(df1, df2){
 #'
 #' @return a subset of the database containing only relevant fields for the unique id matching procedure
 #'
+#' @keywords internal
 subset_db_for_doi_match <- function(db) {
   db %>%
     dplyr::filter(!is.na(DI) & score < 1) %>%
@@ -43,6 +45,7 @@ subset_db_for_doi_match <- function(db) {
 #'
 #' @return a subset df with all needed data for the score matching procedure
 #'
+#' @keywords internal
 subset_db_for_score_match <- function(df) {
   df %>%
     dplyr::filter(is.na(DI) & score < 1) %>%
@@ -71,6 +74,7 @@ subset_db_for_score_match <- function(df) {
 #' # Converting sample matrix to sparseMatrix format
 #' convert_to_sparse_matrix(sample_matrix)
 #'
+#' @keywords internal
 convert_to_sparse_matrix <- function(matrix) {
   matrix[is.na(matrix) | matrix < 0] <- 0 # Replacing NA and negative values with zeroes
   return( Matrix::Matrix(matrix, sparse = TRUE) ) #Returning sparse_matrix (way more memory efficient)

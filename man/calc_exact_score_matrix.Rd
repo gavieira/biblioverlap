@@ -25,3 +25,4 @@ a sparseMatrix object containing score values
 \description{
 Calculates score matrix for a pair of databases based on exact match
 }
+\keyword{internal}

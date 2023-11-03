@@ -34,3 +34,4 @@ To avoid adding more dependencies to this package, we have chosen to keep this f
 
 Long story short, if the computer has enough RAM to calculate the score matrices, it will have enough RAM to run this function, so we chose to use only base functions in it.
 }
+\keyword{internal}
