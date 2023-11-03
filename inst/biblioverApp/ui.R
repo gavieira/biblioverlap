@@ -1,5 +1,4 @@
-source('ui_components.R')
-
+source('ui_components.R', local = TRUE)
 
 ui <- fluidPage(
   custom_styles,
