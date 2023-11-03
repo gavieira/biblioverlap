@@ -12,12 +12,6 @@
 #'
 #' @return a boolean value
 #'
-#' @examples
-#' #df1 <- data.frame(A = sample(1:10)) #non-empty dataframe
-#' #df2 <- data.frame() #empty dataframe
-#' #df3 <- data.frame(A = c('test1', 'test2')) #non-empty dataframe
-#' #any_empty_dfs(df1, df2) #TRUE, as df2 is empty
-#' #any_empty_dfs(df1, df3) #FALSE, as there are no empty dfs in the arguments
 #' @keywords internal
 any_empty_dfs <- function(df1, df2){
   empty_dfs <- sapply(list(df1, df2), function(db) nrow(db) == 0)
@@ -61,18 +55,11 @@ subset_db_for_score_match <- function(df) {
 #' @description
 #' This function converts regular (dense) matrices to sparse, which decreases overall RAM allocation.
 #'
-#' It acts as a helper function to both [biblioverlap::calc_distance_score_matrix()] and [biblioverlap::calc_exact_score_matrix()].
+#' It acts as a helper function to both [calc_distance_score_matrix()] and [calc_exact_score_matrix()].
 #'
-#' Since it is used in the score matching procedure, negative values are replaced by 0 to further reduce RAM usage.
+#' Since it is used in the score matching procedure, negative values and NAs are replaced by 0 to further reduce RAM usage.
 #'
 #' @return a matrix in sparseMatrix format, where negative values have been replaced by 0
-#'
-#' @examples
-#' # Creating a sample matrix
-#' sample_matrix <- matrix(c(1, -2, NA, 4, 5, 0), nrow = 2, ncol = 3)
-#'
-#' # Converting sample matrix to sparseMatrix format
-#' convert_to_sparse_matrix(sample_matrix)
 #'
 #' @keywords internal
 convert_to_sparse_matrix <- function(matrix) {

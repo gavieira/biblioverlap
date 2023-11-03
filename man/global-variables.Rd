@@ -6,3 +6,4 @@
 \description{
 Internally, biblioverlap uses specific field names to refer to the data it processes. They are added here for unquoted use in dplyr.
 }
+\keyword{internal}

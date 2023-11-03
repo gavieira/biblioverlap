@@ -82,7 +82,7 @@ get_matching_summary_df <- function(internal_db_list) {
 #'
 #'
 #' @param db_list - list of dataframes containing the sets of bibliographic data
-#' @param matching_fields - Column names used in the matching. Default: [biblioverlap::default_matching_fields]
+#' @param matching_fields - Column names used in the matching. Default: [default_matching_fields]
 #' @param n_threads - number of (logical) cores used in the matching procedures. Default: 1
 #' @param ti_max - max score value for Title. Default: 0.6
 #' @param ti_penalty - penalty applied for each increment in Title's Levenshtein distance. Default: 0.1

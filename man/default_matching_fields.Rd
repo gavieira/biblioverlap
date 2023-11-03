@@ -14,20 +14,20 @@ default_matching_fields
 Each element in the named list corresponds to a column that will be used to match documents between bibliographic datasets.
 }
 \details{
-In total: there are five columns that need to be specified:
+In total, there are five columns that need to be specified. The default values come from column names in \href{https://www.lens.org/}{The Lens}.
 }
 \section{Fields}{
 
 \describe{
-\item{\code{doi}}{Unique identifier (e.g. DOI)}
+\item{\code{doi}}{Unique identifier (e.g. DOI). Default: 'DOI'}
 
-\item{\code{title}}{Document title}
+\item{\code{title}}{Document title. Default: 'Title'}
 
-\item{\code{pubyear}}{Publication year}
+\item{\code{pubyear}}{Publication year. Default: 'Publication Year'}
 
-\item{\code{authors}}{Authors}
+\item{\code{authors}}{Authors. Default: 'Author/s'}
 
-\item{\code{source}}{Publication source}
+\item{\code{source}}{Publication source. Default: 'Source Title'}
 }}
 
-\keyword{datasets}
+\keyword{internal}

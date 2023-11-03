@@ -4,27 +4,35 @@
 \encoding{UTF-8}
 \name{ufrj_bio_0122}
 \alias{ufrj_bio_0122}
-\title{ufrj_bio_0122}
+\title{UFRJ-affiliated documents from biological sciences disciplines (January 2022)}
 \format{
 \subsection{\code{ufrj_bio_0122}}{
 
-A data frame with 7,240 rows and 60 columns:
+A named list with 4 elements. Each element is a dataframe that contains the following fields:
 \describe{
-\item{country}{Country name}
-\item{iso2, iso3}{2 & 3 letter ISO country codes}
-\item{year}{Year}
-...
+\item{Lens ID}{Unique identifier given to each record in The Lens database}
+\item{DOI}{Digital Object Identifier}
+\item{Title}{Document title}
+\item{Publication Year}{Document publication year}
+\item{Source Title}{Source (e.g. journal) where the document has been published}
+\item{Author/s}{Document authors}
+\item{Publication Type}{Type of the document (e.g. 'journal article', 'book chapter', etc...)}
+\item{Citing Works Count}{Total number of citations received by document at the time of data recovery}
+\item{Open Access Colour}{Type of open access (e.g. gold, bronze, green, etc...)}
 }
 }
 }
 \source{
-\url{https://www.who.int/teams/global-tuberculosis-programme/data}
+\url{https://www.lens.org}
 }
 \usage{
 ufrj_bio_0122
 }
 \description{
-Data obtained from \href{https://www.lens.org}{The Lens Scholarly Search}
-Report ...
+Data obtained from \href{https://www.lens.org/lens/search/scholar/list?q=}{The Lens Scholarly Search} in September 6, 2023.
+
+The original data contained all documents from four major biological sciences fields published in the year 2022 by at least one author affiliated to the Universidade Federal do Rio de Janeiro (UFRJ). The data was then subsampled to documents published exclusively in January 2022 to reduce package size.
+
+The biological disciplines featured in this dataset are \href{https://www.lens.org/lens/search/scholar/list?collectionId=212653}{Biochemistry}, \href{https://www.lens.org/lens/search/scholar/list?collectionId=212658}{Genetics}, \href{https://www.lens.org/lens/search/scholar/list?collectionId=212657}{Microbiology} and \href{https://www.lens.org/lens/search/scholar/list?collectionId=212655}{Zoology}.
 }
 \keyword{datasets}

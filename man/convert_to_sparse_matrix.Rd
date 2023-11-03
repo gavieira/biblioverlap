@@ -19,6 +19,6 @@ This function converts regular (dense) matrices to sparse, which decreases overa
 
 It acts as a helper function to both \code{\link[=calc_distance_score_matrix]{calc_distance_score_matrix()}} and \code{\link[=calc_exact_score_matrix]{calc_exact_score_matrix()}}.
 
-Since it is used in the score matching procedure, negative values are replaced by 0 to further reduce RAM usage.
+Since it is used in the score matching procedure, negative values and NAs are replaced by 0 to further reduce RAM usage.
 }
 \keyword{internal}
