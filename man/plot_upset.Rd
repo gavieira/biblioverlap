@@ -21,3 +21,11 @@ a UpSet plot
 \description{
 Plotting UpSet plot from biblioverlap results
 }
+\examples{
+#Running document-level matching procedure
+matched_data <- biblioverlap(ufrj_bio_0122)
+
+#Plotting the matching summary
+plot_upset(matched_data$db_list)
+
+}

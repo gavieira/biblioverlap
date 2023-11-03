@@ -21,3 +21,11 @@ a Venn Diagram
 \description{
 Plotting Venn Diagram from biblioverlap results
 }
+\examples{
+#Running document-level matching procedure
+matched_data <- biblioverlap(ufrj_bio_0122)
+
+#Plotting the matching summary
+plot_venn(matched_data$db_list)
+
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/06-plots_and_app.R
 \name{biblioverApp}
 \alias{biblioverApp}
-\title{Title}
+\title{Shiny App for the biblioverlap package}
 \usage{
 biblioverApp(port = NULL, max_upload_size = 1000, launch.browser = TRUE)
 }
@@ -23,5 +23,9 @@ biblioverApp(port = NULL, max_upload_size = 1000, launch.browser = TRUE)
 opens a instance of the biblioverlap UI
 }
 \description{
-Title
+Shiny App for the biblioverlap package
+}
+\examples{
+biblioverApp()
+
 }

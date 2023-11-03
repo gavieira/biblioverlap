@@ -89,7 +89,7 @@ It assumes that the AU field is ";" (semicolon) separated. Thus, in order to cor
 #Example list of input dataframes
 lapply(ufrj_bio_0122, head, n=1)
 
-#List of columns for matching
+#List of columns for matching (identical to biblioverlap()'s default column list)
 matching_cols <- list(DI = 'DOI',
                       TI = 'Title',
                       PY = 'Publication Year',
