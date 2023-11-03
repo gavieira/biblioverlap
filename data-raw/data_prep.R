@@ -1,5 +1,5 @@
 ##### Reading raw lens data
-##Data was downloaded from
+##Data was downloaded from The Lens (https://www.lens.org/)
 
 # Specifying path (inside project root)
 path <- 'data-raw'
@@ -46,6 +46,6 @@ ufrj_bio_0122 <- lapply(df_list, function(df) {
 })
 
 
-#Saving as compressed package dataset
-usethis::use_data(ufrj_bio_0122, overwrite = TRUE, compress = 'xz')
+#Saving as package data
+usethis::use_data(ufrj_bio_0122, compress = 'xz')
 

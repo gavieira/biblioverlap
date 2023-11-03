@@ -23,9 +23,12 @@ Plotting biblioverlap's matching summary
 }
 \examples{
 #Running document-level matching procedure
-matched_data <- biblioverlap(ufrj_bio_0122)
+biblioverlap_results <- biblioverlap(ufrj_bio_0122)
+
+#Checking biblioverlap results (summary table)
+biblioverlap_results$summary
 
 #Plotting the matching summary
-plot_matching_summary(matched_data$summary)
+plot_matching_summary(biblioverlap_results$summary)
 
 }

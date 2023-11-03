@@ -126,13 +126,13 @@ get_matching_summary_df <- function(internal_db_list) {
 #'                       SO = 'Source Title')
 #'
 #' #Running document-level matching procedure
-#' matched_data <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
 #'
 #' #Taking a look at the matched db_list
-#' lapply(matched_data$db_list, head, n=1)
+#' lapply(biblioverlap_results$db_list, head, n=1)
 #'
 #' #Taking a look at the matching results summary
-#' matched_data$summary
+#' biblioverlap_results$summary
 #'
 biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_threads = 1,
                         ti_penalty = 0.1, ti_max = 0.6,

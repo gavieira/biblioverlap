@@ -26,6 +26,6 @@ opens a instance of the biblioverlap UI
 Shiny App for the biblioverlap package
 }
 \examples{
-biblioverApp()
+#biblioverApp()
 
 }

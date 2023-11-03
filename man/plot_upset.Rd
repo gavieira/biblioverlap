@@ -23,9 +23,12 @@ Plotting UpSet plot from biblioverlap results
 }
 \examples{
 #Running document-level matching procedure
-matched_data <- biblioverlap(ufrj_bio_0122)
+biblioverlap_results <- biblioverlap(ufrj_bio_0122)
 
-#Plotting the matching summary
-plot_upset(matched_data$db_list)
+#Checking biblioverlap results (db_list)
+lapply(biblioverlap_results$db_list, head, n=1)
+
+#Plotting the UpSet plot
+plot_upset(biblioverlap_results$db_list)
 
 }

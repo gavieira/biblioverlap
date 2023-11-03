@@ -25,10 +25,13 @@ get_uuid_list <- function(db_list) {
 #'
 #' @examples
 #' #Running document-level matching procedure
-#' matched_data <- biblioverlap(ufrj_bio_0122)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122)
+#'
+#' #Checking biblioverlap results (summary table)
+#' biblioverlap_results$summary
 #'
 #' #Plotting the matching summary
-#' plot_matching_summary(matched_data$summary)
+#' plot_matching_summary(biblioverlap_results$summary)
 #'
 plot_matching_summary <- function(matching_summary_df, ...) {
   plot <- matching_summary_df %>%
@@ -50,10 +53,13 @@ plot_matching_summary <- function(matching_summary_df, ...) {
 #'
 #' @examples
 #' #Running document-level matching procedure
-#' matched_data <- biblioverlap(ufrj_bio_0122)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122)
 #'
-#' #Plotting the matching summary
-#' plot_venn(matched_data$db_list)
+#' #Checking biblioverlap results (db_list)
+#' lapply(biblioverlap_results$db_list, head, n=1)
+#'
+#' #Plotting the Venn diagram
+#' plot_venn(biblioverlap_results$db_list)
 #'
 plot_venn <- function(db_list, ...) {
   uuid <- get_uuid_list(db_list)
@@ -73,10 +79,13 @@ plot_venn <- function(db_list, ...) {
 #'
 #' @examples
 #' #Running document-level matching procedure
-#' matched_data <- biblioverlap(ufrj_bio_0122)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122)
 #'
-#' #Plotting the matching summary
-#' plot_upset(matched_data$db_list)
+#' #Checking biblioverlap results (db_list)
+#' lapply(biblioverlap_results$db_list, head, n=1)
+#'
+#' #Plotting the UpSet plot
+#' plot_upset(biblioverlap_results$db_list)
 #'
 plot_upset <- function(db_list, ...) {
   uuid <- get_uuid_list(db_list)
@@ -95,7 +104,7 @@ plot_upset <- function(db_list, ...) {
 #' @export
 #'
 #' @examples
-#' biblioverApp()
+#' #biblioverApp()
 #'
 biblioverApp <- function(port = NULL, max_upload_size = 1000, launch.browser = TRUE) {
   options(shiny.maxRequestSize = max_upload_size * 1024 * 1024)
