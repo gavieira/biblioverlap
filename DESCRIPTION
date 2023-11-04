@@ -34,7 +34,7 @@ Suggests:
     DT,
     testthat
 Depends: 
-    R (>= 4.3)
+    R (>= 4.1)
 URL: https://github.com/gavieira/biblioverlap
 BugReports: https://github.com/gavieira/biblioverlap/issues
 Roxygen: list(markdown = TRUE)
