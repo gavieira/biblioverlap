@@ -48,7 +48,7 @@ plot_matching_summary <- function(matching_summary_df, ...) {
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
 #' @param ... - Additional arguments that can be passed down to [ggVennDiagram::ggVennDiagram()]
 #'
-#' @return a Venn Diagram
+#' @return a Venn Diagram representation of document overlap between the input datasets
 #' @export
 #'
 #' @examples
@@ -74,7 +74,7 @@ plot_venn <- function(db_list, ...) {
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
 #' @param ... - arguments to be passed down to [UpSetR::upset()]
 #'
-#' @return a UpSet plot
+#' @return a UpSet plot representation of document overlap between the input datasets
 #' @export
 #'
 #' @examples

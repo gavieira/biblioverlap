@@ -3,7 +3,7 @@ Type: Package
 Title: Document-Level Matching Between Bibliographic Datasets
 Version: 0.9 
 Authors@R: c(
-    person("Gabriel", "Vieira", , "gabriel.vieira@bioqmed.ufrj.br", role = c("aut", "cre"),
+    person("Gabriel", "Vieira", , "gabriel.vieira@bioqmed.ufrj.br", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5529-7628")),
     person("Jacqueline", "Leta", , "jleta@bioqmed.ufrj.br", role = "ctb",
            comment = c(ORCID = "0000-0002-3271-7749"))
@@ -13,7 +13,7 @@ Description: Tools for identifying and visualizing document overlap in any numbe
     identifier (e.g. DOI) and, for records where the identifier is absent, through a score calculated from a set of
     fields commonly found in bibliographic datasets (Title, Source, Authors and Publication Year). 
     Additionally, it provides functions to visualize the results of the document matching through a Venn Diagram 
-    and/or UpSet plot.
+    and/or UpSet plot, as well as a summary of the matching procedure.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
