@@ -8,7 +8,9 @@
 [![R-CMD-check](https://github.com/gavieira/biblioverlap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gavieira/biblioverlap/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-![](inst/biblioverApp/www/biblioverlap_sticker.png)
+<p align="center" width="100%">
+<img width="33%" src="inst/biblioverApp/www/biblioverlap_sticker.png">
+</p>
 
 Biblioverlap is a R package that implements a procedure for
 identification and visualization of document overlap in any number of
