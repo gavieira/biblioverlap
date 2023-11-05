@@ -8,7 +8,7 @@
 #'
 #' @return a sparseMatrix object containing score values
 #'
-#' @keywords internal
+#' @noRd
 calc_distance_score_matrix <- function(db1_col, db2_col, max_score, penalty, n_threads) {
   stringdist_matrix <- stringdist::stringdistmatrix(db1_col, db2_col, method = "lv", nthread = n_threads)
   stringdist_matrix <- max_score - stringdist_matrix * penalty
@@ -24,7 +24,7 @@ calc_distance_score_matrix <- function(db1_col, db2_col, max_score, penalty, n_t
 #'
 #' @return a sparseMatrix object containing score values
 #'
-#' @keywords internal
+#' @noRd
 calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
   exact_matrix <- outer(db1_col, db2_col, FUN = "==") + 0
   exact_matrix <- max_score * exact_matrix
@@ -49,7 +49,7 @@ calc_exact_score_matrix <- function(db1_col, db2_col, max_score) {
 #'
 #' @return a list containing match data
 #'
-#' @keywords internal
+#' @noRd
 extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
   db1_ids <- db1_index # db1 index vector
   max_scores <- apply(final_score_matrix, 1, max) # max score value for each row (i.e. for each db1_record)
@@ -88,7 +88,7 @@ extract_score_matches <- function(final_score_matrix, db1_index, db2_index) {
 #'
 #' @return a list containing match data
 #'
-#' @keywords internal
+#' @noRd
 score_matching <- function(db1, db2, n_threads,
                               ti_penalty, ti_max,
                               so_penalty, so_max,

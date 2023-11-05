@@ -16,7 +16,7 @@ plot_upset(db_list, ...)
 }}
 }
 \value{
-a UpSet plot
+a UpSet plot representation of document overlap between the input datasets
 }
 \description{
 Plotting UpSet plot from biblioverlap results

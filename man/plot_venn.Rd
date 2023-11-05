@@ -16,7 +16,7 @@ plot_venn(db_list, ...)
 }}
 }
 \value{
-a Venn Diagram
+a Venn Diagram representation of document overlap between the input datasets
 }
 \description{
 Plotting Venn Diagram from biblioverlap results

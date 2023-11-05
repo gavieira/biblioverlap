@@ -24,7 +24,7 @@ biblioverlap(
 }}
 
 \item{matching_fields}{\itemize{
-\item Column names used in the matching. Default: \link{default_matching_fields}
+\item Five column names used in the matching. Should be universal across all datasets and provided as a named list with the following names: \strong{DI} (unique identifier), \strong{TI} (document title), \strong{PY} (publication year), \strong{SO} (publication source) and \strong{AU} (Authors). Default values come from \href{https://support.lens.org/knowledge-base/scholar-field-definition/}{The Lens scholar field definition}.
 }}
 
 \item{n_threads}{\itemize{
@@ -89,7 +89,7 @@ It assumes that the AU field is ";" (semicolon) separated. Thus, in order to cor
 #Example list of input dataframes
 lapply(ufrj_bio_0122, head, n=1)
 
-#List of columns for matching (identical to biblioverlap()'s default column list)
+#List of columns for matching (identical to biblioverlap()'s defaults)
 matching_cols <- list(DI = 'DOI',
                       TI = 'Title',
                       PY = 'Publication Year',

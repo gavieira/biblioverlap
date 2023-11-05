@@ -19,7 +19,7 @@ NULL
 #' Internally, biblioverlap uses specific field names to refer to the data it processes. They are added here for unquoted use in dplyr.
 #'
 #' @name global variables
-#' @keywords internal
+#' @noRd
 utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI', 'SO', '.', 'UUID'))
 
 #' Default matching fields for [biblioverlap()]
@@ -34,7 +34,7 @@ utils::globalVariables(c('index','score', 'AU', 'DI', 'J9', 'PY', 'TI', 'SO', '.
 #' @field authors Authors. Default: 'Author/s'
 #' @field source Publication source. Default: 'Source Title'
 #'
-#' @keywords internal
+#' @noRd
 default_matching_fields <- list(DI = 'DOI',
                                 TI = 'Title',
                                 PY = 'Publication Year',

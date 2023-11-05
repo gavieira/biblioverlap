@@ -11,7 +11,7 @@
 #'
 #' @return a list containing match data
 #'
-#' @keywords internal
+#' @noRd
 doi_matching <- function(db1, db2, n_threads, doi_score = 2) {
   subset_db1 <- subset_db_for_doi_match(db1) #Extracting DOI info from db1
   subset_db2 <- subset_db_for_doi_match(db2) #Extracting DOI info from db2

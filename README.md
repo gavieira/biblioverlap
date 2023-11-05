@@ -107,7 +107,7 @@ can be used to convert the summary of the matching procedure into a bar
 plot.
 
 ``` r
-#Taking a look at the matching results summary
+#Plotting the matching results summary
 plot_matching_summary(biblioverlap_results$summary)
 ```
 

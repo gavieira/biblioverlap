@@ -6,7 +6,7 @@
 #'
 #' @return db2 with updated uuid and score values
 #'
-#' @keywords internal
+#' @noRd
 update_db2_matches <- function(db1, db2, match_list) {
   for (match in match_list) {
     db1_index <- match$db1_id
@@ -29,7 +29,7 @@ update_db2_matches <- function(db1, db2, match_list) {
 #'
 #' @return a db_list with unique records that
 #'
-#' @keywords internal
+#' @noRd
 inherit_uuid_col <- function(unique_db_list, internal_db_list) {
   for (name in names(unique_db_list)) {
     unique_db_list[[name]]$UUID <- internal_db_list[[name]]$UUID
@@ -45,7 +45,7 @@ inherit_uuid_col <- function(unique_db_list, internal_db_list) {
 #' @return a table summary  of the matching procedure results
 #' @importFrom rlang .data
 #'
-#' @keywords internal
+#' @noRd
 get_matching_summary_df <- function(internal_db_list) {
   #Getting dataframes
   all_data <- do.call(rbind, internal_db_list) #Saving all data into a single df
@@ -82,7 +82,7 @@ get_matching_summary_df <- function(internal_db_list) {
 #'
 #'
 #' @param db_list - list of dataframes containing the sets of bibliographic data
-#' @param matching_fields - Column names used in the matching. Default: [default_matching_fields]
+#' @param matching_fields - Five column names used in the matching. Should be universal across all datasets and provided as a named list with the following names: **DI** (unique identifier), **TI** (document title), **PY** (publication year), **SO** (publication source) and **AU** (Authors). Default values come from [The Lens scholar field definition](https://support.lens.org/knowledge-base/scholar-field-definition/).
 #' @param n_threads - number of (logical) cores used in the matching procedures. Default: 1
 #' @param ti_max - max score value for Title. Default: 0.6
 #' @param ti_penalty - penalty applied for each increment in Title's Levenshtein distance. Default: 0.1
@@ -118,7 +118,7 @@ get_matching_summary_df <- function(internal_db_list) {
 #' #Example list of input dataframes
 #' lapply(ufrj_bio_0122, head, n=1)
 #'
-#' #List of columns for matching (identical to biblioverlap()'s default column list)
+#' #List of columns for matching (identical to biblioverlap()'s defaults)
 #' matching_cols <- list(DI = 'DOI',
 #'                       TI = 'Title',
 #'                       PY = 'Publication Year',

@@ -6,7 +6,7 @@
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
 #'
 #' @return - a list containing only the UUID data
-#' @keywords internal
+#' @noRd
 #'
 get_uuid_list <- function(db_list) {
   return( lapply(db_list, function(db) db$UUID) )

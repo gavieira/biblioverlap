@@ -5,7 +5,7 @@
 #'
 #' @return  a list containing a (duplicate-free) dataframe for each set
 #'
-#' @keywords internal
+#' @noRd
 removing_duplicates <- function(db_list, matching_fields) {
   doi_col <- dplyr::sym(matching_fields$DI)
   no_dups <- lapply(db_list, function(db) {
@@ -27,7 +27,7 @@ removing_duplicates <- function(db_list, matching_fields) {
 #'
 #' @return  a list containing a (pre-processed) dataframe for each set
 #'
-#' @keywords internal
+#' @noRd
 data_preprocessing <- function(db_list, matching_fields) {
   preprocessed_data <- lapply(db_list, function(db) {
     db %>%

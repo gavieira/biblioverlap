@@ -75,7 +75,7 @@ sapply(biblioverlap_results, class)
 The package also features some functions for plotting the results of `biblioverlap()`. For instance, the `plot_matching_summary()` function can be used to convert the summary of the matching procedure into a bar plot.
 
 ```{r matching_summary}
-#Taking a look at the matching results summary
+#Plotting the matching results summary
 plot_matching_summary(biblioverlap_results$summary)
 ```
 

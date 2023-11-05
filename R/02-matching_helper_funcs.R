@@ -12,7 +12,7 @@
 #'
 #' @return a boolean value
 #'
-#' @keywords internal
+#' @noRd
 any_empty_dfs <- function(df1, df2){
   empty_dfs <- sapply(list(df1, df2), function(db) nrow(db) == 0)
   return( any(empty_dfs) )
@@ -25,7 +25,7 @@ any_empty_dfs <- function(df1, df2){
 #'
 #' @return a subset of the database containing only relevant fields for the unique id matching procedure
 #'
-#' @keywords internal
+#' @noRd
 subset_db_for_doi_match <- function(db) {
   db %>%
     dplyr::filter(!is.na(DI) & score < 1) %>%
@@ -39,7 +39,7 @@ subset_db_for_doi_match <- function(db) {
 #'
 #' @return a subset df with all needed data for the score matching procedure
 #'
-#' @keywords internal
+#' @noRd
 subset_db_for_score_match <- function(df) {
   df %>%
     dplyr::filter(is.na(DI) & score < 1) %>%
@@ -61,7 +61,7 @@ subset_db_for_score_match <- function(df) {
 #'
 #' @return a matrix in sparseMatrix format, where negative values have been replaced by 0
 #'
-#' @keywords internal
+#' @noRd
 convert_to_sparse_matrix <- function(matrix) {
   matrix[is.na(matrix) | matrix < 0] <- 0 # Replacing NA and negative values with zeroes
   return( Matrix::Matrix(matrix, sparse = TRUE) ) #Returning sparse_matrix (way more memory efficient)
