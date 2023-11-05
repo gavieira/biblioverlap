@@ -104,7 +104,8 @@ plot_upset <- function(db_list, ...) {
 #' @export
 #'
 #' @examples
-#' #biblioverApp()
+#' #Running the ShinyApp
+#' \dontrun{biblioverApp()}
 #'
 biblioverApp <- function(port = NULL, max_upload_size = 1000, launch.browser = TRUE) {
   options(shiny.maxRequestSize = max_upload_size * 1024 * 1024)
