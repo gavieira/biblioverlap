@@ -8,11 +8,11 @@ Authors@R: c(
     person("Jacqueline", "Leta", , "jleta@bioqmed.ufrj.br", role = "ctb",
            comment = c(ORCID = "0000-0002-3271-7749"))
   )
-Description: Tools for identifying and visualizing document overlap in any number of bibliographic datasets.
+Description: Identifies and visualizes document overlap in any number of bibliographic datasets.
     This package implements the identification of overlapping documents overlap through the exact match of a unique 
-    identifier (e.g. DOI) and, for records where the identifier is absent, through a score calculated from a set of
+    identifier (e.g. Digital Object Identifier - DOI) and, for records where the identifier is absent, through a score calculated from a set of
     fields commonly found in bibliographic datasets (Title, Source, Authors and Publication Year). 
-    Additionally, it provides functions to visualize the results of the document matching through a Venn Diagram 
+    Additionally, it provides functions to visualize the results of the document matching through a Venn diagram 
     and/or UpSet plot, as well as a summary of the matching procedure.
 License: GPL (>= 3)
 Encoding: UTF-8
