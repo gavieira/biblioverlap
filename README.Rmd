@@ -19,11 +19,15 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/gavieira/biblioverlap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gavieira/biblioverlap/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+![](inst/biblioverApp/www/biblioverlap_sticker.png)
+
+
+
 Biblioverlap is a R package that implements a procedure for identification and visualization of document overlap in any number of bibliographic datasets. The datasets might be exported from the same bibliographical database or several different databases.
 
 The package receives input data, adds an UUID (Universally Unique Identifier) to each record and performs pairwise comparisons between the datasets to identify matching documents. This identification happens through the exact match of a unique identifier (e.g. DOI) or, when the identifier is absent for the record, through a score calculated from a set of fields commonly found in bibliographic datasets (Title, Source, Authors and Publication Year).
 
-When a match is found, the UUID of the document in the first dataset is copied to its matching counterpart in the second dataset. Thus, after all pairwise comparisons are finished, we have the information needed to identify documents that occur in any intersections of the sets of bibliographical data provided.
+When a match is found, the UUID of the document in the first dataset is copied to its matching counterpart in the second dataset. Thus, after all pairwise comparisons are finished, it provides the information needed to identify documents that occur in any intersections from the sets of bibliographical data provided.
 
 ## Installation
 
@@ -42,15 +46,15 @@ devtools::install_github("gavieira/biblioverlap")
 
 ## Example
 
-This is a basic example which shows how to obtain document overlap between sets of bibliographical data:
+This is a basic example which shows how to obtain document overlap between sets of bibliographical data using the `biblioverlap()` function:
 
 ```{r example}
 library(biblioverlap) #loading package
 
-#Example list of input dataframes
-lapply(ufrj_bio_0122, head, n=1)
+#Input 1: Named list of bibliographic dataframes
+sapply(ufrj_bio_0122, class) #ufrj_bio_0122 is an example dataset provided by the package
 
-#List of columns for matching (identical to biblioverlap()'s default column list)
+#Input 2: Namded list of columns for document matching 
 matching_cols <- list(DI = 'DOI',
                       TI = 'Title',
                       PY = 'Publication Year',
@@ -60,28 +64,27 @@ matching_cols <- list(DI = 'DOI',
 #Running document-level matching procedure
 biblioverlap_results <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
 
-#Taking a look at the matched db_list
-lapply(biblioverlap_results$db_list, head, n=1)
-
-#Taking a look at the matching results summary
-biblioverlap_results$summary
+#The results of the matching returns a list containing:
+#(i) a copy of the original data + UUID column (db_list)
+#(ii) a summary of the matching results (summary)
+sapply(biblioverlap_results, class)
 ```
 
-plot_matching_summary()
+The package also features some functions for plotting the results of `biblioverlap()`. For instance, the `plot_matching_summary()` function can be used to convert the summary of the matching procedure into a bar plot.
 
 ```{r matching_summary}
 #Taking a look at the matching results summary
 plot_matching_summary(biblioverlap_results$summary)
 ```
 
-plot_venn()
+The `plot_venn()` function uses the UUID column to plot the results of the matching procedure as a Venn diagram. 
 
 ```{r venn}
 #Plotting the Venn diagram
 plot_venn(biblioverlap_results$db_list)
 ```
 
-plot_upset()
+Similarly, the `plot_upset()` function uses the UUID column to generate a UpSet plot, which is generally better for visualizing intersections between 5 or more datasets.
 
 ```{r upset}
 #Plotting the UpSet plot
@@ -89,8 +92,14 @@ plot_upset(biblioverlap_results$db_list)
 
 ```
 
-biblioverApp()
+The biblioverlap package also features a graphical user interface in the form of a ShinyApp, which can be called through the `biblioverApp()` function.
 
-```{r upset}
-#biblioverApp() #Don't run here
 ```
+#loading package
+library(biblioverlap)
+
+#Using the ShinyApp
+biblioverApp()
+```
+
+![](man/figures/README-shinyapp-screenshot.png)
