@@ -154,7 +154,7 @@ biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_t
     db2 <- internal_db_list[[db2_name]] #Getting db2 by name from the db_list
     message(paste('Matching by DOI for pair', comb_name))
     doi_matches <- doi_matching(db1, db2, n_threads = n_threads) #Obtaining matches by DOI
-    print(paste('Matching by SCORE for pair', comb_name))
+    message(paste('Matching by SCORE for pair', comb_name))
     score_matches <- score_matching(db1, db2, n_threads = n_threads,
                                        ti_penalty, ti_max,
                                        so_penalty, so_max,

@@ -1,3 +1,10 @@
+### Third submission
+
+> We still see one print() call in R/05-biblioverlap.R. Please also change this one to a message() call.
+
+Sorry about that. It's been fixed now.
+
+
 ### Second submission
 
 > Please proof-read your description text. 
