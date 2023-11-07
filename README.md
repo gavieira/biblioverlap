@@ -71,24 +71,24 @@ matching_cols <- list(DI = 'DOI',
 
 #Running document-level matching procedure
 biblioverlap_results <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
-#> [1] "Matching by DOI for pair Biochemistry_Genetics"
+#> Matching by DOI for pair Biochemistry_Genetics
 #> [1] "Matching by SCORE for pair Biochemistry_Genetics"
-#> [1] "Updating matched documents in db2"
-#> [1] "Matching by DOI for pair Biochemistry_Microbiology"
+#> Updating matched documents in db2
+#> Matching by DOI for pair Biochemistry_Microbiology
 #> [1] "Matching by SCORE for pair Biochemistry_Microbiology"
-#> [1] "Updating matched documents in db2"
-#> [1] "Matching by DOI for pair Biochemistry_Zoology"
+#> Updating matched documents in db2
+#> Matching by DOI for pair Biochemistry_Zoology
 #> [1] "Matching by SCORE for pair Biochemistry_Zoology"
-#> [1] "Updating matched documents in db2"
-#> [1] "Matching by DOI for pair Genetics_Microbiology"
+#> Updating matched documents in db2
+#> Matching by DOI for pair Genetics_Microbiology
 #> [1] "Matching by SCORE for pair Genetics_Microbiology"
-#> [1] "Updating matched documents in db2"
-#> [1] "Matching by DOI for pair Genetics_Zoology"
+#> Updating matched documents in db2
+#> Matching by DOI for pair Genetics_Zoology
 #> [1] "Matching by SCORE for pair Genetics_Zoology"
-#> [1] "Updating matched documents in db2"
-#> [1] "Matching by DOI for pair Microbiology_Zoology"
+#> Updating matched documents in db2
+#> Matching by DOI for pair Microbiology_Zoology
 #> [1] "Matching by SCORE for pair Microbiology_Zoology"
-#> [1] "Updating matched documents in db2"
+#> Updating matched documents in db2
 
 #The results of the matching returns a list containing:
 #(i) a copy of the original data + UUID column (db_list)

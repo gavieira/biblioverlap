@@ -13,7 +13,7 @@ Description: Identifies and visualizes document overlap in any number of bibliog
     identifier (e.g. Digital Object Identifier - DOI) and, for records where the identifier is absent, through a score calculated 
     from a set of fields commonly found in bibliographic datasets (Title, Source, Authors and Publication Year).
     Additionally, it provides functions to visualize the results of the document matching through a Venn diagram 
-    and/or UpSet plot, as well as a summary of the matching procedure. Vieira, G. & Leta, J. (2023) <https://github.com/gavieira/biblioverlap>.
+    and/or UpSet plot, as well as a summary of the matching procedure. 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
