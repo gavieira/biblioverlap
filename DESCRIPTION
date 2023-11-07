@@ -1,7 +1,7 @@
 Package: biblioverlap
 Type: Package
 Title: Document-Level Matching Between Bibliographic Datasets
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
     person("Gabriel", "Vieira", , "gabriel.vieira@bioqmed.ufrj.br", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5529-7628")),
