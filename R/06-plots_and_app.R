@@ -25,7 +25,7 @@ get_uuid_list <- function(db_list) {
 #'
 #' @examples
 #' #Running document-level matching procedure
-#' biblioverlap_results <- biblioverlap(ufrj_bio_0122)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2])
 #'
 #' #Checking biblioverlap results (summary table)
 #' biblioverlap_results$summary
@@ -53,7 +53,7 @@ plot_matching_summary <- function(matching_summary_df, ...) {
 #'
 #' @examples
 #' #Running document-level matching procedure
-#' biblioverlap_results <- biblioverlap(ufrj_bio_0122)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2])
 #'
 #' #Checking biblioverlap results (db_list)
 #' lapply(biblioverlap_results$db_list, head, n=1)
@@ -79,7 +79,7 @@ plot_venn <- function(db_list, ...) {
 #'
 #' @examples
 #' #Running document-level matching procedure
-#' biblioverlap_results <- biblioverlap(ufrj_bio_0122)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2])
 #'
 #' #Checking biblioverlap results (db_list)
 #' lapply(biblioverlap_results$db_list, head, n=1)
@@ -105,12 +105,17 @@ plot_upset <- function(db_list, ...) {
 #'
 #' @examples
 #' #Running the ShinyApp
-#' \dontrun{biblioverApp()}
+#' biblioverApp()
 #'
 biblioverApp <- function(port = NULL, max_upload_size = 1000, launch.browser = TRUE) {
-  options(shiny.maxRequestSize = max_upload_size * 1024 * 1024)
-  shiny::shinyAppDir(
-    system.file("biblioverApp", package = "biblioverlap"),
-    options = list(port = port, launch.browser = launch.browser)
-  )
+  if (interactive()) {
+    options(shiny.maxRequestSize = max_upload_size * 1024 * 1024)
+    shiny::shinyAppDir(
+      system.file("biblioverApp", package = "biblioverlap"),
+      options = list(port = port, launch.browser = launch.browser)
+    )
+  } else {
+    message("This function is intended for interactive sessions.")
+    return(NULL)
+  }
 }

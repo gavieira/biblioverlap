@@ -16,7 +16,7 @@ doi_matching <- function(db1, db2, n_threads, doi_score = 2) {
   subset_db1 <- subset_db_for_doi_match(db1) #Extracting DOI info from db1
   subset_db2 <- subset_db_for_doi_match(db2) #Extracting DOI info from db2
   if ( any_empty_dfs(subset_db1, subset_db2) ) {
-    print('There is a db with no DOI records')
+    message('There is a db with no DOI records')
     return( list() )
   }
   cl <- parallel::makeCluster(n_threads) #Starts the cluster for parallel computing (by default, uses all cores in the system)

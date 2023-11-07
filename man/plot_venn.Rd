@@ -23,7 +23,7 @@ Plotting Venn Diagram from biblioverlap results
 }
 \examples{
 #Running document-level matching procedure
-biblioverlap_results <- biblioverlap(ufrj_bio_0122)
+biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2])
 
 #Checking biblioverlap results (db_list)
 lapply(biblioverlap_results$db_list, head, n=1)

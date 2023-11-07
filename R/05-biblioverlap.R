@@ -125,8 +125,8 @@ get_matching_summary_df <- function(internal_db_list) {
 #'                       AU = 'Author/s',
 #'                       SO = 'Source Title')
 #'
-#' #Running document-level matching procedure
-#' biblioverlap_results <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
+#' #Running document-level matching procedure (first two dataframes)
+#' biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2], matching_fields = matching_cols)
 #'
 #' #Taking a look at the matched db_list
 #' lapply(biblioverlap_results$db_list, head, n=1)
@@ -152,7 +152,7 @@ biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_t
     comb_name <- paste0(db1_name,'_',db2_name) #Name of combination (db1_db2) - Will be used to identify each list of matches
     db1 <- internal_db_list[[db1_name]] #Getting db1 by name from the db_list
     db2 <- internal_db_list[[db2_name]] #Getting db2 by name from the db_list
-    print(paste('Matching by DOI for pair', comb_name))
+    message(paste('Matching by DOI for pair', comb_name))
     doi_matches <- doi_matching(db1, db2, n_threads = n_threads) #Obtaining matches by DOI
     print(paste('Matching by SCORE for pair', comb_name))
     score_matches <- score_matching(db1, db2, n_threads = n_threads,
@@ -162,7 +162,7 @@ biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_t
                                        py_max, score_cutoff) #Obtaining matches by score
     final_score_matrix <- score_matches[[2]]
     score_matches <- score_matches[[1]]
-    print('Updating matched documents in db2')
+    message('Updating matched documents in db2')
     all_matches <- c(doi_matches, score_matches)
     score_matrices[[comb_name]] <- final_score_matrix
     matches[[comb_name]] <- lapply(all_matches, function(lst) {

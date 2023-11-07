@@ -27,6 +27,6 @@ Shiny App for the biblioverlap package
 }
 \examples{
 #Running the ShinyApp
-\dontrun{biblioverApp()}
+biblioverApp()
 
 }

@@ -96,8 +96,8 @@ matching_cols <- list(DI = 'DOI',
                       AU = 'Author/s',
                       SO = 'Source Title')
 
-#Running document-level matching procedure
-biblioverlap_results <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
+#Running document-level matching procedure (only two dataframes used to reduce runtime)
+biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2], matching_fields = matching_cols)
 
 #Taking a look at the matched db_list
 lapply(biblioverlap_results$db_list, head, n=1)

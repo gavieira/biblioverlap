@@ -97,7 +97,7 @@ score_matching <- function(db1, db2, n_threads,
   db1 <- subset_db_for_score_match(db1)
   db2 <- subset_db_for_score_match(db2)
   if ( any_empty_dfs(db1, db2) ) {
-    print('There is a db with only DOI records')
+    message('There is a db with only DOI records')
     return( list(list(), list()) )
   }
   ti_matrix <- calc_distance_score_matrix(db1$TI, db2$TI, max_score = ti_max, penalty = ti_penalty, n_threads = n_threads)
@@ -107,8 +107,6 @@ score_matching <- function(db1, db2, n_threads,
 
   final_score_matrix <- ti_matrix + au_matrix + so_matrix + py_matrix
   final_score_matrix[final_score_matrix < score_cutoff] <- 0 #Results below cutoff are converted to 0
-  #dimnames(final_score_matrix) <- list(paste0('db1_', db1$index),
-  #                                     paste0('db2_',db2$index)) #Adding db indexes to each matrix dimension
   score_matches <- extract_score_matches(final_score_matrix, db1$index, db2$index)
   return(list(score_matches, final_score_matrix))
 }
