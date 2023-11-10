@@ -34,8 +34,8 @@ sets of bibliographical data provided.
 ## Installation
 
 You can install the [stable
-version](https://cran.r-project.org/web/packages/biblioverlap/index.html)
-from CRAN with:
+version](https://cran.r-project.org/package=biblioverlap) from CRAN
+with:
 
 ``` r
 install.packages("biblioverlap")

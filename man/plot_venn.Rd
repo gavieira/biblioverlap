@@ -8,11 +8,11 @@ plot_venn(db_list, ...)
 }
 \arguments{
 \item{db_list}{\itemize{
-\item list of matched dataframes (with UUID column added by biblioverlap)
+\item list of matched dataframes (with UUID column added by \code{\link{biblioverlap}})
 }}
 
 \item{...}{\itemize{
-\item Additional arguments that can be passed down to \code{\link[ggVennDiagram:ggVennDiagram]{ggVennDiagram::ggVennDiagram()}}
+\item Additional arguments that can be passed down to \code{\link[ggVennDiagram:ggVennDiagram]{ggVennDiagram::ggVennDiagram}}
 }}
 }
 \value{

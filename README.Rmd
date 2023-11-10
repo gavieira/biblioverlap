@@ -33,7 +33,7 @@ When a match is found, the UUID of the document in the first dataset is copied t
 
 ## Installation
 
-You can install the [stable version](https://cran.r-project.org/web/packages/biblioverlap/index.html) from CRAN with:
+You can install the [stable version](https://cran.r-project.org/package=biblioverlap) from CRAN with:
 
 ``` r
 install.packages("biblioverlap")

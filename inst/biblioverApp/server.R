@@ -92,8 +92,8 @@ server <- function(input, output, session) {
   #Calculating results using the biblioverlap package when the 'submit' button is clicked
   calculate_results <- eventReactive(input$submit, {
     withProgress(message = 'Analyzing data...', {
-    columns <- get_columns_list()
-    db_list <- get_sets_list()
+    columns <- isolate(get_columns_list())
+    db_list <- isolate(get_sets_list())
     tryCatch({
       results <-  biblioverlap::biblioverlap(db_list,
                                              matching_fields = columns,
@@ -101,11 +101,11 @@ server <- function(input, output, session) {
                                              so_penalty = input$so_penalty, so_max = input$so_max,
                                              au_penalty = input$au_penalty, au_max = input$au_max,
                                              py_max = input$py_max, score_cutoff = input$score_cutoff)
-    }, error = function(e)
-      message(e)
-      )
     calculation_done(TRUE) #Setting this to TRUE here shows the result panel only when the calculation has been finished
     return( results )
+    }, error = function(err)
+      showNotification(paste0(err), type = 'err', duration = NULL)
+      )
     })
   })
 

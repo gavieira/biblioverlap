@@ -1,3 +1,53 @@
+#' Check if user has input valid dataset names
+#'
+#' @description
+#' Function that checks if dataset names (provided as names to elements of db_list) are valid (not NULL, NA or empty string.
+#' If all names are valid, returns them. Throws an error otherwise.
+#'
+#'
+#' @param db_list - db_list used as input for [biblioverlap]
+#' @param matching_fields - column names used in the matching procedure by [`biblioverlap`]
+#'
+#' @return a boolean value. TRUE if check succeeds, otherwise FALSE.
+#'
+#' @noRd
+#'
+check_dataset_names <- function(db_list) {
+  names <- names(db_list)
+  if (is.null(names) || any(sapply(names, function(x) x == "" | is.na(x) | is.null(x)))) {
+    stop("Invalid value for dataset names. Please correct it and resubmit your data.")
+  }
+  return(names)
+}
+
+#' Check if user has input column names present in all datasets
+#'
+#' @description
+#' Function that checks if colnames (provided through the matching_fields argument of [`biblioverlap`]) are present in all datasets
+#' Raises an error if check fails
+#'
+#'
+#' @param db_list - db_list used as input for [biblioverlap]
+#' @param matching_fields - db_list used as input for [biblioverlap]
+#'
+#' @return dataset names
+#'
+#' @noRd
+#'
+check_dataset_cols <- function(db_list, matching_fields) {
+  column_names <- unlist(matching_fields)
+  lapply(1:length(db_list), function(index) {
+    all_present <- all(column_names %in% colnames( db_list[[index]] ))
+
+    if (!all_present) {
+      stop(paste0("Not all specified columns are present in the dataframe '", names(db_list)[index],"'."))
+    }
+
+    return(all_present)
+  })
+}
+
+
 #' Updating db2 matched records
 #'
 #' @param db1 - First bibliographic database in the comparison
@@ -17,6 +67,7 @@ update_db2_matches <- function(db1, db2, match_list) {
   }
   return(db2)
 }
+
 
 
 #' Adding UUID column to original data provided by user
@@ -81,7 +132,7 @@ get_matching_summary_df <- function(internal_db_list) {
 #' This function identifies document overlap between bibliographic datasets and records it through the use of Universally Unique Identifiers (UUID).
 #'
 #'
-#' @param db_list - list of dataframes containing the sets of bibliographic data
+#' @param db_list - named list of dataframes containing the sets of bibliographic data. Names are used to identify sets through the matching process and define pairwise comparison order.
 #' @param matching_fields - Five column names used in the matching. Should be universal across all datasets and provided as a named list with the following names: **DI** (unique identifier), **TI** (document title), **PY** (publication year), **SO** (publication source) and **AU** (Authors). Default values come from [The Lens scholar field definition](https://support.lens.org/knowledge-base/scholar-field-definition/).
 #' @param n_threads - number of (logical) cores used in the matching procedures. Default: 1
 #' @param ti_max - max score value for Title. Default: 0.6
@@ -140,10 +191,11 @@ biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_t
                         au_penalty = 0.1, au_max = 0.3,
                         py_max = 0.3, score_cutoff = 1) {
   #db_list <- lapply(db_list, function(db) db %>% rownames_to_column(var = 'index') ) #Creating column that will keep the index of the original db row even when splitting the data for doi and score matching
+  check_dataset_cols(db_list, matching_fields) #Checking if datasets have the colnames specified in 'matching fields'
+  db_names <- check_dataset_names(db_list) #db_list dataset names
   db_list <- removing_duplicates(db_list, matching_fields)
   internal_db_list <- data_preprocessing(db_list, matching_fields)
-  db_order <- names(db_list) #Names of db_list used to establish the order of pairwise combinations
-  combs <- utils::combn(db_order, 2) #Getting ordered db pairwise combinations
+  combs <- utils::combn(db_names, 2) #Getting ordered db pairwise combinations
   matches <- list()
   score_matrices <- list()
   for (i in 1:ncol(combs)) { #For each pairwise combination of databases, we'll match the documents based on DOI and score, and then modify some fields in db2

@@ -8,11 +8,11 @@ plot_upset(db_list, ...)
 }
 \arguments{
 \item{db_list}{\itemize{
-\item list of matched dataframes (with UUID column added by biblioverlap)
+\item list of matched dataframes (with UUID column added by \code{\link{biblioverlap}})
 }}
 
 \item{...}{\itemize{
-\item arguments to be passed down to \code{\link[UpSetR:upset]{UpSetR::upset()}}
+\item arguments to be passed down to \code{\link[UpSetR:upset]{UpSetR::upset}}
 }}
 }
 \value{
