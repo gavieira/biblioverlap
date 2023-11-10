@@ -1,13 +1,3 @@
 # biblioverlap (development version)
 
-# biblioverlap 1.0.2
-
-# biblioverlap 1.0.1
-
-# biblioverlap 1.0.0
-
-# biblioverlap 0.9.1
-
-# biblioverlap 0.9
-
-* Initial CRAN submission.
+* Added a `NEWS.md` file to track changes to the package.
