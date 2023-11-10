@@ -33,13 +33,13 @@ When a match is found, the UUID of the document in the first dataset is copied t
 
 ## Installation
 
-You can install the stable version of biblioverlap from [CRAN](https://cran.r-project.org/) with:
+You can install the [stable version](https://cran.r-project.org/web/packages/biblioverlap/index.html) from CRAN with:
 
 ``` r
 install.packages("biblioverlap")
 ```
 
-It's also possible to install the development version of biblioverlap from [GitHub](https://github.com/) with:
+It's also possible to install the [development version](https://github.com/gavieira/biblioverlap) from GitHub:
 
 ``` r
 # install.packages("devtools")

@@ -33,15 +33,16 @@ sets of bibliographical data provided.
 
 ## Installation
 
-You can install the stable version of biblioverlap from
-[CRAN](https://cran.r-project.org/) with:
+You can install the [stable
+version](https://cran.r-project.org/web/packages/biblioverlap/index.html)
+from CRAN with:
 
 ``` r
 install.packages("biblioverlap")
 ```
 
-It’s also possible to install the development version of biblioverlap
-from [GitHub](https://github.com/) with:
+It’s also possible to install the [development
+version](https://github.com/gavieira/biblioverlap) from GitHub:
 
 ``` r
 # install.packages("devtools")
@@ -72,22 +73,22 @@ matching_cols <- list(DI = 'DOI',
 #Running document-level matching procedure
 biblioverlap_results <- biblioverlap(ufrj_bio_0122, matching_fields = matching_cols)
 #> Matching by DOI for pair Biochemistry_Genetics
-#> [1] "Matching by SCORE for pair Biochemistry_Genetics"
+#> Matching by SCORE for pair Biochemistry_Genetics
 #> Updating matched documents in db2
 #> Matching by DOI for pair Biochemistry_Microbiology
-#> [1] "Matching by SCORE for pair Biochemistry_Microbiology"
+#> Matching by SCORE for pair Biochemistry_Microbiology
 #> Updating matched documents in db2
 #> Matching by DOI for pair Biochemistry_Zoology
-#> [1] "Matching by SCORE for pair Biochemistry_Zoology"
+#> Matching by SCORE for pair Biochemistry_Zoology
 #> Updating matched documents in db2
 #> Matching by DOI for pair Genetics_Microbiology
-#> [1] "Matching by SCORE for pair Genetics_Microbiology"
+#> Matching by SCORE for pair Genetics_Microbiology
 #> Updating matched documents in db2
 #> Matching by DOI for pair Genetics_Zoology
-#> [1] "Matching by SCORE for pair Genetics_Zoology"
+#> Matching by SCORE for pair Genetics_Zoology
 #> Updating matched documents in db2
 #> Matching by DOI for pair Microbiology_Zoology
-#> [1] "Matching by SCORE for pair Microbiology_Zoology"
+#> Matching by SCORE for pair Microbiology_Zoology
 #> Updating matched documents in db2
 
 #The results of the matching returns a list containing:
