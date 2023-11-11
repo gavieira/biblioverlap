@@ -1,3 +1,9 @@
+### Fourth submission (Version 1.0.3)
+
+> Note: found 573 marked UTF-8 strings 
+
+Actually, the package expects data to be in UTF-8 (as is the case of most exports from bibliographic databases) in order to deal with it accordingly, so the test data reflects this. Converting it to ASCII would reduce its usefulness in debugging. The [R packages' section about non-ASCII data](https://r-pkgs.org/data.html#sec-data-non-ascii) also helped me choose to keep the UTF-8 strings. I'm willing to reconsider this if necessary, though. 
+
 ### Third submission
 
 > We still see one print() call in R/05-biblioverlap.R. Please also change this one to a message() call.
