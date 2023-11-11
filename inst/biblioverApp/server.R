@@ -123,15 +123,16 @@ server <- function(input, output, session) {
   read_datatable <- function(df) {
     return(DT::datatable(
       df,
-      extensions = c("Buttons", "ColReorder"),
+      #extensions = c("Buttons", "ColReorder"),
       filter = 'top',
       selection = 'none',
       options = list(
-        dom = "Blrtip",
+        #dom = "Blrtip",
+        dom = "lrtip",
         scrollX = TRUE,
         lengthMenu = c(2, 10, 50, 100),
-        buttons = c("colvis"),
-        colReorder = TRUE,
+        #buttons = c("colvis"),
+        #colReorder = TRUE,
         columnDefs = list(
           list(targets = "_all", render = htmlwidgets::JS( #The following JS code shows only the first characters of each cell, replacing the rest with '...'
             "function(data, type, row, meta) {",
