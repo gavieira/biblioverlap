@@ -1,6 +1,7 @@
 library(shiny)
 library(DT)
 library(biblioverlap)
+library(dplyr)
 
 # Load the UI and server components
 source('ui.R', local = TRUE)

@@ -1,5 +1,7 @@
 # biblioverlap (development version)
 * Minor documentation updates
+* Used `dplyr::bind_rows()` instead of `rbind()` in the ShinyApp's `get_merged_db_list()` to allow merging of datasets with different rows (and probably from different databases)
+* Added `tryCatch()` to ShinyApp's `merge_input_files()` to raise an error in case the rbind fails (possibly because of divergences in column names/number) and warn the user that the files provided are not compatible for merging.
 
 
 # biblioverlap 1.0.3

@@ -41,7 +41,7 @@ server <- function(input, output, session) {
 
   # Merge files into a named list of dataframes
   get_merged_db_list <- function(db_list) {
-    df <- do.call(rbind, Map(cbind, db_list, SET_NAME = names(db_list))) #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
+    df <- dplyr::bind_rows(db_list, .id =  'SET_NAME') #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
     columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
     df <- df[c(columns_to_front, setdiff(names(df), columns_to_front))] # Rearrange columns
 
@@ -245,7 +245,11 @@ server <- function(input, output, session) {
                sep = sep,
                strip.white = TRUE,
                check.names = FALSE) })
-    df <- do.call(rbind, df_list)
+    tryCatch({
+      df <- do.call(rbind, df_list)
+    }, error = function(err)
+      showNotification('Failed to merge files. Are they from the same database and/or have the same columns?', type = 'err', duration = NULL)
+    )
     df[] <- lapply(df, function(col) { #Cleaning data (one column at a time)
       col <- trimws(as.character(col)) # Removing leading and trailing whitespaces
       if (any(col == "" | is.na(col))) col <- NA  # Convert empty or null values to NA
