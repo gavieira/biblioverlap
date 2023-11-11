@@ -1,4 +1,4 @@
-# biblioverlap (development version)
+# biblioverlap 1.0.3
 
 * Fixed [issue](https://github.com/gavieira/biblioverlap/issues/4) regarding duplicate removal in ShinyApp's 'Merge Files' tab 
 * Added functions that raise errors if the following coditions are not met:
