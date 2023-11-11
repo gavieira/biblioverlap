@@ -1,3 +1,12 @@
+### Fifth submission (Version 1.0.4)
+
+
+>   Days since last update: 4
+Why is such a quick update needed? Please explain. Please also re-read
+the CRAN policies about submission frequency.
+
+This was entirely my fault, sorry. The fixes on my last submission were actually pretty small. It's my first package, so I've just forgot about submission frequency policies. I promise it won't happen again. Thanks for your time!
+
 ### Fourth submission (Version 1.0.3)
 
 > Note: found 573 marked UTF-8 strings 
