@@ -132,7 +132,7 @@ get_matching_summary_df <- function(internal_db_list) {
 #' This function identifies document overlap between bibliographic datasets and records it through the use of Universally Unique Identifiers (UUID).
 #'
 #'
-#' @param db_list - named list of dataframes containing the sets of bibliographic data. Names are used to identify sets through the matching process and define pairwise comparison order.
+#' @param db_list - named list of dataframes containing the sets of bibliographic data. Names are used to identify sets throughout the matching process.
 #' @param matching_fields - Five column names used in the matching. Should be universal across all datasets and provided as a named list with the following names: **DI** (unique identifier), **TI** (document title), **PY** (publication year), **SO** (publication source) and **AU** (Authors). Default values come from [The Lens scholar field definition](https://support.lens.org/knowledge-base/scholar-field-definition/).
 #' @param n_threads - number of (logical) cores used in the matching procedures. Default: 1
 #' @param ti_max - max score value for Title. Default: 0.6

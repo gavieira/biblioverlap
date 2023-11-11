@@ -20,7 +20,7 @@ biblioverlap(
 }
 \arguments{
 \item{db_list}{\itemize{
-\item list of dataframes containing the sets of bibliographic data
+\item named list of dataframes containing the sets of bibliographic data. Names are used to identify sets throughout the matching process.
 }}
 
 \item{matching_fields}{\itemize{
