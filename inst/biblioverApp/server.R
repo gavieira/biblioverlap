@@ -41,6 +41,7 @@ server <- function(input, output, session) {
 
   # Merge files into a named list of dataframes
   get_merged_db_list <- function(db_list) {
+    db_list <- lapply(db_list, function(df) dplyr::mutate_all(df, as.character))
     df <- dplyr::bind_rows(db_list, .id =  'SET_NAME') #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
     columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
     df <- df[c(columns_to_front, setdiff(names(df), columns_to_front))] # Rearrange columns
