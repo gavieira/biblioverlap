@@ -253,7 +253,7 @@ server <- function(input, output, session) {
     )
     df[] <- lapply(df, function(col) { #Cleaning data (one column at a time)
       col <- trimws(as.character(col)) # Removing leading and trailing whitespaces
-      if (any(col == "" | is.na(col))) col <- NA  # Convert empty or null values to NA
+      col[which(col == "" | is.null(col))] <- NA  # Convert empty or null values to NA
       return(col)
     })
     df <- df[!duplicated(df), ]   # Removing duplicate records
