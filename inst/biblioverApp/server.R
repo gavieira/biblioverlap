@@ -14,9 +14,10 @@ server <- function(input, output, session) {
 
 
   #Read individual input files for bibliographical overlap
-  read_input_file <- function(input_file, sep) {
+  read_input_file <- function(input_file, sep, quote) {
       df <- read.csv(input_file,
                      sep = sep,
+                     quote = quote,
                      strip.white = TRUE,
                      check.names = FALSE) #Keep names exactly as they are in the original files
     return( df )
@@ -31,6 +32,7 @@ server <- function(input, output, session) {
       set_name <- input[[paste0("name", i)]]
       filepath <- input[[paste0("file", i)]]$datapath
       sep <- input[[paste0("sep", i)]]
+      quote <- input[[paste0("quote", i)]]
 
       df <- read_input_file(filepath, sep) # Read the CSV file and store it in a data frame
       all_sets[[set_name]] <- df # Assign the data frame to the named list
@@ -73,7 +75,15 @@ server <- function(input, output, session) {
                                            Tab = "\t"),
                                selectize = FALSE,
                                selected = "," )
-          )
+          ),
+         tabPanel("Quote",
+                  selectInput(paste0('quote', id), 'Quote type',
+                              choices = c("None" = "",
+                                          "Double Quote" = "\"",
+                                          "Single Quote" = "'"),
+                              selectize=FALSE,
+                              selected = "\"")
+         )
         )
 
       )
@@ -241,10 +251,12 @@ server <- function(input, output, session) {
   merge_input_files <- reactive({
     input_files <- input$unmerged_files$datapath
     sep <- input$unmerged_sep
+    quote <- input$unmerged_quote
 
     df_list <- lapply(input_files, function(input_file) {
       read.csv(input_file,
                sep = sep,
+               quote = quote,
                strip.white = TRUE,
                check.names = FALSE) })
     tryCatch({

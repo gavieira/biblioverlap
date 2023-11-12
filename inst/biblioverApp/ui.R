@@ -288,7 +288,17 @@ merge_files_ui <- sidebarLayout(
                                                              Semicolon = ";",
                                                              Tab = "\t"),
                                                  selectize = FALSE,
-                                                 selected = "," ) )
+                                                 selected = "," )
+                                     ),
+                            tabPanel("Quote",
+                                     selectInput('unmerged_quote', 'Quote type',
+                                                 choices = c("None" = "",
+                                                             "Double Quote" = "\"",
+                                                             "Single Quote" = "'"),
+                                                 selectize=FALSE,
+                                                 selected = "\"")
+                                     )
+
                 ),
                 downloadButton('download_merged_file', "Download Merged File", width = '100%', class = 'custom_button')
   ),
