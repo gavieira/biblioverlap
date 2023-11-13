@@ -34,7 +34,7 @@ server <- function(input, output, session) {
       sep <- input[[paste0("sep", i)]]
       quote <- input[[paste0("quote", i)]]
 
-      df <- read_input_file(filepath, sep) # Read the CSV file and store it in a data frame
+      df <- read_input_file(filepath, sep, quote) # Read the CSV file and store it in a data frame
       all_sets[[set_name]] <- df # Assign the data frame to the named list
     }
     return(all_sets)
