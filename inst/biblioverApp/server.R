@@ -199,8 +199,8 @@ server <- function(input, output, session) {
   output$summary_plot <- renderPlot({
     summary_df <- calculate_results()$summary
     summary_plot <- biblioverlap::plot_matching_summary(summary_df,
-                                                        size = input$summary_value_size) +
-      ggplot2::theme(text=ggplot2::element_text(size= input$summary_text_size))
+                                                        text_size = input$summary_text_size,
+                                                        size = input$summary_value_size)
     return( summary_plot )
   }, height = reactive( { input$plot_height } ),
   width = reactive( { input$plot_width } )
