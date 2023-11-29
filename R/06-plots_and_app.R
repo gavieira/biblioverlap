@@ -1,3 +1,49 @@
+#' Adding biblioverlap's logo to plots
+#'
+#' @description
+#' Helper function to add biblioverlap's logo to its plots. Except for `logo_path` and `alpha`, all its parameters are compatible with [`grid::grid.raster`]. Check its documentation for more info.
+#'
+#' @param logo_path - path to logo .png file
+#' @param alpha - logo transparency
+#' @param width - logo width
+#' @param heigth - logo height
+#' @param x - logo x position
+#' @param y - logo y position
+#' @param just - logo justification. First value specifies horizontal justification and second value specifies vertical justification. Possible string values are: "left", "right", "centre", "center", "bottom", and "top". For numeric values, 0 means left alignment and 1 means right alignment.
+#' @param interpolate - logical value indicating if image should be linearly interpolated
+#' @param ... -  - arguments to be passed down to [`grid::grid.raster`]
+#'
+#' @return a grid graphical object ("grob") containing both logo and its plotting position
+#'
+#' @noRd
+#'
+add_logo_to_plot <- function(logo_path = 'inst/biblioverApp/www/biblioverlap_sticker.png',
+                             alpha = 0.2,
+                             width = grid::unit(100, 'pt'),
+                             height = grid::unit(125, 'pt'),
+                             x = grid::unit(1, 'npc'),
+                             y = grid::unit(1, 'npc'),
+                             just = c('right', 'top'),
+                             interpolate = TRUE,
+                             ... ) {
+
+  logo_raw <- png::readPNG('inst/biblioverApp/www/biblioverlap_sticker.png') #Importing logo into R
+  logo <- matrix(grDevices::rgb(logo_raw[,,1],logo_raw[,,2],logo_raw[,,3], logo_raw[,,4] * alpha), nrow=dim(logo_raw)[1]) #Adding transparency to logo - source: https://stackoverflow.com/questions/11357926/r-add-alpha-value-to-png-image
+  logo_raster <- grid::grid.raster(logo_raw,
+              width = width,
+              height = height,
+              x = x,
+              y = y,
+              just = just,
+              interpolate = interpolate,
+              ...)
+
+  return(logo_raster)
+}
+
+
+
+
 #' Extracting list of uuid columns from biblioverlap results
 #'
 #' @description
