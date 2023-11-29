@@ -3,6 +3,7 @@
 #' @description
 #' Helper function to add biblioverlap's logo to its plots. Except for `logo_path` and `alpha`, all its parameters are compatible with [`grid::grid.raster`]. Check its documentation for more info.
 #'
+#' @param plot - plot to add logo
 #' @param logo_path - path to logo .png file
 #' @param alpha - logo transparency
 #' @param width - logo width
@@ -17,7 +18,8 @@
 #'
 #' @noRd
 #'
-add_logo_to_plot <- function(logo_path = 'inst/biblioverApp/www/biblioverlap_sticker.png',
+add_logo_to_plot <- function(plot,
+                             logo_path = system.file("biblioverApp", "www", "biblioverlap_sticker.png", package = "biblioverlap"),
                              alpha = 0.2,
                              width = grid::unit(100, 'pt'),
                              height = grid::unit(125, 'pt'),
@@ -27,9 +29,28 @@ add_logo_to_plot <- function(logo_path = 'inst/biblioverApp/www/biblioverlap_sti
                              interpolate = TRUE,
                              ... ) {
 
-  logo_raw <- png::readPNG('inst/biblioverApp/www/biblioverlap_sticker.png') #Importing logo into R
+  # Set up the layout for the main plot and logo
+  layout <- grid::grid.layout(nrow = 1, ncol = 2, widths = c(0.85, 0.15))
+
+  # Create a new page with the specified layout
+  grid::grid.newpage()
+  grid::pushViewport(grid::viewport(layout = layout))
+
+  # Plot the Venn diagram on the left
+  grid::pushViewport(grid::viewport(layout.pos.col = 1))
+  print(plot, newpage = FALSE)
+
+  # Clear the viewport before adding the logo
+  grid::popViewport(1)
+
+  # Getting logo
+  logo_raw <- png::readPNG(logo_path) #Importing logo into R
   logo <- matrix(grDevices::rgb(logo_raw[,,1],logo_raw[,,2],logo_raw[,,3], logo_raw[,,4] * alpha), nrow=dim(logo_raw)[1]) #Adding transparency to logo - source: https://stackoverflow.com/questions/11357926/r-add-alpha-value-to-png-image
-  logo_raster <- grid::grid.raster(logo_raw,
+
+  # Ploting logo on the right
+  grid::pushViewport(grid::viewport(layout.pos.col = 2))
+
+  grid::grid.raster(logo,
               width = width,
               height = height,
               x = x,
@@ -38,9 +59,12 @@ add_logo_to_plot <- function(logo_path = 'inst/biblioverApp/www/biblioverlap_sti
               interpolate = interpolate,
               ...)
 
-  return(logo_raster)
-}
+  # Reset the viewport
+  grid::popViewport(2)
 
+  #Return the combined graphical object
+  return(grid::grid.grab(wrap.grobs = TRUE))
+}
 
 
 
@@ -80,12 +104,12 @@ get_uuid_list <- function(db_list) {
 #' plot_matching_summary(biblioverlap_results$summary)
 #'
 plot_matching_summary <- function(matching_summary_df, ...) {
-  plot <- matching_summary_df %>%
+  summary_plot <- matching_summary_df %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$category, y = .data$n_docs, fill = .data$doc_subset)) +
     ggplot2::geom_bar(stat = 'identity', position = 'stack') +
     ggplot2::geom_text(ggplot2::aes(label = paste0(.data$n_docs," (",.data$perc_inside_category,"%)")), position = ggplot2::position_stack(vjust = 0.5), ... )
 
-  return(plot)
+  return(add_logo_to_plot(summary_plot))
 }
 
 
@@ -112,7 +136,7 @@ plot_venn <- function(db_list, ...) {
   venn <- ggVennDiagram::ggVennDiagram(uuid, ...) +
     ggplot2::scale_fill_gradient(low = "#A7C7E7", high = "#08306B") +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = .2))
-  return ( venn )
+  return ( add_logo_to_plot(venn) )
 }
 
 #' Plotting UpSet plot from biblioverlap results
@@ -136,7 +160,7 @@ plot_venn <- function(db_list, ...) {
 plot_upset <- function(db_list, ...) {
   uuid <- get_uuid_list(db_list)
   upset <- UpSetR::upset(UpSetR::fromList(uuid), ...)
-  return ( upset )
+  return ( add_logo_to_plot(upset) )
 }
 
 
