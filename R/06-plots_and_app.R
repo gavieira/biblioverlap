@@ -164,7 +164,13 @@ plot_venn <- function(db_list, ...) {
 #'
 plot_upset <- function(db_list, ...) {
   uuid <- get_uuid_list(db_list)
-  upset <- UpSetR::upset(UpSetR::fromList(uuid), ...)
+  upset <- UpSetR::upset(UpSetR::fromList(uuid),
+                         main.bar.color = "#08306B",
+                         sets.bar.color = "#08306B",
+                         att.color = "steelblue",
+                         shade.color = "steelblue",
+                         matrix.color = "#08306B",
+                         ...)
   return ( add_logo_to_plot(upset) )
 }
 
