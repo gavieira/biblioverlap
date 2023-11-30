@@ -145,6 +145,8 @@ plot_settings <- tagList(
 
 results_summary_plot <- tabPanel("Summary",
                                  actionButton("modify_summary", "Modify plot", class = 'custom_button'),
+                                 downloadButton("download_summary", "Download plot", class = 'custom_button'),
+
                                  conditionalPanel(
                                    condition = "input.modify_summary % 2 == 1",
                                    fluidRow(
@@ -167,6 +169,7 @@ results_summary_plot <- tabPanel("Summary",
 
 results_venn <- tabPanel("Venn Diagram",
                          actionButton("modify_venn", "Modify plot", class = 'custom_button'),
+                         downloadButton("download_venn", "Download plot", class = 'custom_button'),
                          conditionalPanel(
                            condition = "input.modify_venn % 2 == 1",
                            fluidRow(
@@ -209,6 +212,7 @@ results_venn <- tabPanel("Venn Diagram",
 results_upset <-  tabPanel("UpSet Plot",
                            #tags$br(),
                            actionButton("modify_upset", "Modify plot", class = 'custom_button'),
+                           downloadButton("download_upset", "Download plot", class = 'custom_button'),
                            conditionalPanel(
                              condition = "input.modify_upset % 2 == 1",
                              fluidRow(

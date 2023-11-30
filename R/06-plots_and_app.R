@@ -29,18 +29,19 @@ add_logo_to_plot <- function(plot,
                              interpolate = TRUE,
                              ... ) {
 
+
   # Set up the layout for the main plot and logo
   layout <- grid::grid.layout(nrow = 1, ncol = 1)
-
-  # Create a new page with the specified layout
+#
+  ## Create a new page with the specified layout
   grid::grid.newpage()
   grid::pushViewport(grid::viewport(layout = layout))
-
-  # Plot the Venn diagram on the left
+#
+  ## Plot the Venn diagram on the left
   grid::pushViewport(grid::viewport(layout.pos.col = 1))
   print(plot, newpage = FALSE)
-
-  # Clear the viewport before adding the logo
+#
+  ## Clear the viewport before adding the logo
   grid::popViewport(1)
 
   # Getting logo
@@ -62,9 +63,10 @@ add_logo_to_plot <- function(plot,
   # Reset the viewport
   grid::popViewport(2)
 
+  return( grid::grid.grab(wrap.grobs = TRUE ) )
   #Return the combined graphical object
-  return(grid::grid.grab(wrap.grobs = TRUE))
 }
+
 
 
 
@@ -138,6 +140,7 @@ plot_venn <- function(db_list, ...) {
   venn <- ggVennDiagram::ggVennDiagram(uuid, ...) +
     ggplot2::scale_fill_gradient(low = "#A7C7E7", high = "#08306B") +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = .2))
+  #return ( venn )
   return ( add_logo_to_plot(venn) )
 }
 

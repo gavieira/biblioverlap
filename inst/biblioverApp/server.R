@@ -188,36 +188,28 @@ server <- function(input, output, session) {
     return( read_datatable(table) )
   }, server = TRUE) ##Server is necessary because the db_list can be huge
 
-
   output$summary_table <- renderTable({
     summary_table <- calculate_results()$summary
     return( summary_table )
   }, width = '100%', striped = TRUE, bordered = TRUE, align = 'l')
 
 
+  #### Generating plots (reactive functions)
 
-  output$summary_plot <- renderPlot({
-    summary_df <- calculate_results()$summary
-    summary_plot <- biblioverlap::plot_matching_summary(summary_df,
-                                                        text_size = input$summary_text_size,
-                                                        size = input$summary_value_size)
-    return( summary_plot )
-  }, height = reactive( { input$plot_height } ),
-  width = reactive( { input$plot_width } )
-  )
+  summary_plot <- reactive( {
+    biblioverlap::plot_matching_summary(calculate_results()$summary,
+                                        text_size = input$summary_text_size,
+                                        size = input$summary_value_size)
+  })
 
-  output$venn <- renderPlot({
-    venn <- biblioverlap::plot_venn(calculate_results()$db_list,
+  venn_plot <- reactive( {
+    biblioverlap::plot_venn(calculate_results()$db_list,
                                     label = input$venn_label,
                                     label_color = input$venn_label_color,
                                     label_size = input$venn_label_size,
                                     label_alpha = input$venn_label_alpha,
                                     set_size = input$venn_set_size )
-    return( venn )
-  }, height = reactive( { input$plot_height } ),
-  width = reactive( { input$plot_width } )
-  )
-
+    } )
 
   # Upset plots from UpSetR can hide its empty intersections if a NULL value is passed to its `empty.intersections` parameter
   # However, the NULL value can not be passed directly to the `selectInput()` shiny function
@@ -227,25 +219,66 @@ server <- function(input, output, session) {
     else {return(NULL)}
   })
 
+  upset_plot <- reactive ({
+    biblioverlap::plot_upset(calculate_results()$db_list,
+                             nsets = length(db_list),
+                             nintersects = input$nintersects,
+                             order.by = input$order.by,
+                             scale.intersections	= input$scale,
+                             empty.intersections = upset_empty_intersections(),
+                             scale.sets = input$scale,
+                             text.scale = input$text_size,
+                             show.numbers = input$show.numbers,
+                             mb.ratio = c(input$mb.ratio, 1 - input$mb.ratio)
+                             )
+    }  )
 
+  #Displaying plots in shinyApp (renderPlot functions)
 
-  output$upset <- renderPlot(   {
-    db_list <- calculate_results()$db_list
-    upset <- biblioverlap::plot_upset(db_list,
-                                      nsets = length(db_list),
-                                      nintersects = input$nintersects,
-                                      order.by = input$order.by,
-                                      scale.intersections	= input$scale,
-                                      empty.intersections = upset_empty_intersections(),
-                                      scale.sets = input$scale,
-                                      text.scale = input$text_size,
-                                      show.numbers = input$show.numbers,
-                                      mb.ratio = c(input$mb.ratio, 1 - input$mb.ratio)
-    )
-    return( upset )
+  output$summary_plot <- renderPlot({
+    summary_plot()
   }, height = reactive( { input$plot_height } ),
   width = reactive( { input$plot_width } )
   )
+
+  output$venn <- renderPlot({
+    venn_plot()
+  }, height = reactive( { input$plot_height } ),
+  width = reactive( { input$plot_width } )
+  )
+
+  output$upset <- renderPlot(   {
+    upset_plot()
+  }, height = reactive( { input$plot_height } ),
+  width = reactive( { input$plot_width } )
+  )
+
+  #Generating download handlers for each plot (downloadHandler functions)
+
+  #function to generate download handlers for the plots
+  download_plot <- function(name, plot_obj) {
+    downloadHandler(
+      filename = function() {
+        name
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = plot_obj,
+                        limitsize = FALSE,
+                        height = input$plot_height,
+                        width = input$plot_width,
+                        units = 'px', dpi = 'screen'
+        )
+      }
+    )
+  }
+
+
+  output$download_summary <- download_plot('summary_plot.png', summary_plot())
+
+  output$download_venn <- download_plot('venn_plot.png', venn_plot())
+
+  output$download_upset <- download_plot('upset_plot.png', upset_plot())
+
 
   # Function to merge multiple input_files
   merge_input_files <- reactive({
