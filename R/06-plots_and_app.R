@@ -35,26 +35,13 @@ add_logo_to_plot <- function(plot,
   # Set up null graphics device to avoid unintentional plotting
   grDevices::pdf(NULL)
 
-  # Set up the layout for the main plot and logo
-  layout <- grid::grid.layout(nrow = 1, ncol = 1)
-
-  ## Create a new page with the specified layout
-  grid::grid.newpage()
-  grid::pushViewport(grid::viewport(layout = layout))
-
-  ## Plot the Venn diagram on the left
-  grid::pushViewport(grid::viewport(layout.pos.col = 1))
-  print(plot, newpage = FALSE)
-
-  ## Clear the viewport before adding the logo
-  grid::popViewport(1)
+  # Printing plot
+  print(plot)
 
   # Getting logo
   logo_raw <- png::readPNG(logo_path) #Importing logo into R
   logo <- matrix(grDevices::rgb(logo_raw[,,1],logo_raw[,,2],logo_raw[,,3], logo_raw[,,4] * alpha), nrow=dim(logo_raw)[1]) #Adding transparency to logo - source: https://stackoverflow.com/questions/11357926/r-add-alpha-value-to-png-image
 
-  # Pushing viewport
-  grid::pushViewport(grid::viewport(layout.pos.col = 1))
   # Ploting logo
   grid::grid.raster(logo,
               width = width,
@@ -64,9 +51,6 @@ add_logo_to_plot <- function(plot,
               just = just,
               interpolate = interpolate,
               ...)
-
-  # Reset the viewport
-  grid::popViewport(2)
 
   #Generate combined plot
   combined_plot <- grid::grid.grab(wrap.grobs = TRUE )
@@ -81,7 +65,6 @@ add_logo_to_plot <- function(plot,
   #Return the final graphical object
   return( final_plot )
 }
-
 
 
 
