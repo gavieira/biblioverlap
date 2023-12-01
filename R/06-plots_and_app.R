@@ -1,7 +1,7 @@
-#' Adding biblioverlap's logo to plots
+#' Finalizing biblioverlap's plots
 #'
 #' @description
-#' Helper function to add biblioverlap's logo to its plots. Except for `logo_path` and `alpha`, all its parameters are compatible with [`grid::grid.raster`]. Check its documentation for more info.
+#' Helper function to finalize biblioverlap's plots. It basically adds (when `add_logo = TRUE`) the package's logo to the plot passed as argument. Except for `logo_path`, `add_logo` and `alpha`, all its parameters are compatible with [`grid::grid.raster`]. Check its documentation for more info.
 #'
 #' @param plot - plot to add logo
 #' @param logo_path - path to logo .png file
@@ -28,7 +28,6 @@ add_logo_to_plot <- function(plot,
                              just = c('right', 'top'),
                              interpolate = TRUE,
                              ... ) {
-
 
   # Set up the layout for the main plot and logo
   layout <- grid::grid.layout(nrow = 1, ncol = 1)
@@ -63,8 +62,16 @@ add_logo_to_plot <- function(plot,
   # Reset the viewport
   grid::popViewport(2)
 
-  return( grid::grid.grab(wrap.grobs = TRUE ) )
-  #Return the combined graphical object
+  #Generate combined plot
+  combined_plot <- grid::grid.grab(wrap.grobs = TRUE )
+
+  #Generate final plot
+  final_plot <- cowplot::ggdraw() +
+    cowplot::draw_plot(combined_plot)
+
+
+  #Return the final graphical object
+  return( final_plot )
 }
 
 
@@ -140,7 +147,7 @@ plot_venn <- function(db_list, ...) {
   venn <- ggVennDiagram::ggVennDiagram(uuid, ...) +
     ggplot2::scale_fill_gradient(low = "#A7C7E7", high = "#08306B") +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = .2))
-  #return ( venn )
+
   return ( add_logo_to_plot(venn) )
 }
 
@@ -171,6 +178,7 @@ plot_upset <- function(db_list, ...) {
                          shade.color = "steelblue",
                          matrix.color = "#08306B",
                          ...)
+
   return ( add_logo_to_plot(upset) )
 }
 
