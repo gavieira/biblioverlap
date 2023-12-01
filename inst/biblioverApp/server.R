@@ -197,18 +197,20 @@ server <- function(input, output, session) {
   #### Generating plots (reactive functions)
 
   summary_plot <- reactive( {
-    biblioverlap::plot_matching_summary(calculate_results()$summary,
+    summary <- biblioverlap::plot_matching_summary(calculate_results()$summary,
                                         text_size = input$summary_text_size,
                                         size = input$summary_value_size)
+    return(summary)
   })
 
   venn_plot <- reactive( {
-    biblioverlap::plot_venn(calculate_results()$db_list,
+    venn <- biblioverlap::plot_venn(calculate_results()$db_list,
                                     label = input$venn_label,
                                     label_color = input$venn_label_color,
                                     label_size = input$venn_label_size,
                                     label_alpha = input$venn_label_alpha,
                                     set_size = input$venn_set_size )
+    return(venn)
     } )
 
   # Upset plots from UpSetR can hide its empty intersections if a NULL value is passed to its `empty.intersections` parameter
@@ -220,7 +222,7 @@ server <- function(input, output, session) {
   })
 
   upset_plot <- reactive ({
-    biblioverlap::plot_upset(calculate_results()$db_list,
+    upset <- biblioverlap::plot_upset(calculate_results()$db_list,
                              nsets = length(db_list),
                              nintersects = input$nintersects,
                              order.by = input$order.by,
@@ -231,6 +233,7 @@ server <- function(input, output, session) {
                              show.numbers = input$show.numbers,
                              mb.ratio = c(input$mb.ratio, 1 - input$mb.ratio)
                              )
+    return(upset)
     }  )
 
   #Displaying plots in shinyApp (renderPlot functions)
@@ -264,6 +267,7 @@ server <- function(input, output, session) {
       content = function(file) {
         ggplot2::ggsave(file, plot = plot_obj,
                         limitsize = FALSE,
+                        bg = 'white',
                         height = input$plot_height,
                         width = input$plot_width,
                         units = 'px', dpi = 'screen'

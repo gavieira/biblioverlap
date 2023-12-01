@@ -29,17 +29,23 @@ add_logo_to_plot <- function(plot,
                              interpolate = TRUE,
                              ... ) {
 
+  # Getting graphics device
+  previous_device <- grDevices::dev.cur()
+
+  # Set up null graphics device to avoid unintentional plotting
+  grDevices::pdf(NULL)
+
   # Set up the layout for the main plot and logo
   layout <- grid::grid.layout(nrow = 1, ncol = 1)
-#
+
   ## Create a new page with the specified layout
   grid::grid.newpage()
   grid::pushViewport(grid::viewport(layout = layout))
-#
+
   ## Plot the Venn diagram on the left
   grid::pushViewport(grid::viewport(layout.pos.col = 1))
   print(plot, newpage = FALSE)
-#
+
   ## Clear the viewport before adding the logo
   grid::popViewport(1)
 
@@ -47,9 +53,9 @@ add_logo_to_plot <- function(plot,
   logo_raw <- png::readPNG(logo_path) #Importing logo into R
   logo <- matrix(grDevices::rgb(logo_raw[,,1],logo_raw[,,2],logo_raw[,,3], logo_raw[,,4] * alpha), nrow=dim(logo_raw)[1]) #Adding transparency to logo - source: https://stackoverflow.com/questions/11357926/r-add-alpha-value-to-png-image
 
-  # Ploting logo on the right
+  # Pushing viewport
   grid::pushViewport(grid::viewport(layout.pos.col = 1))
-
+  # Ploting logo
   grid::grid.raster(logo,
               width = width,
               height = height,
@@ -65,10 +71,12 @@ add_logo_to_plot <- function(plot,
   #Generate combined plot
   combined_plot <- grid::grid.grab(wrap.grobs = TRUE )
 
-  #Generate final plot
+  #Generate final plot (ggplot-like object)
   final_plot <- cowplot::ggdraw() +
     cowplot::draw_plot(combined_plot)
 
+  # Go back to previous graphics device
+  grDevices::dev.set(previous_device)
 
   #Return the final graphical object
   return( final_plot )
