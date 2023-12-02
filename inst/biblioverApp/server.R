@@ -197,20 +197,18 @@ server <- function(input, output, session) {
   #### Generating plots (reactive functions)
 
   summary_plot <- reactive( {
-    summary <- biblioverlap::plot_matching_summary(calculate_results()$summary,
+   biblioverlap::plot_matching_summary(calculate_results()$summary,
                                         text_size = input$summary_text_size,
                                         size = input$summary_value_size)
-    return(summary)
   })
 
   venn_plot <- reactive( {
-    venn <- biblioverlap::plot_venn(calculate_results()$db_list,
+    biblioverlap::plot_venn(calculate_results()$db_list,
                                     label = input$venn_label,
                                     label_color = input$venn_label_color,
                                     label_size = input$venn_label_size,
                                     label_alpha = input$venn_label_alpha,
                                     set_size = input$venn_set_size )
-    return(venn)
     } )
 
   # Upset plots from UpSetR can hide its empty intersections if a NULL value is passed to its `empty.intersections` parameter
@@ -222,8 +220,8 @@ server <- function(input, output, session) {
   })
 
   upset_plot <- reactive ({
-    upset <- biblioverlap::plot_upset(calculate_results()$db_list,
-                             nsets = length(db_list),
+    biblioverlap::plot_upset(calculate_results()$db_list,
+                             nsets = length(calculate_results()$db_list),
                              nintersects = input$nintersects,
                              order.by = input$order.by,
                              scale.intersections	= input$scale,
@@ -233,7 +231,6 @@ server <- function(input, output, session) {
                              show.numbers = input$show.numbers,
                              mb.ratio = c(input$mb.ratio, 1 - input$mb.ratio)
                              )
-    return(upset)
     }  )
 
   #Displaying plots in shinyApp (renderPlot functions)
