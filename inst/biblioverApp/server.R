@@ -220,6 +220,7 @@ server <- function(input, output, session) {
   })
 
   upset_plot <- reactive ({
+    req(input$order.by)
     biblioverlap::plot_upset(calculate_results()$db_list,
                              nsets = length(calculate_results()$db_list),
                              nintersects = input$nintersects,
@@ -262,7 +263,7 @@ server <- function(input, output, session) {
         name
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = plot_obj,
+        ggplot2::ggsave(file, plot = plot_obj(),
                         limitsize = FALSE,
                         bg = 'white',
                         height = input$plot_height,
@@ -274,11 +275,11 @@ server <- function(input, output, session) {
   }
 
 
-  output$download_summary <- download_plot('summary_plot.png', summary_plot())
+  output$download_summary <- download_plot('summary_plot.png', summary_plot)
 
-  output$download_venn <- download_plot('venn_plot.png', venn_plot())
+  output$download_venn <- download_plot('venn_plot.png', venn_plot)
 
-  output$download_upset <- download_plot('upset_plot.png', upset_plot())
+  output$download_upset <- download_plot('upset_plot.png', upset_plot)
 
 
   # Function to merge multiple input_files
