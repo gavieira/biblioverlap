@@ -5,6 +5,8 @@
 * Added 'quote' tabpanels alongside all `fileInput()` calls to determine quotation of input datasets
 * Added download buttons for plots in ShinyApp
 * Added package logo to plots
+* Added `merge_results`: a function to merge biblioverlap's results into a single dataframe
+* Added `merge_input_files`: a function to merge multiple files from the same source into a single file
 
 
 # biblioverlap 1.0.3

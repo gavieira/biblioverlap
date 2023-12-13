@@ -177,7 +177,7 @@ plot_upset <- function(db_list, ...) {
 #' Shiny App for the biblioverlap package
 #'
 #' @param port - port of the application
-#' @param max_upload_size - max upload size of documents (in MB) - Default 100
+#' @param max_upload_size - max upload size of documents (in MB) - Default 1000
 #' @param launch.browser - launch on browser - Default = TRUE
 #'
 #' @return opens a instance of the biblioverlap UI

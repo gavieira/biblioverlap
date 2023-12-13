@@ -12,7 +12,7 @@ biblioverApp(port = NULL, max_upload_size = 1000, launch.browser = TRUE)
 }}
 
 \item{max_upload_size}{\itemize{
-\item max upload size of documents (in MB) - Default 100
+\item max upload size of documents (in MB) - Default 1000
 }}
 
 \item{launch.browser}{\itemize{

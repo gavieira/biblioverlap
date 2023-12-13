@@ -41,16 +41,6 @@ server <- function(input, output, session) {
   }
 
 
-  # Merge files into a named list of dataframes
-  get_merged_db_list <- function(db_list) {
-    db_list <- lapply(db_list, function(df) dplyr::mutate_all(df, as.character))
-    df <- dplyr::bind_rows(db_list, .id =  'SET_NAME') #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
-    columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
-    df <- df[c(columns_to_front, setdiff(names(df), columns_to_front))] # Rearrange columns
-
-    return( df )
-  }
-
  generate_dataset_input_fields <- function(id) {
    tagList(
       div(
@@ -160,13 +150,17 @@ server <- function(input, output, session) {
       )
   }
 
+  results_data_table <- reactive ({
+    return ( biblioverlap::merge_results(calculate_results()$db_list, filter_distinct = input$filter_distinct) )
+  }  )
+
 
   output$download_data <- downloadHandler(
     filename = function() {
       'result_data.csv'
     },
     content = function(file) {
-      write.csv(get_merged_db_list(calculate_results()$db_list), file, row.names = FALSE)
+      write.csv(results_data_table(), file, row.names = FALSE)
     }
   )
 
@@ -176,16 +170,13 @@ server <- function(input, output, session) {
       'summary.csv'
     },
     content = function(file) {
-      write.csv(calculate_results()$summary$df, file, row.names = FALSE)
+      write.csv(calculate_results()$summary, file, row.names = FALSE)
     }
   )
 
 
   output$full_table <- DT::renderDataTable({
-    table_list <- calculate_results()$db_list
-    table <- get_merged_db_list(table_list)
-
-    return( read_datatable(table) )
+    return( read_datatable(results_data_table()) )
   }, server = TRUE) ##Server is necessary because the db_list can be huge
 
   output$summary_table <- renderTable({
@@ -282,44 +273,32 @@ server <- function(input, output, session) {
   output$download_upset <- download_plot('upset_plot.png', upset_plot)
 
 
-  # Function to merge multiple input_files
-  merge_input_files <- reactive({
+  #Code for the 'Merge Files' tabset
+  merged_input_files <- reactive({
+
     input_files <- input$unmerged_files$datapath
     sep <- input$unmerged_sep
     quote <- input$unmerged_quote
 
-    df_list <- lapply(input_files, function(input_file) {
-      read.csv(input_file,
-               sep = sep,
-               quote = quote,
-               strip.white = TRUE,
-               check.names = FALSE) })
-    tryCatch({
-      df <- do.call(rbind, df_list)
-    }, error = function(err)
-      showNotification('Failed to merge files. Are they from the same database and/or have the same columns?', type = 'err', duration = NULL)
-    )
-    df[] <- lapply(df, function(col) { #Cleaning data (one column at a time)
-      col <- trimws(as.character(col)) # Removing leading and trailing whitespaces
-      col[which(col == "" | is.null(col))] <- NA  # Convert empty or null values to NA
-      return(col)
-    })
-    df <- df[!duplicated(df), ]   # Removing duplicate records
-
-    return( df )
+    merged_files <- biblioverlap::merge_input_files(input_files,
+                                    sep = sep,
+                                    quote = quote)
+    return(merged_files)
   })
+
+
 
   output$download_merged_file <- downloadHandler(
     filename = function() {
-      'merged_data.csv'
+      'merged_files.csv'
     },
     content = function(file) {
-      write.csv(merge_input_files(), file, row.names = FALSE)
+      write.csv(merged_input_files(), file, row.names = FALSE)
     }
   )
 
   output$merged_files_table <- DT::renderDataTable({
-      table <- merge_input_files()
+      table <- merged_input_files()
       return( read_datatable(table) )
     }, server = TRUE) ##Server is necessary because the db_list can be huge
 

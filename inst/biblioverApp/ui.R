@@ -114,7 +114,9 @@ n_sets_ui <-
 
 
 results_data <-  tabPanel("Data",
-                          downloadButton("download_data", "Download Data", class = 'custom_button'),
+                          fluidRow(
+                          column(2, checkboxInput('filter_distinct', 'Filter distinct records')),
+                          column(2, downloadButton("download_data", "Download Data", class = 'custom_button')) ),
                           DT::dataTableOutput('full_table')
 )
 
@@ -208,7 +210,7 @@ results_venn <- tabPanel("Venn Diagram",
 )
 
 
-#Matybe split the results_upset into a part that contains the modify options and one for the plot itself
+#Maybe split the results_upset into a part that contains the modify options and one for the plot itself
 results_upset <-  tabPanel("UpSet Plot",
                            #tags$br(),
                            actionButton("modify_upset", "Modify plot", class = 'custom_button'),
