@@ -4,7 +4,7 @@
 Why is such a quick update needed? Please explain. Please also re-read
 the CRAN policies about submission frequency.
 
-This was entirely my fault, sorry. The fixes on my last submission were actually pretty small, so the update was not necessary at all. It's my first package and I had forgotten about submission frequency policies. Rest assured that it won't happen again and thanks for your time!
+This was entirely my fault, sorry. The fixes since my last submission were actually pretty small, so the update was not necessary at all. It's my first package and I had forgotten about submission frequency policies. Rest assured that it won't happen again and thanks for your time!
 
 ### Fourth submission (Version 1.0.3)
 

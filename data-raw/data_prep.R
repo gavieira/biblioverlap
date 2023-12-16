@@ -60,7 +60,7 @@ library(ggplot2)
 test_data = list(A = 1:1, B = 1:1, C = 1:1, D = 1:1)
 
 p <- ggVennDiagram(test_data, label_size = 15,
-                   set_size = 15, label_alpha = 1) +
+                   set_size = 15, label_alpha = 0) +
   scale_color_manual(values = rep("black", 4))
 
 #Names to be plotted instead of intersection counts
