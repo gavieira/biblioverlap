@@ -181,8 +181,11 @@ plot_upset <- function(db_list, add_logo = TRUE, ...) {
                          matrix.color = "#08306B",
                          ...)
 
-  return ( add_logo_to_plot(upset) )
-  #return ( upset )
+  if (add_logo) {
+    return(add_logo_to_plot(upset))
+  }
+
+  return ( upset )
 }
 
 

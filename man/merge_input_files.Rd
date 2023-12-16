@@ -26,7 +26,7 @@ a single dataframe with all unique records from the input files
 Merge multiple input files from the same source
 }
 \details{
-It is fairly common to retrieve data from a single bibliographic database in small chunks. Thus, this function is designed to merge multiple files from the same database into a single file while also removing duplicate records.
+It is fairly common to retrieve data from a single bibliographic database in small chunks. Thus, this function is designed to merge multiple files from the same source into a single file while also removing duplicate records.
 }
 \examples{
 

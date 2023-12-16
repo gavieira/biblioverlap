@@ -4,11 +4,15 @@
 \alias{plot_upset}
 \title{Plotting UpSet plot from biblioverlap results}
 \usage{
-plot_upset(db_list, ...)
+plot_upset(db_list, add_logo = TRUE, ...)
 }
 \arguments{
 \item{db_list}{\itemize{
 \item list of matched dataframes (with UUID column added by \code{\link{biblioverlap}})
+}}
+
+\item{add_logo}{\itemize{
+\item boolean specifying whether to add package logo to plot or not. Default: TRUE
 }}
 
 \item{...}{\itemize{
