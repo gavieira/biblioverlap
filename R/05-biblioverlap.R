@@ -106,16 +106,16 @@ get_matching_summary_df <- function(internal_db_list) {
   #Getting values
   summary <- list()
   summary$total <- nrow(all_data)
-  summary$unique <- nrow(all_data %>% dplyr::distinct(.data$UUID, .keep_all = TRUE))
-  summary$duplicates <- summary$total - summary$unique
+  summary$distinct <- nrow(all_data %>% dplyr::distinct(.data$UUID, .keep_all = TRUE))
+  summary$overlap <- summary$total - summary$distinct
   summary$matched <- nrow(matched_data)
-  summary$unmatched <- summary$unique - summary$matched
+  summary$unmatched <- summary$distinct - summary$matched
   summary$matched_id <- nrow(matched_data %>% dplyr::filter(!is.na(DI)))
   summary$matched_score <- nrow(matched_data %>% dplyr::filter(is.na(DI))) #USES DI column
   summary_df <- data.frame(doc_subset = names(summary), n_docs = unlist(summary), row.names = NULL)
   #Getting dataframe
-  categories <- c('total', 'unique/duplicates', 'unique/duplicates', 'unique', 'unique', 'matched', 'matched')
-  doc_subset_levels <- c('total',  'duplicates', 'unique', 'unmatched', 'matched',  'matched_id', 'matched_score' )
+  categories <- c('total', 'distinct/overlap', 'distinct/overlap', 'distinct', 'distinct', 'matched', 'matched')
+  doc_subset_levels <- c('total',  'overlap', 'distinct', 'unmatched', 'matched',  'matched_id', 'matched_score' )
   final_summary_df <- summary_df %>%
     dplyr::mutate("doc_subset" = factor(.data$doc_subset, levels = doc_subset_levels)) %>%
     dplyr::mutate("category" = factor(categories, levels = unique(categories)), .after = .data$doc_subset) %>%
