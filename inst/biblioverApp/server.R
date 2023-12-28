@@ -53,7 +53,7 @@ server <- function(input, output, session) {
                    textInput(paste0("name", id), "Dataset name:", value = id)
           ),
           tabPanel("File",
-                   fileInput(paste0("file", id), "Upload file:",
+                   fileInput(paste0("file", id), "Upload file (csv only):",
                              accept = c("text/csv",
                                         "text/comma-separated-values,text/plain",
                                         ".csv") )
