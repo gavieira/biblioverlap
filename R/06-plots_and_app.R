@@ -71,7 +71,7 @@ add_logo_to_plot <- function(plot,
 #' Extracting list of uuid columns from biblioverlap results
 #'
 #' @description
-#' Helper function to [plot_venn()] and [plot_upset()] that extracts overlapping data stored in the UUID column.
+#' Helper function to [venn_plot()] and [upset_plot()] that extracts overlapping data stored in the UUID column.
 #'
 #' @param db_list - list of matched dataframes (with UUID column added by biblioverlap)
 #'
@@ -103,9 +103,9 @@ get_uuid_list <- function(db_list) {
 #' biblioverlap_results$summary
 #'
 #' #Plotting the matching summary
-#' plot_matching_summary(biblioverlap_results$summary)
+#' matching_summary_plot(biblioverlap_results$summary)
 #'
-plot_matching_summary <- function(matching_summary_df, add_logo = TRUE, text_size = 15, ...) {
+matching_summary_plot <- function(matching_summary_df, add_logo = TRUE, text_size = 15, ...) {
   summary_plot <- matching_summary_df %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$category, y = .data$n_docs, fill = .data$doc_subset)) +
     ggplot2::geom_bar(stat = 'identity', position = 'stack') +
@@ -137,9 +137,9 @@ plot_matching_summary <- function(matching_summary_df, add_logo = TRUE, text_siz
 #' lapply(biblioverlap_results$db_list, head, n=1)
 #'
 #' #Plotting the Venn diagram
-#' plot_venn(biblioverlap_results$db_list)
+#' venn_plot(biblioverlap_results$db_list)
 #'
-plot_venn <- function(db_list, add_logo = TRUE, ...) {
+venn_plot <- function(db_list, add_logo = TRUE, ...) {
   uuid <- get_uuid_list(db_list)
   venn <- ggVennDiagram::ggVennDiagram(uuid, ...) +
     ggplot2::scale_fill_gradient(low = "#A7C7E7", high = "#08306B") +
@@ -169,9 +169,9 @@ plot_venn <- function(db_list, add_logo = TRUE, ...) {
 #' lapply(biblioverlap_results$db_list, head, n=1)
 #'
 #' #Plotting the UpSet plot
-#' plot_upset(biblioverlap_results$db_list)
+#' upset_plot(biblioverlap_results$db_list)
 #'
-plot_upset <- function(db_list, add_logo = TRUE, ...) {
+upset_plot <- function(db_list, add_logo = TRUE, ...) {
   uuid <- get_uuid_list(db_list)
   upset <- UpSetR::upset(UpSetR::fromList(uuid),
                          main.bar.color = "#08306B",
