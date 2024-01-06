@@ -188,13 +188,13 @@ server <- function(input, output, session) {
   #### Generating plots (reactive functions)
 
   summary_plot <- reactive( {
-   biblioverlap::plot_matching_summary(calculate_results()$summary,
+   biblioverlap::matching_summary_plot(calculate_results()$summary,
                                         text_size = input$summary_text_size,
                                         size = input$summary_value_size)
   })
 
   venn_plot <- reactive( {
-    biblioverlap::plot_venn(calculate_results()$db_list,
+    biblioverlap::venn_plot(calculate_results()$db_list,
                                     label = input$venn_label,
                                     label_color = input$venn_label_color,
                                     label_size = input$venn_label_size,
@@ -212,7 +212,7 @@ server <- function(input, output, session) {
 
   upset_plot <- reactive ({
     req(input$order.by)
-    biblioverlap::plot_upset(calculate_results()$db_list,
+    biblioverlap::upset_plot(calculate_results()$db_list,
                              nsets = length(calculate_results()$db_list),
                              nintersects = input$nintersects,
                              order.by = input$order.by,

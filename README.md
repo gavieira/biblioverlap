@@ -103,37 +103,31 @@ sapply(biblioverlap_results, class)
 ```
 
 The package also features some functions for plotting the results of
-`biblioverlap()`. For instance, the `plot_matching_summary()` function
+`biblioverlap()`. For instance, the `matching_summary_plot()` function
 can be used to convert the summary of the matching procedure into a bar
 plot.
 
 ``` r
 #Plotting the matching results summary
-plot_matching_summary(biblioverlap_results$summary)
+matching_summary_plot(biblioverlap_results$summary)
 ```
 
-<img src="man/figures/README-matching_summary-1.png" width="100%" />
-
-The `plot_venn()` function uses the UUID column to plot the results of
+The `venn_plot()` function uses the UUID column to plot the results of
 the matching procedure as a Venn diagram.
 
 ``` r
 #Plotting the Venn diagram
-plot_venn(biblioverlap_results$db_list)
+venn_plot(biblioverlap_results$db_list)
 ```
 
-<img src="man/figures/README-venn-1.png" width="100%" />
-
-Similarly, the `plot_upset()` function uses the UUID column to generate
+Similarly, the `upset_plot()` function uses the UUID column to generate
 a UpSet plot, which is generally better for visualizing intersections
 between 5 or more datasets.
 
 ``` r
 #Plotting the UpSet plot
-plot_upset(biblioverlap_results$db_list)
+upset_plot(biblioverlap_results$db_list)
 ```
-
-<img src="man/figures/README-upset-1.png" width="100%" />
 
 The biblioverlap package also features a graphical user interface in the
 form of a ShinyApp, which can be called through the `biblioverApp()`
