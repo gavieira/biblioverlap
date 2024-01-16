@@ -237,7 +237,7 @@ biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_t
 #' Merge biblioverlap's results into a single dataframe
 #'
 #' @param db_list - list of matched dataframes (with UUID column added by [`biblioverlap`])
-#' @param filter_distinct - boolean value determining whether to return only the subset containing distinct records (TRUE) or to keep overlapping records between datasets (FALSE). Default: FALSE
+#' @param filter - value determining whether to return all the data ('none'), distinct records only ('distinct') or matched records only ('matched'). Default: 'none'
 #'
 #' @return a single dataframe containing data from db_list, featuring an additional 'SET_NAME' column to indicate from which dataset each record came
 #' @importFrom rlang .data
@@ -248,27 +248,40 @@ biblioverlap <- function(db_list, matching_fields = default_matching_fields, n_t
 #' #Running document-level matching procedure for two datasets
 #' biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2])
 #'
-#' #Obtaining the results as a single dataframe (including overlapping records)
+#' #Obtaining the results as a single dataframe (all records)
 #' all_data <- merge_results(biblioverlap_results$db_list)
 #'
 #' #Checking number of total rows and overlapping documents are in the dataframe
 #' nrow(all_data)
 #' sum(duplicated(all_data$UUID))
 #'
-#' #Obtaining only unique records as a single dataframe
-#' distinct_data <- merge_results(biblioverlap_results$db_list, filter_distinct = FALSE)
+#' #Obtaining only distinct records as a single dataframe
+#' distinct_data <- merge_results(biblioverlap_results$db_list, filter = 'distinct')
 #'
 #' #Checking number of total rows and overlapping documents are in the dataframe
 #' nrow(distinct_data)
 #' sum(duplicated(distinct_data$UUID))
 #'
-merge_results <- function(db_list, filter_distinct = FALSE){
+#' #Obtaining only matched records as a single dataframe
+#' matched_data <- merge_results(biblioverlap_results$db_list, filter = 'matched')
+#'
+#' #Checking number of total rows and overlapping documents are in the dataframe
+#' nrow(matched_data)
+#' sum(duplicated(matched_data$UUID))
+#'
+merge_results <- function(db_list, filter = 'none') {
   db_list <- lapply(db_list, function(df) dplyr::mutate_all(df, as.character))
   df <- dplyr::bind_rows(db_list, .id =  'SET_NAME') #Joining all info in a single table, while also adding a new column (SET_NAME) with the name of the set that record comes from
   columns_to_front <- c("SET_NAME", "UUID") # Specifying the names of the columns to be moved to the front
   df <- df[c(columns_to_front, setdiff(names(df), columns_to_front))] # Rearrange columns
-  if (filter_distinct) {
+  if (filter == 'distinct') {
     df <- dplyr::distinct(df, .data$UUID, .keep_all = TRUE)
+  }
+  else if (filter == 'matched') {
+    df <- df %>%
+      dplyr::arrange(.data$UUID) %>%
+      dplyr::group_by(.data$UUID) %>%
+      dplyr::filter(dplyr::n() >= 2)
   }
 
   return(df)

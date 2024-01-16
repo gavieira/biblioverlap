@@ -151,7 +151,7 @@ server <- function(input, output, session) {
   }
 
   results_data_table <- reactive ({
-    return ( biblioverlap::merge_results(calculate_results()$db_list, filter_distinct = input$filter_distinct) )
+    return ( biblioverlap::merge_results(calculate_results()$db_list, filter = input$filter_results) )
   }  )
 
 

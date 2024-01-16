@@ -4,6 +4,7 @@ custom_styles <-
   tags$style(
     HTML(".custom_title { color: darkcyan; font-family: Arial, sans-serif; text-align: center; font-size: 18px; font-weight: bold; }"),
     HTML(".custom_button { background-color: green; color: white; margin-top: 10px; margin-bottom: 10px }"),
+    HTML(".custom_button_higher_margin { background-color: green; color: white; margin-top: 25px; margin-bottom: 10px }"),
     HTML(".plot_container {
       width: 100%; /* Set the width of the div as needed */
       overflow-x: auto; /* Add a vertical scrollbar if content overflows horizontally */
@@ -115,8 +116,15 @@ n_sets_ui <-
 
 results_data <-  tabPanel("Data",
                           fluidRow(
-                          column(2, checkboxInput('filter_distinct', 'Filter distinct records')),
-                          column(2, downloadButton("download_data", "Download Data", class = 'custom_button')) ),
+                          column(2, selectInput('filter_results', 'Filter results',
+                                                choices = c('Unfiltered' = 'none',
+                                                            'Distinct' = 'distinct',
+                                                            'Matched' = 'matched'),
+                                                selectize = FALSE,
+                                                selected = 'none')
+                                 ),
+                          column(2, downloadButton("download_data", "Download Data", class = 'custom_button_higher_margin')) ),
+
                           DT::dataTableOutput('full_table')
 )
 

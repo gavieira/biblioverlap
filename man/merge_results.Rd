@@ -4,15 +4,15 @@
 \alias{merge_results}
 \title{Merge biblioverlap's results into a single dataframe}
 \usage{
-merge_results(db_list, filter_distinct = FALSE)
+merge_results(db_list, filter = "none")
 }
 \arguments{
 \item{db_list}{\itemize{
 \item list of matched dataframes (with UUID column added by \code{\link{biblioverlap}})
 }}
 
-\item{filter_distinct}{\itemize{
-\item boolean value determining whether to return only the subset containing distinct records (TRUE) or to keep overlapping records between datasets (FALSE). Default: FALSE
+\item{filter}{\itemize{
+\item value determining whether to return all the data ('none'), distinct records only ('distinct') or matched records only ('matched'). Default: 'none'
 }}
 }
 \value{
@@ -26,18 +26,25 @@ Merge biblioverlap's results into a single dataframe
 #Running document-level matching procedure for two datasets
 biblioverlap_results <- biblioverlap(ufrj_bio_0122[1:2])
 
-#Obtaining the results as a single dataframe (including overlapping records)
+#Obtaining the results as a single dataframe (all records)
 all_data <- merge_results(biblioverlap_results$db_list)
 
 #Checking number of total rows and overlapping documents are in the dataframe
 nrow(all_data)
 sum(duplicated(all_data$UUID))
 
-#Obtaining only unique records as a single dataframe
-distinct_data <- merge_results(biblioverlap_results$db_list, filter_distinct = FALSE)
+#Obtaining only distinct records as a single dataframe
+distinct_data <- merge_results(biblioverlap_results$db_list, filter = 'distinct')
 
 #Checking number of total rows and overlapping documents are in the dataframe
 nrow(distinct_data)
 sum(duplicated(distinct_data$UUID))
+
+#Obtaining only matched records as a single dataframe
+matched_data <- merge_results(biblioverlap_results$db_list, filter = 'matched')
+
+#Checking number of total rows and overlapping documents are in the dataframe
+nrow(matched_data)
+sum(duplicated(matched_data$UUID))
 
 }
