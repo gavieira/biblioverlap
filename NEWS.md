@@ -7,6 +7,7 @@
 * Added package logo to plots
 * Added `merge_results`: a function to merge biblioverlap's results into a single dataframe
 * Added `merge_input_files`: a function to merge multiple files from the same source into a single file
+* Added `get_all_subset_matches`: a function to recover missing matches in subsets of data due to differences in fields from distinct bibliographic sources
 
 
 # biblioverlap 1.0.3

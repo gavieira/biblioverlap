@@ -3,6 +3,7 @@
 export("%>%")
 export(biblioverApp)
 export(biblioverlap)
+export(get_all_subset_matches)
 export(matching_summary_plot)
 export(merge_input_files)
 export(merge_results)
